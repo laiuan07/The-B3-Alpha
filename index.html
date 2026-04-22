@@ -275,6 +275,11 @@ footer a:hover{color:var(--text)}
 .modal-frame{position:relative;z-index:1;width:95vw;height:92vh;border-radius:20px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 40px 120px rgba(0,0,0,0.8)}
 .modal-close{position:absolute;top:16px;right:16px;z-index:10;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border2);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .modal-close:hover{background:rgba(248,113,113,0.15);color:var(--red)}
+.module-next-btn{position:absolute;bottom:28px;right:28px;z-index:20;height:52px;min-width:52px;border-radius:100px;background:linear-gradient(135deg,#0369a1,#38bdf8);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 24px rgba(56,189,248,0.45);transition:all .3s;padding:0 20px}
+.module-next-btn.arrow-only{min-width:52px;width:52px;border-radius:50%;padding:0}
+.module-next-btn:hover{transform:scale(1.08);box-shadow:0 6px 36px rgba(56,189,248,0.65)}
+.module-next-btn .mnb-label{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:13px;white-space:nowrap}
+.modal-iframe{transition:opacity .3s}
 .modal-iframe{width:100%;height:100%;border:none;background:#000}
 
 /* Popup curso */
@@ -511,6 +516,7 @@ footer a:hover{color:var(--text)}
   <div class="modal-frame">
     <button class="modal-close" onclick="closeModule()">✕</button>
     <iframe class="modal-iframe" id="moduleIframe" src="" title="Módulo"></iframe>
+    <button class="module-next-btn arrow-only" id="moduleNextBtn" onclick="nextModule()" title="Próximo módulo">→</button>
   </div>
 </div>
 
@@ -1351,14 +1357,49 @@ function closeLoginRequiredModal(){
 }
 
 // ── MÓDULOS ──
+let currentModuleNum=0;
+const moduleFiles={1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides_1.html'};
+
 function openModule(num){
+  currentModuleNum=num;
   const modal=document.getElementById('modal-modules');
   const iframe=document.getElementById('moduleIframe');
-  const files={1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides_1.html'};
-  iframe.src=files[num];
+  iframe.src=moduleFiles[num];
   modal.classList.add('open');
   document.body.style.overflow='hidden';
+  updateNextBtn();
 }
+
+function updateNextBtn(){
+  const btn=document.getElementById('moduleNextBtn');
+  if(!btn)return;
+  if(currentModuleNum>=4){
+    btn.innerHTML='<span class="mnb-label">Ir para IA ⚡</span>';
+    btn.classList.remove('arrow-only');
+    btn.title='Abrir Blueprint IA';
+  } else {
+    btn.innerHTML='→';
+    btn.classList.add('arrow-only');
+    btn.title='Próximo módulo';
+  }
+}
+
+function nextModule(){
+  const iframe=document.getElementById('moduleIframe');
+  if(currentModuleNum>=4){
+    closeModule();
+    switchSection('chat');
+    return;
+  }
+  iframe.style.opacity='0';
+  setTimeout(()=>{
+    currentModuleNum++;
+    iframe.src=moduleFiles[currentModuleNum];
+    iframe.onload=()=>{iframe.style.opacity='1';iframe.onload=null;};
+    updateNextBtn();
+  },300);
+}
+
 function closeModule(){
   document.getElementById('modal-modules').classList.remove('open');
   document.body.style.overflow='';
@@ -1419,7 +1460,7 @@ async function handleLogin(){
     populateUserUI(data.user,name);
     _authHandled=true;
     document.getElementById('loginSuccess').classList.add('show');
-    setTimeout(()=>{_authHandled=false;goTo('dashboard');showCoursePopup();},1600);
+    setTimeout(()=>{_authHandled=false;goTo('dashboard');openModule(1);},1600);
   }catch(e){btn.classList.remove('loading');showError('loginError','Erro de conexão. Tente novamente.');}
 }
 
@@ -1446,7 +1487,7 @@ async function handleRegister(){
     populateUserUI(data.user,first);
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
-    setTimeout(()=>{_authHandled=false;goTo('dashboard');showCoursePopup();},1800);
+    setTimeout(()=>{_authHandled=false;goTo('dashboard');openModule(1);},1800);
   }catch(e){btn.classList.remove('loading');showError('registerError','Erro de conexão. Tente novamente.');}
 }
 
@@ -1484,7 +1525,7 @@ _supabase.auth.onAuthStateChange((event,session)=>{
     populateUserUI(user,name);
     if(!_authHandled&&!document.getElementById('page-dashboard').classList.contains('active')){
       goTo('dashboard');
-      showCoursePopup();
+      openModule(1);
     }
   }
   if(event==='SIGNED_OUT') goTo('landing');
