@@ -1,0 +1,20 @@
+# robots.txt — The B3 Blueprint
+# https://theb3blueprint.best
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /login.html
+Allow: /cadastro.html
+Allow: /modulo1-slides.html
+Allow: /modulo2-slides.html
+Allow: /modulo3-slides.html
+Allow: /modulo4-slides_1.html
+Allow: /sitemap.xml
+
+# Bloquear acesso a arquivos desnecessários
+Disallow: /*.json$
+Disallow: /*.xml$ 
+
+# Sitemap
+Sitemap: https://theb3blueprint.best/sitemap.xml
