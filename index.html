@@ -1759,8 +1759,8 @@ footer a:hover{color:var(--text)}
 
 <script>
 // ── SUPABASE ──
-const SUPA_URL = 'https://luljxtettmifukbprekj.supabase.co';
-const SUPA_KEY = 'sb_publishable_t5gsPgpUnNx5fcRj4dUu4A_NraHsfbH';
+const SUPA_URL = 'https://cmkjbeatytndzyjkeunn.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNta2piZWF0eXRuZHp5amtldW5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNTExMDEsImV4cCI6MjA4MTkyNzEwMX0.IKthMQ_Fy_HLckm9ij6TkDqIYy6lRgz_4ZNpnKCJFzQ';
 const _supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ── WAVE ──
@@ -1924,6 +1924,7 @@ async function handleLogin(){
     populateUserUI(data.user,name);
     _authHandled=true;
     document.getElementById('loginSuccess').classList.add('show');
+    syncCreditsFromDB();
     setTimeout(()=>{_authHandled=false;goTo('dashboard');openModule(1);},1600);
   }catch(e){btn.classList.remove('loading');showError('loginError','Erro de conexão. Tente novamente.');}
 }
@@ -1951,6 +1952,7 @@ async function handleRegister(){
     populateUserUI(data.user,first);
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
+    syncCreditsFromDB();
     setTimeout(()=>{_authHandled=false;goTo('dashboard');openModule(1);},1800);
   }catch(e){btn.classList.remove('loading');showError('registerError','Erro de conexão. Tente novamente.');}
 }
@@ -1976,6 +1978,7 @@ async function checkSession(){
     const name=(user.user_metadata?.first_name||user.user_metadata?.full_name||user.email.split('@')[0]);
     populateUserUI(user,name);
     goTo('dashboard');
+    syncCreditsFromDB();
   }
 }
 
@@ -2016,20 +2019,37 @@ function appNav(section){
 let userCredits=80;
 let _selectedPack={credits:100,price:'R$ 9,90'};
 
+// Sync credits from DB via user-login edge function
+async function syncCreditsFromDB(){
+  try{
+    const {data:{session}}=await _supabase.auth.getSession();
+    if(!session?.access_token)return;
+    const res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/user-login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token}
+    });
+    const data=await res.json();
+    if(typeof data.credit_balance==='number'){
+      userCredits=data.credit_balance;
+      updateCreditsUI();
+    }
+  }catch(e){console.warn('syncCreditsFromDB failed',e);}
+}
+
 async function loadCredits(user){
-  const credits=user?.user_metadata?.credits;
-  userCredits=(credits===undefined||credits===null)?80:credits;
+  // Optimistic local value while we fetch from DB
+  userCredits=80;
   updateCreditsUI();
+  await syncCreditsFromDB();
 }
 
 function updateCreditsUI(){
-  const badge=document.getElementById('creditsNum');        // nav badge number
-  const iaCount=document.getElementById('iaCreditsCount'); // sidebar count
-  const iaHint=document.getElementById('iaCreditsHint');   // input footer
+  const badge=document.getElementById('creditsNum');
+  const iaCount=document.getElementById('iaCreditsCount');
+  const iaHint=document.getElementById('iaCreditsHint');
   if(badge)badge.textContent=userCredits;
   if(iaCount)iaCount.textContent=userCredits;
   if(iaHint)iaHint.textContent=userCredits;
-  // Color cues when low
   const badgeWrap=document.getElementById('creditsBadge');
   if(badgeWrap){
     if(userCredits<=0){badgeWrap.style.color='#f87171';badgeWrap.style.borderColor='rgba(248,113,113,.3)';}
@@ -2042,14 +2062,9 @@ function updateCreditsUI(){
 }
 
 async function spendCredit(){
-  if(userCredits<=0)return false;
-  userCredits=Math.max(0,userCredits-10);
-  updateCreditsUI();
-  // Persist to Supabase user_metadata
-  try{
-    await _supabase.auth.updateUser({data:{credits:userCredits}});
-  }catch(e){console.warn('Could not persist credits',e);}
-  return true;
+  // Deduction is now handled server-side by blueprint-ia edge function.
+  // This is a no-op kept for compatibility; credit_balance is synced via API response.
+  return userCredits>0;
 }
 
 function showBuyCreditsModal(){
@@ -2108,11 +2123,20 @@ async function callBlueprintIA(message,history){
   const {data:{session}}=await _supabase.auth.getSession();
   const headers={'Content-Type':'application/json'};
   if(session?.access_token)headers['Authorization']='Bearer '+session.access_token;
-  const res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/blueprint-ia',{
+  const res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/blueprint-ia',{
     method:'POST',headers,
     body:JSON.stringify({message:enrichedMsg,history,originalMessage:message})
   });
   const data=await res.json();
+  // Sync balance returned by server
+  if(typeof data.credit_balance==='number'){
+    userCredits=data.credit_balance;
+    updateCreditsUI();
+  }
+  if(res.status===402||data.error==='creditos_insuficientes'){
+    showBuyCreditsModal();
+    throw new Error('creditos_insuficientes');
+  }
   return data.reply||'Erro ao conectar.';
 }
 
@@ -2147,7 +2171,10 @@ async function sendDbChat(){
     chatHistory.push({role:'assistant',content:cleanReply});
     addMsg('ai',renderMarkdown(cleanReply));
     await spendCredit();
-  }catch(e){document.getElementById(tid)?.remove();addMsg('ai','Erro de conexão. Tente novamente.');}
+  }catch(e){
+    document.getElementById(tid)?.remove();
+    if(e.message!=='creditos_insuficientes') addMsg('ai','Erro de conexão. Tente novamente.');
+  }
   input.disabled=false;btn.disabled=false;input.focus();
 }
 function addMsg(type,text){
