@@ -1531,12 +1531,7 @@ footer a:hover{color:var(--text)}
         <span class="dh-logo-text">Blueprint</span>
       </button>
     </div>
-    <div class="dh-center">
-      <div class="dh-search-wrap">
-        <span class="dh-search-icon">⌕</span>
-        <input class="dh-search" id="dhSearchInput" placeholder="Buscar ativo (PETR4, BBAS3, FIIs...)" onkeydown="if(event.key==='Enter'&&this.value.trim()){sendSugg('Analise o ativo '+this.value.trim());this.value=''}">
-      </div>
-    </div>
+    <div class="dh-center"></div>
     <div class="dh-right">
       <button class="db-mob-menu-btn" onclick="openDrawer()">☰</button>
       <div class="dh-credits" id="creditsBadge" onclick="showBuyCreditsModal()">
@@ -1604,7 +1599,7 @@ footer a:hover{color:var(--text)}
       <div class="db-input-area">
         <div class="db-input-box">
           <input class="ia-field" id="dbChatInput" placeholder="Pergunte sobre ações, dividendos, estratégias..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
-          <button class="ia-send" id="dbSendBtn" onclick="sendDbChat()">↑</button>
+          <button class="ia-send" id="dbSendBtn" onclick="sendDbChat()" style="display:none"></button>
         </div>
         <div class="ia-input-footer">Blueprint IA · dados da B3 · <span id="iaCreditsHint">50</span> créditos restantes</div>
       </div>
@@ -1965,7 +1960,7 @@ function _buildTicker(){
     var up=a.v>=0;
     var varStr=(up?'+':'')+a.v.toFixed(2)+'%';
     var priceStr='R$'+a.p.toFixed(2).replace('.',',');
-    return '<div class="db-ticker-card '+(up?'up':'down')+'" onclick="sendSugg(\'Analise a ação '+a.t+' para mim — vale comprar agora?\')" title="'+a.n+' — clique para analisar com IA">'+
+    return '<div class="db-ticker-card '+(up?'up':'down')+'" onclick="sendSugg(\'Analise a ação '+a.t+' para mim — vale comprar agora?\')">'+
       '<div class="db-ticker-row1">'+
         '<span class="db-ticker-ticker">'+a.t+'</span>'+
         '<span class="db-ticker-name">'+a.n+'</span>'+
