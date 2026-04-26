@@ -197,6 +197,121 @@ footer a:hover{color:var(--text)}
 .success-sub{font-size:13px;color:var(--muted)}
 .age-warning{font-size:11px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:4px}
 
+/* ════════════════════════════════
+   APP LAYOUT PÓS-LOGIN
+════════════════════════════════ */
+.app-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(3,6,15,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.app-nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;background:none;border:none}
+.app-nav-links{display:flex;gap:4px}
+.app-nav-btn{background:none;border:1px solid transparent;padding:8px 20px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;transition:all .2s}
+.app-nav-btn:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.app-nav-btn.active{color:var(--blue);background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2)}
+.app-nav-right{display:flex;align-items:center;gap:12px}
+.credits-badge{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue);background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);padding:5px 12px;border-radius:100px;cursor:pointer;transition:all .2s}
+.credits-badge:hover{background:rgba(56,189,248,.15)}
+.credits-badge.low{color:var(--yellow);background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.25)}
+.credits-badge.empty{color:var(--red);background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.25)}
+.app-user-chip{display:flex;align-items:center;gap:8px}
+.app-logout-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px 8px;transition:color .2s;border-radius:6px}
+.app-logout-btn:hover{color:var(--red)}
+
+/* ═══ SEÇÕES ═══ */
+.app-section{min-height:calc(100vh - 73px);margin-top:73px}
+.app-section-inner{max-width:1100px;margin:0 auto;padding:60px 40px}
+.app-section-hdr{margin-bottom:40px}
+.app-section-title{font-family:'Clash Display',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1px;margin-bottom:8px}
+.app-section-sub{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ═══ HOME HERO ═══ */
+.app-home-section{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#03060f;min-height:100vh;margin-top:0;padding-top:73px}
+.app-home-bg{position:absolute;inset:0;pointer-events:none}
+.app-home-fog{position:absolute;inset:0;background:radial-gradient(ellipse 90% 50% at 20% 75%,rgba(56,189,248,.06) 0%,transparent 100%),radial-gradient(ellipse 90% 50% at 80% 75%,rgba(103,232,249,.05) 0%,transparent 100%),radial-gradient(ellipse 60% 60% at 50% 100%,rgba(56,189,248,.1) 0%,transparent 70%)}
+.app-home-glow{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse at center bottom,rgba(56,189,248,.2) 0%,rgba(14,165,233,.08) 40%,transparent 70%)}
+.app-home-beam{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:1.5px;height:58vh;background:linear-gradient(to top,transparent,rgba(56,189,248,.7) 40%,rgba(103,232,249,.95) 80%,rgba(255,255,255,.98));box-shadow:0 0 40px 8px rgba(56,189,248,.28),0 0 110px 35px rgba(56,189,248,.12)}
+.app-home-content{position:relative;z-index:2;text-align:center;padding:40px 24px;max-width:720px}
+.app-home-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--green);background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);padding:5px 14px;border-radius:100px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px}
+.app-home-title{font-family:'Clash Display',sans-serif;font-size:clamp(46px,7vw,90px);font-weight:700;line-height:1.0;letter-spacing:-3px;margin-bottom:22px;color:var(--text)}
+.app-home-title span{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.app-home-sub{font-size:clamp(14px,1.6vw,17px);color:var(--muted);line-height:1.8;margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto}
+.app-home-cta{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;border:none;padding:16px 38px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:all .3s;box-shadow:0 0 30px rgba(56,189,248,.3)}
+.app-home-cta:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(56,189,248,.55)}
+.app-home-stat{position:absolute;top:50%;transform:translateY(-50%);z-index:2}
+.app-home-stat.left{left:64px}.app-home-stat.right{right:64px}
+.ahs-num{font-family:'Clash Display',sans-serif;font-size:56px;font-weight:700;letter-spacing:-2px;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.ahs-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* ═══ PLANOS ═══ */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;align-items:start}
+.plan-card{background:rgba(6,12,26,.8);border:1px solid var(--border);border-radius:20px;padding:32px 28px;position:relative;transition:all .3s;display:flex;flex-direction:column}
+.plan-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.plan-card.featured{border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.04);transform:scale(1.03)}
+.plan-card.featured:hover{transform:scale(1.03) translateY(-4px)}
+.plan-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;padding:4px 11px;border-radius:100px;letter-spacing:.5px;margin-bottom:18px;width:fit-content}
+.badge-start{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:var(--green)}
+.badge-grow{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:var(--yellow)}
+.badge-scale{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:var(--red)}
+.plan-name{font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:18px}
+.plan-name span{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px;flex:1}
+.plan-features li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.plan-check{color:var(--blue);flex-shrink:0;font-size:11px;margin-top:2px}
+.plan-price{font-family:'Clash Display',sans-serif;font-size:40px;font-weight:700;letter-spacing:-1.5px;margin-bottom:2px}
+.plan-price sup{font-size:16px;vertical-align:top;margin-top:10px}
+.plan-period{font-size:12px;color:var(--muted);margin-bottom:20px}
+.plan-btn{width:100%;padding:13px;border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;cursor:pointer;transition:all .3s;border:none;text-align:center}
+.plan-btn.primary{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;box-shadow:0 0 20px rgba(56,189,248,.2)}
+.plan-btn.primary:hover{box-shadow:0 0 35px rgba(56,189,248,.4);transform:translateY(-2px)}
+.plan-btn.outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.plan-btn.outline:hover{background:var(--surface2)}
+
+/* ═══ IA SECTION ═══ */
+.ia-section{display:flex;flex-direction:column;height:calc(100vh - 73px);margin-top:73px;min-height:auto}
+.ia-credits-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;border-bottom:1px solid var(--border);background:rgba(3,6,15,.6);flex-shrink:0}
+.ia-credits-info{display:flex;align-items:center;gap:14px}
+.ia-credits-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.ia-credits-count{font-family:'Clash Display',sans-serif;font-size:20px;font-weight:700;color:var(--blue);letter-spacing:-.3px}
+.ia-credits-count.low{color:var(--yellow)}.ia-credits-count.empty{color:var(--red)}
+.ia-buy-btn{font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:12px;color:var(--blue);background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);padding:6px 14px;border-radius:100px;cursor:pointer;transition:all .2s}
+.ia-buy-btn:hover{background:rgba(56,189,248,.15)}
+.ia-zero-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:40px;text-align:center}
+.ia-zero-icon{font-size:48px;margin-bottom:4px}
+.ia-zero-title{font-family:'Clash Display',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.4px}
+.ia-zero-sub{font-size:13px;color:var(--muted);line-height:1.7;max-width:380px}
+
+/* ═══ COMPRAR CRÉDITOS MODAL ═══ */
+.buy-credits-modal{position:fixed;inset:0;z-index:800;display:none;align-items:center;justify-content:center;padding:24px}
+.buy-credits-modal.open{display:flex}
+.bcm-bg{position:absolute;inset:0;background:rgba(2,4,12,.92);backdrop-filter:blur(14px)}
+.bcm-card{position:relative;z-index:1;width:100%;max-width:460px;background:rgba(4,9,26,.98);border:1px solid rgba(56,189,248,.2);border-radius:24px;padding:40px 36px;box-shadow:0 40px 100px rgba(0,0,0,.8);overflow:hidden}
+.bcm-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.6),transparent)}
+.bcm-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.bcm-close:hover{background:rgba(248,113,113,.1);color:var(--red)}
+.bcm-icon{font-size:44px;text-align:center;display:block;margin-bottom:12px}
+.bcm-title{font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px;text-align:center}
+.bcm-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px;text-align:center}
+.bcm-packs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.bcm-pack{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.bcm-pack:hover,.bcm-pack.selected{border-color:rgba(56,189,248,.5);background:rgba(56,189,248,.07)}
+.bcm-pack-credits{font-family:'Clash Display',sans-serif;font-size:26px;font-weight:700;color:var(--blue);letter-spacing:-.5px}
+.bcm-pack-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin:2px 0}
+.bcm-pack-price{font-size:13px;font-weight:700;color:var(--text);margin-top:4px}
+.bcm-btn{width:100%;padding:14px;background:linear-gradient(135deg,#0369a1,var(--blue));border:none;border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;color:#fff;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(56,189,248,.2)}
+.bcm-btn:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(56,189,248,.4)}
+
+/* ═══ MOBILE ═══ */
+.app-mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(4,9,22,.97);border-top:1px solid var(--border2);backdrop-filter:blur(20px)}
+.app-mn-inner{display:flex;justify-content:space-around;padding:6px 0 calc(env(safe-area-inset-bottom,0px) + 6px)}
+.app-mn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;background:none;border:none;cursor:pointer;color:var(--muted);transition:color .2s;font-family:'Cabinet Grotesk',sans-serif;font-size:10px;font-weight:600}
+.app-mn-item.active{color:var(--blue)}
+.app-mn-icon{font-size:20px;line-height:1.2}
+@media(max-width:900px){
+  .app-nav{padding:14px 20px}.app-nav-links{display:none}.app-home-stat{display:none}
+  .plan-grid{grid-template-columns:1fr}.plan-card.featured{transform:scale(1)}
+  .plan-card.featured:hover{transform:translateY(-4px)}
+  .bcm-packs{grid-template-columns:1fr}.app-section-inner{padding:40px 20px}
+  .app-mobile-nav{display:block}.ia-section{margin-bottom:80px}
+}
+
 /* ── DASHBOARD ── */
 .db-layout{display:flex;height:100vh;overflow:hidden}
 .db-sidebar{width:220px;flex-shrink:0;background:rgba(4,9,22,0.95);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0}
@@ -484,6 +599,277 @@ footer a:hover{color:var(--text)}
   .db-mobile-nav{display:block}
   .db-content{padding-bottom:90px!important}
   .db-topbar{padding:12px 16px}
+}
+
+/* ═══════════════════════════════════════════════
+   DASHBOARD — MODERN FINTECH (LIGHT/DARK)
+═══════════════════════════════════════════════ */
+
+/* Theme tokens — Dark (default) */
+#page-dashboard {
+  --d-bg:#070d1a; --d-surface:#0f1629; --d-surface2:#141d35;
+  --d-border:rgba(255,255,255,.08); --d-text:#f1f5f9; --d-text2:#94a3b8;
+  --d-muted:rgba(255,255,255,.06); --d-accent:#3b82f6;
+  --d-accent-glow:rgba(59,130,246,.12); --d-positive:#22c55e;
+  --d-user-bubble:#1e2d4d; font-family:'Cabinet Grotesk',sans-serif;
+}
+/* Light theme */
+#page-dashboard[data-theme="light"] {
+  --d-bg:#f0f4f8; --d-surface:#ffffff; --d-surface2:#f8fafc;
+  --d-border:#e2e8f0; --d-text:#0f172a; --d-text2:#475569;
+  --d-muted:#e2e8f0; --d-accent:#2563eb;
+  --d-accent-glow:rgba(37,99,235,.1); --d-positive:#16a34a;
+  --d-user-bubble:#dbeafe;
+}
+#page-dashboard.active { display:flex !important; flex-direction:column; height:100vh; overflow:hidden; background:var(--d-bg) }
+
+/* ── HEADER ── */
+.dh {
+  height:60px; flex-shrink:0;
+  background:var(--d-surface); border-bottom:1px solid var(--d-border);
+  display:flex; align-items:center; gap:16px; padding:0 20px;
+  position:relative; z-index:200;
+}
+.dh-logo { display:flex; align-items:center; gap:9px; background:none; border:none; cursor:pointer; padding:0 }
+.dh-logo-text { font-family:'Clash Display',sans-serif; font-size:15px; font-weight:700; color:var(--d-text) }
+.dh-center { flex:1; max-width:480px; margin:0 auto }
+.dh-search-wrap {
+  display:flex; align-items:center; gap:9px;
+  background:var(--d-surface2); border:1px solid var(--d-border);
+  border-radius:10px; padding:7px 14px; transition:border-color .2s;
+}
+.dh-search-wrap:focus-within { border-color:var(--d-accent) }
+.dh-search-icon { font-size:13px; opacity:.4; color:var(--d-text2) }
+.dh-search { flex:1; background:none; border:none; outline:none; font-family:'Cabinet Grotesk',sans-serif; font-size:13px; color:var(--d-text) }
+.dh-search::placeholder { color:var(--d-text2); opacity:.5 }
+.dh-right { flex-shrink:0; display:flex; align-items:center; gap:10px }
+.dh-credits {
+  display:flex; align-items:center; gap:5px;
+  background:var(--d-surface2); border:1px solid var(--d-border);
+  border-radius:8px; padding:5px 12px; cursor:pointer;
+  font-family:'DM Mono',monospace; font-size:12px; color:var(--d-text2);
+  transition:all .2s; white-space:nowrap;
+}
+.dh-credits:hover { border-color:var(--d-accent); color:var(--d-accent) }
+.dh-credits-icon { color:#fbbf24 }
+.dh-plan-badge {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.5px;
+  background:var(--d-accent-glow); color:var(--d-accent);
+  border:1px solid rgba(59,130,246,.25); border-radius:6px;
+  padding:4px 9px; text-transform:uppercase;
+}
+.dh-user {
+  position:relative; display:flex; align-items:center; gap:9px;
+  background:var(--d-surface2); border:1px solid var(--d-border);
+  border-radius:10px; padding:6px 12px 6px 6px;
+  cursor:pointer; transition:all .2s; user-select:none;
+}
+.dh-user:hover,.dh-user.open { border-color:var(--d-accent) }
+.dh-avatar {
+  width:28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800; color:#fff; flex-shrink:0;
+}
+.dh-user-info { display:flex; flex-direction:column; line-height:1.2 }
+.dh-hello { font-size:10px; color:var(--d-text2); font-family:'DM Mono',monospace }
+.dh-username { font-size:13px; font-weight:700; color:var(--d-text) }
+.dh-chevron { font-size:10px; color:var(--d-text2); transition:transform .2s }
+.dh-user.open .dh-chevron { transform:rotate(180deg) }
+.dh-dropdown {
+  position:absolute; top:calc(100% + 8px); right:0;
+  background:var(--d-surface); border:1px solid var(--d-border);
+  border-radius:14px; padding:8px; min-width:220px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  display:none; flex-direction:column; gap:2px; z-index:500;
+}
+.dh-user.open .dh-dropdown { display:flex }
+.dh-dd-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:8px; border:none;
+  background:none; width:100%; text-align:left; cursor:pointer;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:13px; font-weight:600;
+  color:var(--d-text2); transition:all .15s;
+}
+.dh-dd-item:hover { background:var(--d-surface2); color:var(--d-text) }
+.dh-dd-icon { font-size:14px; width:20px; text-align:center }
+.dh-dd-divider { height:1px; background:var(--d-border); margin:6px 0 }
+.dh-dd-theme { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-radius:8px }
+.dh-dd-theme-label { font-size:13px; font-weight:600; color:var(--d-text2) }
+.dh-theme-sw { position:relative; display:inline-block; width:38px; height:20px; cursor:pointer }
+.dh-theme-sw input { opacity:0; width:0; height:0 }
+.dh-theme-track { position:absolute; inset:0; background:var(--d-border); border-radius:20px; transition:.3s }
+.dh-theme-track:before { content:''; position:absolute; width:14px; height:14px; left:3px; top:3px; background:var(--d-text2); border-radius:50%; transition:.3s }
+.dh-theme-sw input:checked + .dh-theme-track { background:var(--d-accent) }
+.dh-theme-sw input:checked + .dh-theme-track:before { transform:translateX(18px); background:#fff }
+.dh-dd-logout { color:#ef4444 !important }
+.dh-dd-logout:hover { background:rgba(239,68,68,.08) !important; color:#ef4444 !important }
+
+/* ── BODY ── */
+.db-body { flex:1; display:flex; min-height:0; overflow:hidden; position:relative }
+
+/* Chat Panel */
+.db-chat-panel { flex:1; display:flex; flex-direction:column; min-width:0; border-right:1px solid var(--d-border) }
+.db-chat-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; border-bottom:1px solid var(--d-border);
+  flex-shrink:0; background:var(--d-surface);
+}
+.db-chat-status { display:flex; align-items:center; gap:8px; font-family:'DM Mono',monospace; font-size:11px; color:var(--d-text2) }
+.db-online-dot { width:6px; height:6px; border-radius:50%; background:#22c55e; animation:pulse 2s infinite; flex-shrink:0 }
+.db-chat-action-btn {
+  display:flex; align-items:center; gap:6px;
+  background:none; border:1px solid var(--d-border);
+  border-radius:8px; padding:5px 12px; cursor:pointer;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:12px; font-weight:600;
+  color:var(--d-text2); transition:all .2s;
+}
+.db-chat-action-btn:hover { border-color:var(--d-accent); color:var(--d-accent) }
+.db-msgs-wrap { flex:1; overflow-y:auto; background:var(--d-bg) }
+.db-msgs-wrap::-webkit-scrollbar { width:3px }
+.db-msgs-wrap::-webkit-scrollbar-thumb { background:var(--d-border); border-radius:4px }
+.db-input-area { padding:16px 24px 20px; border-top:1px solid var(--d-border); flex-shrink:0; background:var(--d-surface) }
+.db-input-box {
+  display:flex; align-items:center; gap:10px;
+  background:var(--d-surface2); border:1px solid var(--d-border);
+  border-radius:13px; padding:10px 12px 10px 18px; transition:border-color .2s;
+}
+.db-input-box:focus-within { border-color:var(--d-accent) }
+
+/* Side Panel */
+.db-side-panel {
+  width:310px; flex-shrink:0; overflow-y:auto;
+  padding:14px; display:flex; flex-direction:column; gap:10px;
+  background:var(--d-bg);
+}
+.db-side-panel::-webkit-scrollbar { width:3px }
+.db-side-panel::-webkit-scrollbar-thumb { background:var(--d-border) }
+
+/* Cards */
+.db-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:16px; transition:border-color .2s }
+.db-card:hover { border-color:rgba(59,130,246,.25) }
+.db-card-hdr { display:flex; align-items:center; gap:8px; margin-bottom:12px }
+.db-card-icon { font-size:15px }
+.db-card-title { flex:1; font-size:13px; font-weight:700; color:var(--d-text); font-family:'Clash Display',sans-serif; letter-spacing:-.2px }
+.db-card-badge { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.5px; background:var(--d-accent-glow); color:var(--d-accent); border:1px solid rgba(59,130,246,.25); border-radius:5px; padding:2px 7px }
+.db-card-badge.new { background:rgba(34,197,94,.1); color:#22c55e; border-color:rgba(34,197,94,.25) }
+.db-card-action { width:100%; margin-top:10px; padding:8px; background:var(--d-surface2); border:1px solid var(--d-border); border-radius:9px; font-family:'Cabinet Grotesk',sans-serif; font-size:12px; font-weight:700; color:var(--d-text2); cursor:pointer; transition:all .2s; text-align:center }
+.db-card-action:hover { border-color:var(--d-accent); color:var(--d-accent); background:var(--d-accent-glow) }
+.db-port-list { display:flex; flex-direction:column; gap:7px }
+.db-port-item { display:flex; align-items:center; gap:8px }
+.db-port-ticker { font-family:'DM Mono',monospace; font-size:11px; color:var(--d-text); font-weight:600; width:52px; flex-shrink:0 }
+.db-port-bar { flex:1; height:4px; background:var(--d-muted); border-radius:4px; overflow:hidden }
+.db-port-fill { height:100%; background:var(--d-accent); border-radius:4px }
+.db-port-pct { font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2); width:28px; text-align:right; flex-shrink:0 }
+.db-radar-list { display:flex; flex-direction:column; gap:6px }
+.db-radar-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:8px; border:1px solid var(--d-border); background:var(--d-surface2); cursor:pointer; transition:all .2s }
+.db-radar-item:hover { border-color:rgba(59,130,246,.3) }
+.db-radar-item.up .db-radar-arrow { color:#22c55e }
+.db-radar-item.neutral .db-radar-arrow { color:#f59e0b }
+.db-radar-ticker { font-family:'DM Mono',monospace; font-size:11px; color:var(--d-text); font-weight:700; width:46px; flex-shrink:0 }
+.db-radar-signal { flex:1; font-size:11px; color:var(--d-text2); line-height:1.3 }
+.db-radar-arrow { font-size:14px; font-weight:700; flex-shrink:0 }
+.db-indic-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px }
+.db-indic-item { background:var(--d-surface2); border:1px solid var(--d-border); border-radius:9px; padding:8px 10px }
+.db-indic-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--d-text2); letter-spacing:.4px; display:block; margin-bottom:3px }
+.db-indic-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:700; color:var(--d-text); display:block }
+.db-indic-val.up { color:#22c55e }
+.db-news-list { display:flex; flex-direction:column; gap:5px }
+.db-news-item { padding:8px 10px; border-radius:8px; cursor:pointer; border:1px solid transparent; transition:all .2s }
+.db-news-item:hover { background:var(--d-surface2); border-color:var(--d-border) }
+.db-news-src { font-family:'DM Mono',monospace; font-size:9px; color:var(--d-accent); letter-spacing:.4px; display:block; margin-bottom:2px; text-transform:uppercase }
+.db-news-text { font-size:12px; color:var(--d-text2); line-height:1.4 }
+
+/* ── Overlay panels ── */
+.db-overlay { position:absolute; inset:0; z-index:150; background:var(--d-bg); display:none; overflow-y:auto; flex-direction:column }
+.db-overlay.open { display:flex; animation:slideUp .25s ease }
+@keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+.db-overlay-inner { max-width:920px; width:100%; margin:0 auto; padding:28px 24px }
+.db-overlay-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px }
+.db-overlay-title { font-family:'Clash Display',sans-serif; font-size:20px; font-weight:700; color:var(--d-text) }
+.db-overlay-close { width:36px; height:36px; border-radius:10px; background:var(--d-surface2); border:1px solid var(--d-border); font-size:14px; color:var(--d-text2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s }
+.db-overlay-close:hover { border-color:#ef4444; color:#ef4444 }
+.db-overlay-ia-cta { width:100%; margin-top:28px; padding:14px; background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(99,102,241,.1)); border:1px solid rgba(59,130,246,.25); border-radius:12px; cursor:pointer; transition:all .2s; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:15px; color:var(--d-accent); text-align:center }
+.db-overlay-ia-cta:hover { background:rgba(59,130,246,.2); border-color:rgba(59,130,246,.4) }
+/* Modules inside overlay */
+.db-overlay .mod-ov-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px }
+.db-mod-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:18px; cursor:pointer; transition:all .2s }
+.db-mod-card:hover { border-color:rgba(59,130,246,.35); transform:translateY(-2px) }
+.db-mod-num { font-family:'DM Mono',monospace; font-size:9px; background:var(--d-accent-glow); color:var(--d-accent); border:1px solid rgba(59,130,246,.2); border-radius:5px; padding:2px 8px; letter-spacing:.5px }
+.db-mod-icon { font-size:24px; display:block; margin:10px 0 6px }
+.db-mod-title { font-family:'Clash Display',sans-serif; font-size:14px; font-weight:700; color:var(--d-text); margin-bottom:5px }
+.db-mod-desc { font-size:12px; color:var(--d-text2); line-height:1.5; margin-bottom:10px }
+.db-mod-meta { display:flex; gap:10px; padding-top:10px; border-top:1px solid var(--d-border) }
+.db-mod-meta span { font-size:11px; color:var(--d-text2) }
+.db-mod-cta { font-size:12px; color:var(--d-accent); font-weight:700; margin-top:8px }
+/* Plans inside overlay */
+.db-plan-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px }
+.db-plan-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:20px; position:relative; transition:all .2s }
+.db-plan-card:hover { border-color:rgba(59,130,246,.3) }
+.db-plan-card.featured { border-color:rgba(59,130,246,.4); background:var(--d-surface2) }
+.db-plan-badge { font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2); margin-bottom:10px }
+.db-plan-name { font-family:'Clash Display',sans-serif; font-size:18px; font-weight:700; color:var(--d-text); margin-bottom:14px }
+.db-plan-name span { color:var(--d-accent) }
+.db-plan-features { list-style:none; padding:0; margin:0 0 14px; display:flex; flex-direction:column; gap:6px }
+.db-plan-features li { font-size:12px; color:var(--d-text2); display:flex; gap:8px }
+.db-plan-check { color:var(--d-accent) }
+.db-plan-price { font-family:'Clash Display',sans-serif; font-size:36px; font-weight:700; color:var(--d-text); margin-bottom:4px }
+.db-plan-price sup { font-size:16px; vertical-align:super }
+.db-plan-period { font-size:11px; color:var(--d-text2); margin-bottom:14px }
+.db-plan-btn { width:100%; padding:11px; border-radius:10px; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:13px; cursor:pointer; transition:all .2s; border:none }
+.db-plan-btn.outline { background:var(--d-surface2); border:1px solid var(--d-border); color:var(--d-text2) }
+.db-plan-btn.outline:hover { border-color:var(--d-accent); color:var(--d-accent) }
+.db-plan-btn.primary { background:var(--d-accent); color:#fff }
+.db-plan-btn.primary:hover { opacity:.9 }
+
+/* ── IA messages adapted to theme ── */
+.db-msgs-wrap .ia-msgs { padding:20px 24px; gap:10px; min-height:100%; display:flex; flex-direction:column }
+.db-msgs-wrap .ia-msg-who { color:var(--d-text2) }
+.db-msgs-wrap .ia-bubble { color:var(--d-text2); font-size:13.5px; line-height:1.58 }
+.db-msgs-wrap .ia-msg.user .ia-bubble { background:var(--d-user-bubble); border:1px solid rgba(59,130,246,.2); color:var(--d-text); border-radius:16px 16px 4px 16px; padding:10px 16px }
+.db-msgs-wrap .ia-msg.ai .ia-bubble { background:none; padding:0 }
+.db-msgs-wrap .ia-msg.ai .ia-bubble strong { color:var(--d-text) }
+.db-msgs-wrap .ia-msg.ai .ia-bubble h2 { color:var(--d-text); font-size:15px; margin:10px 0 4px; font-family:'Clash Display',sans-serif }
+.db-msgs-wrap .ia-msg.ai .ia-bubble h3 { color:var(--d-text); font-size:13.5px; margin:8px 0 3px; font-weight:700 }
+.db-msgs-wrap .ia-msg.ai .ia-bubble ul,.db-msgs-wrap .ia-msg.ai .ia-bubble ol { padding-left:18px; margin:5px 0; display:flex; flex-direction:column; gap:2px }
+.db-msgs-wrap .ia-msg.ai .ia-bubble li { color:var(--d-text2); font-size:13.5px; line-height:1.55 }
+.db-msgs-wrap .ia-msg.ai .ia-bubble hr { border:none; border-top:1px solid var(--d-border); margin:8px 0 }
+.db-msgs-wrap .ia-msg.ai .ia-bubble table { border-collapse:collapse; width:100%; margin:8px 0; font-size:13px }
+.db-msgs-wrap .ia-msg.ai .ia-bubble th { padding:6px 10px; border:1px solid var(--d-border); color:var(--d-text); font-weight:600; background:var(--d-surface2); text-align:left }
+.db-msgs-wrap .ia-msg.ai .ia-bubble td { padding:6px 10px; border:1px solid var(--d-border); color:var(--d-text2) }
+.db-msgs-wrap .ia-typing span { background:var(--d-text2) }
+.db-msgs-wrap .ia-sugg-chip { background:var(--d-surface); border:1px solid var(--d-border); color:var(--d-text2) }
+.db-msgs-wrap .ia-sugg-chip:hover { border-color:var(--d-accent); color:var(--d-accent); background:var(--d-accent-glow) }
+.db-input-area .ia-field { color:var(--d-text) }
+.db-input-area .ia-field::placeholder { color:var(--d-text2); opacity:.5 }
+.db-input-area .ia-send { background:var(--d-accent); color:#fff }
+.db-input-area .ia-send:hover { opacity:.85; transform:scale(1.06) }
+.db-input-area .ia-send:disabled { opacity:.35; cursor:not-allowed; transform:none }
+.db-input-area .ia-input-footer { color:var(--d-text2); opacity:.5; font-size:10px; text-align:center; margin-top:8px; font-family:'DM Mono',monospace }
+
+/* Mobile drawer */
+.db-mob-menu-btn { display:none; background:none; border:none; cursor:pointer; font-size:20px; color:var(--d-text2); padding:4px }
+.db-drawer-overlay { display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,.55); backdrop-filter:blur(2px) }
+.db-drawer-overlay.open { display:block }
+.db-drawer { position:fixed; top:0; left:0; bottom:0; width:280px; z-index:400; background:var(--d-surface); border-right:1px solid var(--d-border); display:flex; flex-direction:column; padding:20px 16px; transform:translateX(-100%); transition:transform .3s ease }
+.db-drawer.open { transform:translateX(0) }
+.db-drawer-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--d-border) }
+.db-drawer-nav { display:flex; flex-direction:column; gap:4px }
+.db-drawer-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; border:none; background:none; text-align:left; cursor:pointer; transition:all .2s; font-family:'Cabinet Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--d-text2) }
+.db-drawer-item:hover { background:var(--d-surface2); color:var(--d-text) }
+
+@media(max-width:960px){
+  .db-side-panel { display:none }
+  .db-mob-menu-btn { display:flex }
+  .dh-center { display:none }
+  .db-input-area { padding:12px 16px 16px }
+  .db-msgs-wrap .ia-msgs { padding:14px 16px }
+  .db-chat-top { padding:10px 16px }
+}
+@media(max-width:600px){
+  .dh { padding:0 14px; gap:10px }
+  .dh-plan-badge,.dh-hello { display:none }
+  .db-chat-top { gap:8px }
 }
 
 </style>
@@ -1079,217 +1465,214 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
-<!-- ══ DASHBOARD ══ -->
-<div id="page-dashboard" class="page">
-  <div class="db-layout">
-    <div class="db-sidebar">
-      <div class="db-logo">
-        <svg width="28" height="22" viewBox="0 0 110 90" fill="none"><defs><linearGradient id="lg2" x1="0" y1="0" x2="110" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#67e8f9"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="url(#lg2)"/></svg>
-        <span style="font-family:'Clash Display',sans-serif;font-size:13px;font-weight:700;color:var(--text)">Blueprint</span>
+<!-- ══ COMPRAR CRÉDITOS MODAL ══ -->
+<div class="buy-credits-modal" id="buyCreditsModal">
+  <div class="bcm-bg" onclick="closeBuyCreditsModal()"></div>
+  <div class="bcm-card">
+    <button class="bcm-close" onclick="closeBuyCreditsModal()">✕</button>
+    <span class="bcm-icon">⚡</span>
+    <div class="bcm-title">Comprar Créditos</div>
+    <div class="bcm-sub">Cada mensagem para a Blueprint IA consome 1 crédito. Compre mais para continuar investindo com inteligência.</div>
+    <div class="bcm-packs">
+      <div class="bcm-pack selected" id="pack1" onclick="selectPack(this,100,'R$ 9,90')">
+        <div class="bcm-pack-credits">100</div>
+        <div class="bcm-pack-label">créditos</div>
+        <div class="bcm-pack-price">R$ 9,90</div>
       </div>
-      <nav class="db-nav">
-        <div class="db-nav-section">Principal</div>
-        <div class="db-nav-item active" onclick="dbNav(this,'overview')">📊 Dashboard</div>
-        <div class="db-nav-item" onclick="dbNav(this,'chat')">⚡ Análise IA</div>
-        <div class="db-nav-item" onclick="dbNav(this,'modules')">📚 Módulos</div>
-        <div class="db-nav-section">Mercado</div>
-        <div class="db-nav-item" onclick="dbNav(this,'watchlist')">👁 Watchlist</div>
-        <div class="db-nav-item" onclick="dbNav(this,'alertas')">🔔 Alertas</div>
-        <div class="db-nav-section">Conta</div>
-        <div class="db-nav-item" onclick="dbNav(this,'config')">⚙️ Configurações</div>
-      </nav>
-      <div class="db-user">
-        <div class="db-avatar" id="dbAvatar">U</div>
-        <div><div class="db-username" id="dbUserName">Usuário</div><div class="db-plan">Plano Ativo</div></div>
-        <button class="db-logout" onclick="handleLogout()" title="Sair">↩</button>
+      <div class="bcm-pack" id="pack2" onclick="selectPack(this,300,'R$ 24,90')">
+        <div class="bcm-pack-credits">300</div>
+        <div class="bcm-pack-label">créditos</div>
+        <div class="bcm-pack-price">R$ 24,90</div>
+      </div>
+      <div class="bcm-pack" id="pack3" onclick="selectPack(this,700,'R$ 49,90')">
+        <div class="bcm-pack-credits">700</div>
+        <div class="bcm-pack-label">créditos</div>
+        <div class="bcm-pack-price">R$ 49,90</div>
       </div>
     </div>
-    <div class="db-main">
-      <div class="db-topbar">
-        <div class="db-page-title" id="dbPageTitle">Dashboard</div>
-        <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">● Mercado ao vivo</div>
+    <button class="bcm-btn" onclick="buyCredits()">Comprar agora →</button>
+  </div>
+</div>
+
+<!-- ══ APP PÓS-LOGIN ══ -->
+<div id="page-dashboard" class="page" data-theme="dark">
+
+  <!-- HEADER -->
+  <header class="dh">
+    <div class="dh-left">
+      <button class="dh-logo" onclick="dhNav('chat')">
+        <svg width="26" height="20" viewBox="0 0 110 90" fill="none"><defs><linearGradient id="lg4" x1="0" y1="0" x2="110" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#67e8f9"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="url(#lg4)"/></svg>
+        <span class="dh-logo-text">Blueprint</span>
+      </button>
+    </div>
+    <div class="dh-center">
+      <div class="dh-search-wrap">
+        <span class="dh-search-icon">⌕</span>
+        <input class="dh-search" id="dhSearchInput" placeholder="Buscar ativo (PETR4, BBAS3, FIIs...)" onkeydown="if(event.key==='Enter'&&this.value.trim()){sendSugg('Analise o ativo '+this.value.trim());this.value=''}">
       </div>
-      <div class="db-content">
-        <!-- Overview -->
-        <div id="db-overview">
-          <!-- IA Hero + Quick Ask -->
-          <div class="db-ai-hero">
-            <div class="db-ai-hero-header">
-              <div>
-                <div class="db-ai-hero-badge"><span class="db-ai-badge-dot"></span>Blueprint IA — Online</div>
-                <div class="db-ai-hero-title">Olá, <span id="welcomeName">Investidor</span>!</div>
-                <div class="db-ai-hero-sub">O que você quer analisar no mercado hoje?</div>
-              </div>
-              <button class="db-ai-link" onclick="switchSection('chat')">Chat completo →</button>
-            </div>
-            <div class="qa-wrap">
-              <input class="qa-input" id="qaInput" placeholder="Ex: PETR4 vale comprar? Melhor CDB hoje? Como montar carteira?" onkeydown="if(event.key==='Enter')sendQuickAsk()">
-              <button class="chat-send" onclick="sendQuickAsk()">↑</button>
-            </div>
-            <div class="qa-suggestions">
-              <span class="chat-sugg" onclick="quickAskSugg('Analise PETR4 — vale comprar agora?')">📊 PETR4</span>
-              <span class="chat-sugg" onclick="quickAskSugg('Melhor renda fixa com Selic a 14,75%')">🏦 Renda fixa</span>
-              <span class="chat-sugg" onclick="quickAskSugg('Como montar carteira com R$1.000?')">🎯 Montar carteira</span>
-              <span class="chat-sugg" onclick="quickAskSugg('FII ou imóvel físico — qual rende mais?')">🏢 FII</span>
-              <span class="chat-sugg" onclick="quickAskSugg('Vale investir em Bitcoin agora?')">₿ Bitcoin</span>
-            </div>
-            <div class="qa-response-preview" id="qaPreview"></div>
-          </div>
-
-          <!-- Mercado -->
-          <div class="stat-grid">
-            <div class="stat-card"><div class="sc-label">IBOVESPA</div><div class="sc-value">128.4k</div><div class="sc-change up">▲ +1.24%</div></div>
-            <div class="stat-card"><div class="sc-label">PETR4</div><div class="sc-value">R$38,20</div><div class="sc-change up">▲ +0.87%</div></div>
-            <div class="stat-card"><div class="sc-label">SELIC</div><div class="sc-value">14.75%</div><div class="sc-change dn">▼ -0.25%</div></div>
-            <div class="stat-card"><div class="sc-label">HGLG11</div><div class="sc-value">R$162,50</div><div class="sc-change up">▲ +0.31%</div></div>
-          </div>
-
-          <!-- Sinais + Módulos -->
-          <div class="db-overview-bottom">
-            <div class="db-card">
-              <div class="dc-title"><div class="dc-dot"></div>Sinais de IA — Hoje</div>
-              <div class="signal-item"><span class="sig-ticker">VALE3</span><span class="sig-info">Momento favorável de entrada</span><span class="sig-badge buy">COMPRAR</span></div>
-              <div class="signal-item"><span class="sig-ticker">ITUB4</span><span class="sig-info">Aguardar próximo suporte</span><span class="sig-badge hold">AGUARDAR</span></div>
-              <div class="signal-item"><span class="sig-ticker">MGLU3</span><span class="sig-info">Pressão vendedora elevada</span><span class="sig-badge sell">VENDER</span></div>
-              <div class="signal-item"><span class="sig-ticker">WEGE3</span><span class="sig-info">Rompimento de resistência</span><span class="sig-badge buy">COMPRAR</span></div>
-            </div>
-            <div class="db-card">
-              <div class="dc-title">📚 Curso Gratuito</div>
-              <div class="mod-quick-item" onclick="openModule(1)"><span style="font-size:18px;flex-shrink:0">🚀</span><div style="flex:1"><div class="mqi-num">MÓDULO 01</div><div class="mqi-name">Investindo na B3</div></div><span class="mqi-arrow">→</span></div>
-              <div class="mod-quick-item" onclick="openModule(2)"><span style="font-size:18px;flex-shrink:0">🏢</span><div style="flex:1"><div class="mqi-num">MÓDULO 02</div><div class="mqi-name">Fundos Imobiliários</div></div><span class="mqi-arrow">→</span></div>
-              <div class="mod-quick-item" onclick="openModule(3)"><span style="font-size:18px;flex-shrink:0">💰</span><div style="flex:1"><div class="mqi-num">MÓDULO 03</div><div class="mqi-name">Renda Fixa</div></div><span class="mqi-arrow">→</span></div>
-              <div class="mod-quick-item" onclick="openModule(4)"><span style="font-size:18px;flex-shrink:0">₿</span><div style="flex:1"><div class="mqi-num">MÓDULO 04</div><div class="mqi-name">Corretoras & Criptos</div></div><span class="mqi-arrow">→</span></div>
-            </div>
-          </div>
+    </div>
+    <div class="dh-right">
+      <button class="db-mob-menu-btn" onclick="openDrawer()">☰</button>
+      <div class="dh-credits" id="creditsBadge" onclick="showBuyCreditsModal()">
+        <span class="dh-credits-icon">⚡</span>
+        <span id="creditsNum">50</span>
+        <span class="dh-credits-label">créditos</span>
+      </div>
+      <div class="dh-plan-badge">Free</div>
+      <div class="dh-user" id="dhUser" onclick="toggleDhDropdown(event)">
+        <div class="dh-avatar" id="dbAvatar">U</div>
+        <div class="dh-user-info">
+          <span class="dh-hello">Olá,</span>
+          <span class="dh-username" id="dbUserName">Usuário</span>
         </div>
-        <!-- Chat IA -->
-        <div id="db-chat" style="display:none">
-          <div class="chat-wrap">
-            <div class="chat-messages" id="dbChatMessages">
-              <div class="chat-msg ai">
-                <div class="chat-avatar">⚡</div>
-                <div class="chat-bubble">Olá! Sou a <strong>Blueprint IA</strong> — especialista em investimentos brasileiros. 🇧🇷<br><br>Posso te ajudar com <strong>ações, FIIs, Selic, CDB, criptos, carteira</strong> e muito mais.<br><br>O que você quer saber hoje?</div>
-              </div>
-              <div class="chat-suggestions">
-                <div class="chat-sugg" onclick="sendSugg('Analise a PETR4 — vale comprar agora?')">📊 Analisar PETR4</div>
-                <div class="chat-sugg" onclick="sendSugg('Melhor CDB com Selic a 14,75%?')">🏦 Melhor CDB</div>
-                <div class="chat-sugg" onclick="sendSugg('Como montar carteira com R$1.000?')">🎯 Montar carteira</div>
-                <div class="chat-sugg" onclick="sendSugg('FII ou imóvel físico — qual é melhor?')">🏢 FII vs Imóvel</div>
-                <div class="chat-sugg" onclick="sendSugg('Vale investir em Bitcoin agora?')">₿ Bitcoin</div>
-                <div class="chat-sugg" onclick="sendSugg('O que é o Ibovespa?')">📈 Ibovespa</div>
-              </div>
-            </div>
-            <div class="chat-input-area">
-              <div class="chat-input-row">
-                <input class="chat-input" id="dbChatInput" placeholder="Pergunte sobre ações, FIIs, Selic, cripto..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
-                <button class="chat-send" id="dbSendBtn" onclick="sendDbChat()">↑</button>
-              </div>
-            </div>
+        <span class="dh-chevron">▾</span>
+        <div class="dh-dropdown" id="dhDropdown">
+          <button class="dh-dd-item" onclick="dhNav('modules')"><span class="dh-dd-icon">◫</span>Revisar Módulos</button>
+          <button class="dh-dd-item" onclick="dhNav('plans')"><span class="dh-dd-icon">◉</span>Planos e Assinatura</button>
+          <button class="dh-dd-item" onclick="showBuyCreditsModal()"><span class="dh-dd-icon">⚡</span>Créditos / Recarregar</button>
+          <button class="dh-dd-item"><span class="dh-dd-icon">⚙</span>Configurações</button>
+          <div class="dh-dd-divider"></div>
+          <div class="dh-dd-theme">
+            <span class="dh-dd-theme-label">🌙 Modo Escuro</span>
+            <label class="dh-theme-sw"><input type="checkbox" id="themeToggle" checked onchange="toggleDashTheme(this)"><span class="dh-theme-track"></span></label>
           </div>
-        </div>
-        <!-- Watchlist -->
-        <div id="db-watchlist" style="display:none">
-          <div class="db-card" style="max-width:600px">
-            <div class="dc-title">👁 Watchlist — Em breve</div>
-            <p style="font-size:13px;color:var(--muted);margin-top:12px;line-height:1.7">Acompanhe seus ativos favoritos em tempo real. Adicione ações, FIIs e criptos para monitorar preço, variação e dividendos. <br><br><strong style="color:var(--blue)">Disponível em breve.</strong></p>
-          </div>
-        </div>
-        <!-- Alertas -->
-        <div id="db-alertas" style="display:none">
-          <div class="db-card" style="max-width:600px">
-            <div class="dc-title">🔔 Alertas de Preço — Em breve</div>
-            <p style="font-size:13px;color:var(--muted);margin-top:12px;line-height:1.7">Configure alertas de preço para seus ativos. Receba notificações quando uma ação ou FII atingir o preço que você definir. <br><br><strong style="color:var(--blue)">Disponível em breve.</strong></p>
-          </div>
-        </div>
-        <!-- Configurações -->
-        <div id="db-config" style="display:none">
-          <div class="db-card" style="max-width:600px">
-            <div class="dc-title">⚙️ Configurações da Conta</div>
-            <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
-              <div style="font-size:13px;color:var(--muted)"><strong style="color:var(--text)">Email:</strong> <span id="configEmail">—</span></div>
-              <div style="font-size:13px;color:var(--muted)"><strong style="color:var(--text)">Plano:</strong> Ativo</div>
-              <div style="font-size:13px;color:var(--muted)"><strong style="color:var(--text)">Membro desde:</strong> <span id="configSince">—</span></div>
-              <button onclick="handleLogout()" style="margin-top:8px;padding:12px 24px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:10px;color:var(--red);font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;width:fit-content">Sair da conta →</button>
-            </div>
-          </div>
-        </div>
-        <!-- Módulos -->
-        <div id="db-modules" style="display:none">
-          <div class="mod-section-header">
-            <div class="mod-section-title">Módulos do Curso</div>
-            <div class="mod-section-sub">4 módulos gratuitos para construir sua base em investimentos</div>
-          </div>
-          <div class="mod-grid">
-            <div class="mod-card" onclick="openModule(1)">
-              <div class="mod-card-header">
-                <span class="mc-num">MOD 01</span>
-                <span class="mod-status-available">✦ Disponível</span>
-              </div>
-              <span class="mod-card-icon">🚀</span>
-              <div class="mc-title">Investindo na B3</div>
-              <div class="mc-desc">Do zero ao primeiro investimento. Ações, Ibovespa e como abrir conta em uma corretora.</div>
-              <div class="mod-card-meta">
-                <span class="mod-meta-item">📹 12 aulas</span>
-                <span class="mod-meta-item">⏱ ~2h</span>
-              </div>
-              <div class="mod-card-cta">Acessar módulo →</div>
-            </div>
-            <div class="mod-card" onclick="openModule(2)">
-              <div class="mod-card-header">
-                <span class="mc-num">MOD 02</span>
-                <span class="mod-status-available">✦ Disponível</span>
-              </div>
-              <span class="mod-card-icon">🏢</span>
-              <div class="mc-title">Fundos Imobiliários</div>
-              <div class="mc-desc">Invista em imóveis sem ter um imóvel. FIIs, dividendos mensais e como analisar um fundo.</div>
-              <div class="mod-card-meta">
-                <span class="mod-meta-item">📹 10 aulas</span>
-                <span class="mod-meta-item">⏱ ~1h40</span>
-              </div>
-              <div class="mod-card-cta">Acessar módulo →</div>
-            </div>
-            <div class="mod-card" onclick="openModule(3)">
-              <div class="mod-card-header">
-                <span class="mc-num">MOD 03</span>
-                <span class="mod-status-available">✦ Disponível</span>
-              </div>
-              <span class="mod-card-icon">💰</span>
-              <div class="mc-title">Renda Fixa & Impostos</div>
-              <div class="mc-desc">Tesouro Direto, CDB, LCI e LCA. Quanto rende, como declarar e qual escolher com a Selic atual.</div>
-              <div class="mod-card-meta">
-                <span class="mod-meta-item">📹 8 aulas</span>
-                <span class="mod-meta-item">⏱ ~1h20</span>
-              </div>
-              <div class="mod-card-cta">Acessar módulo →</div>
-            </div>
-            <div class="mod-card" onclick="openModule(4)">
-              <div class="mod-card-header">
-                <span class="mc-num">MOD 04</span>
-                <span class="mod-status-available">✦ Disponível</span>
-              </div>
-              <span class="mod-card-icon">₿</span>
-              <div class="mc-title">Corretoras & Criptos</div>
-              <div class="mc-desc">Como escolher sua corretora, taxas e custódia. Introdução ao Bitcoin e criptoativos no Brasil.</div>
-              <div class="mod-card-meta">
-                <span class="mod-meta-item">📹 9 aulas</span>
-                <span class="mod-meta-item">⏱ ~1h30</span>
-              </div>
-              <div class="mod-card-cta">Acessar módulo →</div>
-            </div>
-          </div>
+          <div class="dh-dd-divider"></div>
+          <button class="dh-dd-item dh-dd-logout" onclick="handleLogout()"><span class="dh-dd-icon">↩</span>Sair</button>
         </div>
       </div>
     </div>
-    <!-- Mobile Nav -->
-    <div class="db-mobile-nav">
-      <div class="db-mn-inner">
-        <button class="db-mn-item active" data-mn="overview" onclick="switchSection('overview')"><span class="db-mn-icon">📊</span>Início</button>
-        <button class="db-mn-item" data-mn="chat" onclick="switchSection('chat')"><span class="db-mn-icon">⚡</span>IA</button>
-        <button class="db-mn-item" data-mn="modules" onclick="switchSection('modules')"><span class="db-mn-icon">📚</span>Módulos</button>
-        <button class="db-mn-item" data-mn="config" onclick="switchSection('config')"><span class="db-mn-icon">⚙️</span>Conta</button>
+  </header>
+
+  <!-- BODY -->
+  <div class="db-body">
+
+    <!-- LEFT: IA Chat -->
+    <div class="db-chat-panel">
+      <div class="db-chat-top">
+        <div class="db-chat-status"><span class="db-online-dot"></span>Blueprint IA — Online</div>
+        <div class="db-chat-actions">
+          <button class="db-chat-action-btn" onclick="newIaChat()">⊕ Novo chat</button>
+        </div>
       </div>
+      <div class="db-msgs-wrap">
+        <div class="ia-msgs" id="dbChatMessages">
+          <div class="ia-msg ai">
+            <div class="ia-msg-who">Blueprint IA</div>
+            <div class="ia-bubble">Olá. Sou a <strong>Blueprint IA</strong> — especialista em investimentos brasileiros.<br>Posso analisar ações, FIIs, renda fixa, criptos e ajudar a montar sua carteira com base em dados reais da B3.<br>O que você quer saber?</div>
+            <div class="ia-suggs">
+              <div class="ia-sugg-chip" onclick="sendSugg('Analise a PETR4 — vale comprar agora?')">Analisar PETR4</div>
+              <div class="ia-sugg-chip" onclick="sendSugg('Qual o melhor CDB com a Selic a 14,75%?')">Melhor CDB</div>
+              <div class="ia-sugg-chip" onclick="sendSugg('Como montar uma carteira com R$1.000?')">Montar carteira</div>
+              <div class="ia-sugg-chip" onclick="sendSugg('FII ou imóvel físico — qual rende mais?')">FII vs Imóvel</div>
+              <div class="ia-sugg-chip" onclick="sendSugg('Vale investir em Bitcoin agora?')">Bitcoin</div>
+              <div class="ia-sugg-chip" onclick="sendSugg('O que é o Ibovespa e como funciona?')">Ibovespa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="db-input-area">
+        <div class="db-input-box">
+          <input class="ia-field" id="dbChatInput" placeholder="Pergunte sobre ações, dividendos, estratégias..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
+          <button class="ia-send" id="dbSendBtn" onclick="sendDbChat()">↑</button>
+        </div>
+        <div class="ia-input-footer">Blueprint IA · dados da B3 · <span id="iaCreditsHint">50</span> créditos restantes</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Info Panel -->
+    <aside class="db-side-panel">
+      <div class="db-card">
+        <div class="db-card-hdr"><span class="db-card-icon">💼</span><span class="db-card-title">Carteira Sugerida</span><span class="db-card-badge">IA</span></div>
+        <div class="db-port-list">
+          <div class="db-port-item"><span class="db-port-ticker">PETR4</span><div class="db-port-bar"><div class="db-port-fill" style="width:25%"></div></div><span class="db-port-pct">25%</span></div>
+          <div class="db-port-item"><span class="db-port-ticker">MXRF11</span><div class="db-port-bar"><div class="db-port-fill" style="width:20%"></div></div><span class="db-port-pct">20%</span></div>
+          <div class="db-port-item"><span class="db-port-ticker">Tesouro</span><div class="db-port-bar"><div class="db-port-fill" style="width:30%;background:#22c55e"></div></div><span class="db-port-pct">30%</span></div>
+          <div class="db-port-item"><span class="db-port-ticker">BTC</span><div class="db-port-bar"><div class="db-port-fill" style="width:10%;background:#f59e0b"></div></div><span class="db-port-pct">10%</span></div>
+          <div class="db-port-item"><span class="db-port-ticker">CDB</span><div class="db-port-bar"><div class="db-port-fill" style="width:15%;background:#8b5cf6"></div></div><span class="db-port-pct">15%</span></div>
+        </div>
+        <button class="db-card-action" onclick="sendSugg('Monte uma carteira diversificada para mim')">Personalizar com IA →</button>
+      </div>
+      <div class="db-card">
+        <div class="db-card-hdr"><span class="db-card-icon">📡</span><span class="db-card-title">Radar de Oportunidades</span><span class="db-card-badge new">NOVO</span></div>
+        <div class="db-radar-list">
+          <div class="db-radar-item up" onclick="sendSugg('Analise a VALE3 — está em oportunidade de entrada?')"><span class="db-radar-ticker">VALE3</span><span class="db-radar-signal">Oportunidade de entrada</span><span class="db-radar-arrow">↑</span></div>
+          <div class="db-radar-item neutral" onclick="sendSugg('Analise o BBAS3 — vale esperar o suporte?')"><span class="db-radar-ticker">BBAS3</span><span class="db-radar-signal">Aguardar próximo suporte</span><span class="db-radar-arrow">→</span></div>
+          <div class="db-radar-item up" onclick="sendSugg('Analise o KNRI11 — o dividend yield está atrativo?')"><span class="db-radar-ticker">KNRI11</span><span class="db-radar-signal">DY atrativo 0,8%/mês</span><span class="db-radar-arrow">↑</span></div>
+        </div>
+        <button class="db-card-action" onclick="sendSugg('Quais as melhores oportunidades na B3 agora?')">Analisar com IA →</button>
+      </div>
+      <div class="db-card">
+        <div class="db-card-hdr"><span class="db-card-icon">📊</span><span class="db-card-title">Indicadores Econômicos</span></div>
+        <div class="db-indic-grid">
+          <div class="db-indic-item"><span class="db-indic-label">SELIC</span><span class="db-indic-val">14,75%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">CDI</span><span class="db-indic-val">14,65%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">IPCA</span><span class="db-indic-val">5,48%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">IBOV</span><span class="db-indic-val up">134.2k</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">Dólar</span><span class="db-indic-val">R$5,68</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">IGP-M</span><span class="db-indic-val">6,2%</span></div>
+        </div>
+      </div>
+      <div class="db-card">
+        <div class="db-card-hdr"><span class="db-card-icon">📰</span><span class="db-card-title">Notícias do Mercado</span></div>
+        <div class="db-news-list">
+          <div class="db-news-item" onclick="sendSugg('O que aconteceu com a Petrobras recentemente?')"><span class="db-news-src">Infomoney</span><span class="db-news-text">Petrobras anuncia dividendos acima do esperado</span></div>
+          <div class="db-news-item" onclick="sendSugg('Como o Fed impacta os investimentos no Brasil?')"><span class="db-news-src">Valor Econômico</span><span class="db-news-text">Fed mantém juros, Ibovespa reage positivamente</span></div>
+          <div class="db-news-item" onclick="sendSugg('O que é o Tesouro IPCA+ e vale investir agora?')"><span class="db-news-src">XP Investimentos</span><span class="db-news-text">Tesouro IPCA+ atinge maior rentabilidade em 2 anos</span></div>
+        </div>
+        <button class="db-card-action" onclick="sendSugg('Quais as principais notícias do mercado hoje?')">Ver análise da IA →</button>
+      </div>
+    </aside>
+
+    <!-- OVERLAY: Módulos -->
+    <div class="db-overlay" id="dbModulesOverlay">
+      <div class="db-overlay-inner">
+        <div class="db-overlay-hdr">
+          <div class="db-overlay-title">◫ Módulos do Curso</div>
+          <button class="db-overlay-close" onclick="dhNav('chat')">✕</button>
+        </div>
+        <div class="db-mod-ov-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
+          <div class="db-mod-card" onclick="openModule(1)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 01</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">🚀</span><div class="db-mod-title">Investindo na B3</div><div class="db-mod-desc">Do zero ao primeiro investimento. Ações, Ibovespa e como abrir conta em uma corretora.</div><div class="db-mod-meta"><span>📹 12 aulas</span><span>⏱ ~2h</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
+          <div class="db-mod-card" onclick="openModule(2)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 02</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">🏢</span><div class="db-mod-title">Fundos Imobiliários</div><div class="db-mod-desc">Invista em imóveis sem ter um imóvel. FIIs, dividendos mensais e como analisar um fundo.</div><div class="db-mod-meta"><span>📹 10 aulas</span><span>⏱ ~1h40</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
+          <div class="db-mod-card" onclick="openModule(3)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 03</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">💰</span><div class="db-mod-title">Renda Fixa & Impostos</div><div class="db-mod-desc">Tesouro Direto, CDB, LCI e LCA. Quanto rende, como declarar e qual escolher.</div><div class="db-mod-meta"><span>📹 8 aulas</span><span>⏱ ~1h20</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
+          <div class="db-mod-card" onclick="openModule(4)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 04</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">₿</span><div class="db-mod-title">Corretoras & Criptos</div><div class="db-mod-desc">Como escolher sua corretora, taxas e custódia. Introdução ao Bitcoin e criptoativos.</div><div class="db-mod-meta"><span>📹 9 aulas</span><span>⏱ ~1h30</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
+        </div>
+        <button class="db-overlay-ia-cta" onclick="dhNav('chat')">⚡ Usar Blueprint IA com 50 créditos grátis →</button>
+      </div>
+    </div>
+
+    <!-- OVERLAY: Planos -->
+    <div class="db-overlay" id="dbPlansOverlay">
+      <div class="db-overlay-inner">
+        <div class="db-overlay-hdr">
+          <div class="db-overlay-title">◉ Planos e Assinatura</div>
+          <button class="db-overlay-close" onclick="dhNav('chat')">✕</button>
+        </div>
+        <div class="db-plan-grid">
+          <div class="db-plan-card"><div class="db-plan-badge">Mais em conta</div><div class="db-plan-name">Plano <span>Mensal</span></div><ul class="db-plan-features"><li><span class="db-plan-check">✦</span>IA com dados em tempo real</li><li><span class="db-plan-check">✦</span>Análise de ações e FIIs</li><li><span class="db-plan-check">✦</span>Tira-dúvidas ilimitado</li><li><span class="db-plan-check">✦</span>Acesso aos 4 módulos</li><li><span class="db-plan-check">✦</span>Cancele quando quiser</li></ul><div class="db-plan-price"><sup>R$</sup>27<span style="font-size:22px">,99</span></div><div class="db-plan-period">por mês · cobrado mensalmente</div><button class="db-plan-btn outline" onclick="window.open('https://pay.hotmart.com/E105279724U?off=jve556ja','_blank')">Assinar agora</button></div>
+          <div class="db-plan-card featured" style="position:relative"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0369a1,#3b82f6);color:#fff;font-family:'DM Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;letter-spacing:1px;white-space:nowrap">✦ Melhor custo-benefício</div><div class="db-plan-badge">Recomendado</div><div class="db-plan-name">Plano <span>Anual</span></div><ul class="db-plan-features"><li><span class="db-plan-check">✦</span>Tudo do plano mensal</li><li><span class="db-plan-check">✦</span>Alertas de mercado</li><li><span class="db-plan-check">✦</span>Prioridade em novas features</li><li><span class="db-plan-check">✦</span>Suporte prioritário</li><li><span class="db-plan-check">✦</span>Acesso antecipado</li></ul><div class="db-plan-price"><sup>R$</sup>23<span style="font-size:22px">,90</span></div><div class="db-plan-period">por mês · R$286,80/ano</div><div style="font-size:10px;color:#22c55e;margin-bottom:12px;font-family:'DM Mono',monospace">Economize R$50 por ano</div><button class="db-plan-btn primary" onclick="window.open('https://pay.hotmart.com/E105279724U?off=5tqdpmwm','_blank')">Quero o anual →</button></div>
+          <div class="db-plan-card"><div class="db-plan-badge">Sem recorrência</div><div class="db-plan-name">Plano <span>Teste 30 dias</span></div><ul class="db-plan-features"><li><span class="db-plan-check">✦</span>Acesso completo por 30 dias</li><li><span class="db-plan-check">✦</span>Sem cobrança recorrente</li><li><span class="db-plan-check">✦</span>Todas as funcionalidades</li><li><span class="db-plan-check">✦</span>Ideal para experimentar</li><li><span class="db-plan-check">✦</span>Sem compromisso</li></ul><div class="db-plan-price"><sup>R$</sup>49<span style="font-size:22px">,90</span></div><div class="db-plan-period">pagamento único · sem recorrência</div><button class="db-plan-btn outline" onclick="window.open('https://pay.hotmart.com/E105279724U?off=ur6adiwt','_blank')">Quero testar</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div class="db-drawer-overlay" id="dbDrawerOverlay" onclick="closeDrawer()"></div>
+  <div class="db-drawer" id="dbDrawer">
+    <div class="db-drawer-hdr">
+      <span style="font-family:'Clash Display',sans-serif;font-size:15px;font-weight:700;color:var(--d-text)">Menu</span>
+      <button style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--d-text2)" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="db-drawer-nav">
+      <button class="db-drawer-item" onclick="closeDrawer();dhNav('chat')"><span>💬</span>Blueprint IA</button>
+      <button class="db-drawer-item" onclick="closeDrawer();dhNav('modules')"><span>◫</span>Revisar Módulos</button>
+      <button class="db-drawer-item" onclick="closeDrawer();dhNav('plans')"><span>◉</span>Planos</button>
+      <button class="db-drawer-item" onclick="closeDrawer();showBuyCreditsModal()"><span>⚡</span>Créditos</button>
+      <button class="db-drawer-item" onclick="handleLogout()" style="color:#ef4444"><span>↩</span>Sair</button>
     </div>
   </div>
+
 </div>
 
 <script>
@@ -1388,7 +1771,7 @@ function nextModule(){
   const iframe=document.getElementById('moduleIframe');
   if(currentModuleNum>=4){
     closeModule();
-    switchSection('chat');
+    appNav('ia');
     return;
   }
   iframe.style.opacity='0';
@@ -1433,12 +1816,11 @@ document.getElementById('regBirth').max=new Date().toISOString().split('T')[0];
 // ── POPULATE USER UI ──
 function populateUserUI(user,name){
   const display=name.charAt(0).toUpperCase()+name.slice(1);
-  document.getElementById('dbUserName').textContent=display;
-  document.getElementById('dbAvatar').textContent=name.charAt(0).toUpperCase();
-  const wn=document.getElementById('welcomeName');
-  if(wn)wn.textContent=display;
-  document.getElementById('configEmail').textContent=user.email||'—';
-  document.getElementById('configSince').textContent=new Date(user.created_at).toLocaleDateString('pt-BR');
+  const uname=document.getElementById('dbUserName');
+  const uavatar=document.getElementById('dbAvatar');
+  if(uname)uname.textContent=display;
+  if(uavatar)uavatar.textContent=name.charAt(0).toUpperCase();
+  loadCredits(user);
 }
 
 let _authHandled=false;
@@ -1460,7 +1842,7 @@ async function handleLogin(){
     populateUserUI(data.user,name);
     _authHandled=true;
     document.getElementById('loginSuccess').classList.add('show');
-    setTimeout(()=>{_authHandled=false;goTo('dashboard');openModule(1);},1600);
+    setTimeout(()=>{_authHandled=false;goTo('dashboard');dhNav('chat');},1600);
   }catch(e){btn.classList.remove('loading');showError('loginError','Erro de conexão. Tente novamente.');}
 }
 
@@ -1487,7 +1869,7 @@ async function handleRegister(){
     populateUserUI(data.user,first);
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
-    setTimeout(()=>{_authHandled=false;goTo('dashboard');openModule(1);},1800);
+    setTimeout(()=>{_authHandled=false;goTo('dashboard');dhNav('chat');},1800);
   }catch(e){btn.classList.remove('loading');showError('registerError','Erro de conexão. Tente novamente.');}
 }
 
@@ -1500,9 +1882,7 @@ async function authGoogle(){
 async function handleLogout(){
   await _supabase.auth.signOut();
   chatHistory=[];
-  const preview=document.getElementById('qaPreview');
-  if(preview){preview.classList.remove('visible');preview.innerHTML='';}
-  document.getElementById('qaInput').value='';
+  userCredits=0;
   goTo('landing');
 }
 
@@ -1525,7 +1905,7 @@ _supabase.auth.onAuthStateChange((event,session)=>{
     populateUserUI(user,name);
     if(!_authHandled&&!document.getElementById('page-dashboard').classList.contains('active')){
       goTo('dashboard');
-      openModule(1);
+      dhNav('chat');
     }
   }
   if(event==='SIGNED_OUT') goTo('landing');
@@ -1533,90 +1913,158 @@ _supabase.auth.onAuthStateChange((event,session)=>{
 
 checkSession();
 
+// ── APP NAV ──
+function appNav(section){
+  // Compatibility alias → dhNav
+  dhNav(section==='ia'?'chat':section);
+}
+
 // ── DASHBOARD NAV ──
-function dbNav(el,section){
-  document.querySelectorAll('.db-nav-item').forEach(i=>i.classList.remove('active'));
-  if(el) el.classList.add('active');
-  document.querySelectorAll('[data-mn]').forEach(b=>b.classList.toggle('active',b.dataset.mn===section));
-  ['overview','chat','modules','watchlist','alertas','config'].forEach(s=>{
-    const d=document.getElementById('db-'+s);
-    if(!d)return;
-    if(s===section){
-      d.style.display=s==='chat'?'flex':'block';
-      if(s==='chat'){d.style.flexDirection='column';d.style.height='100%';}
-    } else {
-      d.style.display='none';
-    }
+function dhNav(section){
+  ['dbModulesOverlay','dbPlansOverlay'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.classList.remove('open');
   });
-  const titles={overview:'Dashboard',chat:'Análise IA',modules:'Módulos',watchlist:'Watchlist',alertas:'Alertas',config:'Configurações'};
-  document.getElementById('dbPageTitle').textContent=titles[section]||'Dashboard';
+  if(section==='modules')document.getElementById('dbModulesOverlay')?.classList.add('open');
+  else if(section==='plans')document.getElementById('dbPlansOverlay')?.classList.add('open');
 }
 
-function switchSection(section){
-  const items=document.querySelectorAll('.db-nav-item');
-  const map={overview:0,chat:1,modules:2,watchlist:3,alertas:4,config:5};
-  const idx=map[section];
-  dbNav(idx!==undefined?items[idx]:null,section);
+// ── DROPDOWN ──
+function toggleDhDropdown(e){
+  e.stopPropagation();
+  document.getElementById('dhUser')?.classList.toggle('open');
+}
+document.addEventListener('click',function(){
+  document.getElementById('dhUser')?.classList.remove('open');
+});
+
+// ── THEME ──
+function toggleDashTheme(el){
+  var dash=document.getElementById('page-dashboard');
+  var label=el.closest('.dh-dd-theme').querySelector('.dh-dd-theme-label');
+  if(!el.checked){dash.dataset.theme='light';if(label)label.textContent='☀️ Modo Claro';}
+  else{dash.dataset.theme='dark';if(label)label.textContent='🌙 Modo Escuro';}
 }
 
-// ── QUICK ASK (overview inline) ──
+// ── MOBILE DRAWER ──
+function openDrawer(){
+  document.getElementById('dbDrawer')?.classList.add('open');
+  document.getElementById('dbDrawerOverlay')?.classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('dbDrawer')?.classList.remove('open');
+  document.getElementById('dbDrawerOverlay')?.classList.remove('open');
+}
+
+// ── CREDITS SYSTEM ──
+let userCredits=50;
+let _selectedPack={credits:100,price:'R$ 9,90'};
+
+async function loadCredits(user){
+  const credits=user?.user_metadata?.credits;
+  userCredits=(credits===undefined||credits===null)?50:credits;
+  updateCreditsUI();
+}
+
+function updateCreditsUI(){
+  const badge=document.getElementById('creditsNum');        // nav badge number
+  const iaCount=document.getElementById('iaCreditsCount'); // sidebar count
+  const iaHint=document.getElementById('iaCreditsHint');   // input footer
+  if(badge)badge.textContent=userCredits;
+  if(iaCount)iaCount.textContent=userCredits;
+  if(iaHint)iaHint.textContent=userCredits;
+  // Color cues when low
+  const badgeWrap=document.getElementById('creditsBadge');
+  if(badgeWrap){
+    if(userCredits<=0){badgeWrap.style.color='#f87171';badgeWrap.style.borderColor='rgba(248,113,113,.3)';}
+    else if(userCredits<=20){badgeWrap.style.color='#fbbf24';badgeWrap.style.borderColor='rgba(251,191,36,.3)';}
+    else{badgeWrap.style.color='';badgeWrap.style.borderColor='';}
+  }
+  if(iaCount){
+    iaCount.style.color=userCredits<=0?'#f87171':userCredits<=20?'#fbbf24':'';
+  }
+}
+
+async function spendCredit(){
+  if(userCredits<=0)return false;
+  userCredits=Math.max(0,userCredits-10);
+  updateCreditsUI();
+  // Persist to Supabase user_metadata
+  try{
+    await _supabase.auth.updateUser({data:{credits:userCredits}});
+  }catch(e){console.warn('Could not persist credits',e);}
+  return true;
+}
+
+function showBuyCreditsModal(){
+  document.getElementById('buyCreditsModal').classList.add('open');
+}
+function closeBuyCreditsModal(){
+  document.getElementById('buyCreditsModal').classList.remove('open');
+}
+function selectPack(el,credits,price){
+  document.querySelectorAll('.bcm-pack').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  _selectedPack={credits,price};
+}
+async function buyCredits(){
+  // In production: redirect to payment. For now, show confirmation.
+  alert('Em breve: integração com pagamento.\n\nPacote selecionado: '+_selectedPack.credits+' créditos — '+_selectedPack.price);
+  closeBuyCreditsModal();
+}
+function choosePlan(name,price){
+  alert('Em breve: integração com pagamento.\n\nPlano '+name+' — '+price+'/mês');
+}
+
+// ── BLUEPRINT IA KNOWLEDGE BASE (auto-generated from PDFs) ──
+const _KB=[{"t":"PARTE 1 — A B3 E O MERCADO BRASILEIRO","c":"O que é a B3\nA B3 (Brasil, Bolsa, Balcão) é a única bolsa de valores do Brasil, resultado da fusão entre a\nBM&FBovespa e a Cetip em\n\n2017.\n\nÉ uma das maiores bolsas do mundo em valor de mercado, com sede em São\n\nPaulo.\nA B3 é onde acontecem as negociações de: - Ações de empresas brasileiras - Fundos Imobiliários (FIIs) - ETFs (Exchange Traded Funds) - BDRs (Brazilian Depositary Receipts) - Contratos futuros e opções - Títulos de renda fixa - Moedas estrangeiras\nHorário de funcionamento - Pré-abertura: 09h45 - Abertura: 10h00 - Fechamento: 17h55 - After Market: 18h00 às 19h30\nComo funciona a liquidação - Ações: D+2 (o dinheiro cai 2 dias úteis após a venda) - FIIs: D+2 - Tesouro Direto: D+1 - Renda Fixa: D+0 ou D+1 dependendo do produto\nO Ibovespa\nO Ibovespa (Índice Bovespa) é o principal indicador de desempenho das ações da bolsa brasileira.\n\nEle representa a carteira teórica das ações mais negociadas da\n\nB3.\n\nComo é calculado O Ibovespa é calculado em pontos e representa o valor total de uma carteira teórica de ações.\nQuando o índice sobe 1%, significa que essa carteira valorizou\n\n1%.\n\nPrincipais empresas no Ibovespa - VALE3 — Vale (mineração) - PETR4/PETR3 — Petrobras (petróleo) - ITUB4 — Itaú Unibanco (banco) - BBDC4 — Bradesco (banco) - ABEV3 — Ambev (bebidas) - WEGE3 — WEG (industrial) - RENT3 — Localiza (aluguel de carros) - MGLU3 — Magazine Luiza (varejo) - B3SA3 — B3 (bolsa) - SUZB3 — Suzano (papel e celulose)\nOutros índices importantes - IFIX — Índice de FIIs mais negociados - SMLL — Small Caps (empresas menores) - IDIV — Empresas pagadoras de dividendos - IBXX — IBrX-100 (100 ações mais negociadas) - BOVA11 — ETF que replica o Ibovespa - IVVB11 — ETF que replica o S&P 500 americano"},{"t":"PARTE 2 — RENDA FIXA COMPLETA","c":"A Taxa Selic\nA Selic (Sistema Especial de Liquidação e Custódia) é a taxa básica de juros da economia brasileira.\n\nÉ definida pelo Copom (Comitê de Política Monetária do Banco Central) a cada 45\n dias.\n\nComo funciona A Selic influencia todas as taxas de juros do país: - Quanto maior a Selic → maior o rendimento da renda fixa - Quanto maior a Selic → mais caro fica o crédito - Quanto maior a Selic → menor a atratividade da bolsa (em teoria)\nPor que o Copom sobe ou baixa a Selic - Sobe a Selic quando a inflação está alta — para esfriar a economia - Baixa a Selic quando a inflação está controlada — para estimular o crescimento\nHistórico resumido - 2016: 14,25% (combate à inflação) - 2020: 2,00% (pandemia — menor da história) - 2022: 13,75% (inflação pós-pandemia) - 2023: 11,75% (queda gradual) - 2024: 10,50% (continuação da queda) - 2025: 14,75% (nova alta por inflação)\nCDI — Certificado de Depósito Interbancário\nO CDI é a taxa que os bancos usam para emprestar dinheiro entre si. É sempre muito próximo da Selic (geralmente 0,10%\n abaixo).\n\nComo é usado O CDI serve como referência para investimentos de renda fixa. Quando um CDB paga \"100% do CDI\", significa que rende exatamente a taxa\n\nCDI.\n\nTabela de rendimento do CDI - 80% do CDI = rendimento ruim (pior que poupança muitas vezes) - 100% do CDI = rendimento padrão do mercado - 110% do CDI = bom rendimento - 120% do CDI = excelente rendimento - 130%+ do CDI = muito acima da média (verificar riscos)\nPoupança\nA poupança é o investimento mais popular do Brasil, mas quase sempre o pior em termos de rentabilidade.\n\nComo funciona o rendimento - Quando a Selic > 8,5%: rende 0,5% ao mês + TR (taxa referencial) - Quando a Selic ≤ 8,5%: rende 70% da Selic + TR\nQuando a Selic está a 14,75% - Poupança rende: 0,5% ao mês = ~6,17% ao ano"},{"t":"PARTE 3 — RENDA VARIÁVEL COMPLETA","c":"Ações — Conceitos Fundamentais\nUma ação representa uma fração do capital social de uma empresa. Ao comprar uma ação, você vira sócio daquela\n empresa.\n\nTipos de ações Ações Ordinárias (ON) — terminam em 3 - Dão direito a voto nas assembleias - Ex: VALE3, ITUB3, PETR3 Ações Preferenciais (PN) — terminam em 4 - Prioridade no recebimento de dividendos - Geralmente não têm direito a voto - Ex: ITUB4, BBDC4, PETR4\nUnits — terminam em 11 - Certificados que representam um conjunto de ações ON e PN - Ex: SANB11 (Santander)\nComo ganhar dinheiro com ações 1. Valorização (ganho de capital) Compra a R$10, vende a R$15 = lucro de R$5 2. Dividendos Parte do lucro da empresa distribuída aos acionistas Pagamento em dinheiro, proporcional ao número de ações\n3. JCP — Juros sobre Capital Próprio Similar ao dividendo mas com tratamento fiscal diferente A empresa deduz do imposto de renda antes de distribuir Análise Fundamentalista\nA análise fundamentalista avalia o valor intrínseco de uma empresa com base em seus dados financeiros.\n\nPrincipais indicadores P/L — Preço sobre Lucro - Fórmula: Preço da ação ÷ Lucro por ação - O que significa: quantos anos levaria para recuperar o investimento pelo lucro atual - P/L baixo = ação barata (em tese) - P/L alto = ação cara (ou empresa em crescimento) - Referência: comparar com setor e histórico da própria empresa P/VP — Preço sobre Valor Patrimonial - Fórmula: Preço da ação ÷ Valor Patrimonial por ação - P/VP < 1 = empresa valendo menos que seu patrimônio (pode ser oportunidade ou armadilha)\n- P/VP > 1 = mercado pagando prêmio pelo intangível (marca, gestão, crescimento) ROE — Retorno sobre Patrimônio Líquido - Fórmula: Lucro Líquido ÷ Patrimônio Líquido - Mede a eficiência da empresa em gerar lucro com o que tem\n- ROE > 15% é considerado bom - Empr"},{"t":"PARTE 4 — CORRETORAS","c":"Principais Corretoras Brasileiras\nNu Invest (antiga Easynvest) - Perfil: Iniciantes - Taxas: Zero corretagem em ações, FIIs, ETFs e fundos - Plataforma: Simples e intuitiva, integrada ao Nubank - Diferencial: Melhor para quem está começando - Mínimo: R$1\nRico - Perfil: Iniciantes e intermediários - Taxas: Zero corretagem - Plataforma: Rico Investimentos com conteúdo educativo - Diferencial: Forte em educação financeira - Pertence ao: Grupo XP\nXP Investimentos - Perfil: Intermediários e avançados - Taxas: Zero corretagem para ações - Plataforma: Completa com home broker, análises, relatórios - Diferencial: Maior corretora independente do Brasil, assessoria disponível - Mínimo: R$0\nClear Corretora - Perfil: Traders e intermediários - Taxas: Zero para ações, custo baixo para opções e contratos - Plataforma: Foco em trading, plataformas avançadas - Diferencial: Melhor para quem opera ativamente - Pertence ao: Grupo XP\nBTG Pactual Digital - Perfil: Intermediários e avançados - Taxas: Zero corretagem - Plataforma: Robusta com acesso a produtos exclusivos - Diferencial: Banco de investimentos com plataforma para pessoa física\nBanco Inter - Perfil: Iniciantes - Taxas: Zero corretagem - Plataforma: Integrada ao app do banco - Diferencial: Tudo no mesmo app — conta corrente e investimentos\nItaú, Bradesco, BB (bancos tradicionais) - Perfil: Correntistas que preferem conveniência - Taxas: Geralmente mais altas - Plataforma: Integrada ao app do banco - Desvantagem: Menor variedade de produtos, taxas maiores\nComo escolher sua corretora 1. Analise as taxas (zero corretagem é o mínimo hoje) 2. Teste a plataforma — facilidade de uso 3. Verifique o portfólio de produtos disponíveis 4. Confirme o registro na CVM e B3 5. Leia avaliações sobre o suporte"},{"t":"PARTE 5 — PLANEJAMENTO FINANCEIRO","c":"Perfis de Investidor\nConservador - Prioridade absoluta: segurança do capital - Aceita rendimento menor em troca de segurança - Carteira típica: 80-100% renda fixa - Produtos: Tesouro Selic, CDB liquidez, LCI/LCA, FIIs de papel\nModerado - Equilibra segurança e rentabilidade - Aceita alguma volatilidade no curto prazo - Carteira típica: 50% renda fixa + 50% variável - Produtos: CDB, Tesouro IPCA+, FIIs diversificados, ETFs, blue chips\nArrojado - Prioridade: maximizar retorno no longo prazo - Aceita grande volatilidade - Carteira típica: 20% renda fixa + 80% variável - Produtos: Ações, FIIs, ETFs, BDRs, criptomoedas, opções\nReserva de Emergência\nA reserva de emergência é o dinheiro guardado para imprevistos (perda de emprego, doença, etc.)\n\nQuanto guardar - Empregado CLT: 3 a 6 meses de gastos mensais - Autônomo/empreendedor: 6 a 12 meses de gastos mensais\nOnde deixar Requisitos: Liquidez diária + segurança + rendimento acima da inflação\nMelhores opções: 1. Tesouro Selic — mais seguro do Brasil, liquidez D+1, rende ~14,65% 2. CDB liquidez diária 100%+ CDI — vários bancos digitais oferecem 3. Conta remunerada de bancos digitais (Nubank, Inter, C6) Nunca: Poupança, CDB com carência, ações, FIIs\nConstrução de Carteira por Objetivo\nObjetivo: Reserva de emergência 100% Tesouro Selic ou CDB liquidez diária\nObjetivo: Viagem em 1 ano 100% CDB prefixado ou Tesouro Prefixado com vencimento na data\nObjetivo: Entrada de imóvel em 3 anos 50% Tesouro IPCA+ 2028 50% CDB IPCA+\nObjetivo: Renda passiva 50% FIIs diversificados (tijolo + papel) 30% Ações pagadoras de dividendos 20% Renda fixa (segurança)\nObjetivo: Aposentadoria em 20+ anos 40% Ações (crescimento longo prazo) 20% FIIs (renda) 20% ETFs (diversificação) 10% Tesouro IPCA+ longo prazo\n10% Internacional (IVVB11, BDRs)\nJuros Compost"},{"t":"PARTE 6 — CRIPTOMOEDAS","c":"Fundamentos\nO que é Bitcoin Bitcoin (BTC) é a primeira criptomoeda, criada em 2009 por Satoshi Nakamoto (pseudônimo). É uma moeda digital descentralizada\n\n—\n não controlada por nenhum governo ou banco\n central.\n\nCaracterísticas - Oferta limitada: 21 milhões de bitcoins no total - Halvings: A cada 4 anos a recompensa dos mineradores cai pela metade, reduzindo a emissão\n\n- Descentralizado: Nenhuma entidade central controla - Transparente: Todas as transações são públicas no blockchain\nEthereum Segunda maior criptomoeda. Além de moeda, é uma plataforma de contratos inteligentes\n(smart contracts) que permite criar aplicações descentralizadas\n\n(DApps).\n\nCiclos do mercado cripto O mercado cripto tem ciclos de aproximadamente 4 anos, ligados ao halving do Bitcoin: - Bull market: alta intensa (às vezes 10x em 1 ano) - Bear market: queda de 70-90% após o pico - Acumulação: período de lateralização antes da próxima alta\nComo comprar cripto com segurança no Brasil 1. Exchanges regulamentadas: Mercado Bitcoin, Binance, Coinbase 2. Via B3: HASH11 (ETF de criptos), BITH11 (ETF Bitcoin) 3. Via corretoras: algumas permitem compra de BTC diretamente\nRiscos - Volatilidade extrema (pode cair 50% em dias) - Risco regulatório - Risco de exchange (falência/hack) - Risco de golpes (nunca compartilhe sua seed phrase)\nQuanto alocar em cripto - Conservador: 0-2% da carteira - Moderado: 2-5% da carteira - Arrojado: 5-10% da carteira - Especulador: acima de 10% (alto risco)"},{"t":"PARTE 7 — IMÓVEIS E ALTERNATIVOS","c":"Imóvel Físico vs FIIs\nImóvel físico — vantagens - Tangibilidade (você pode ver e tocar) - Proteção psicológica — difícil \"vender no pânico\" - Uso próprio possível - Herança facilitada\nImóvel físico — desvantagens - Ilíquido (pode demorar meses para vender) - Alto custo de entrada (ITBI, cartório, corretor = ~10% do valor) - Vacância sem renda (imóvel vago = custo, não receita) - Manutenção e impostos (IPTU, condomínio) - Concentração de risco em um único ativo - Renda de aluguel tributada (tabela progressiva IR)\nFIIs — vantagens - Liquidez diária (vende em segundos) - A partir de R$10 por cota - Diversificação automática (um FII tem vários imóveis) - Dividendos mensais ISENTOS de IR - Gestão profissional - Sem burocracia de inquilino, contrato, manutenção\nFIIs — desvantagens - Volatilidade de preço (cota oscila diariamente) - Dependente da gestão do fundo - Quando Selic sobe, FIIs tendem a cair de preço\nComparativo de rentabilidade - Aluguel físico: geralmente 0,3% a 0,5% ao mês do valor do imóvel (antes de IR) - FII: geralmente 0,7% a 1% ao mês de dividendos (isento de IR) - Conclusão: na maioria dos casos, FII gera mais renda com mais liquidez\nInvestimento em Terrenos\n- Menor liquidez que imóveis construídos - Não gera renda enquanto não desenvolvido - Potencial de valorização em áreas em crescimento - Custos: IPTU, manutenção, segurança - Indica-se apenas para investidores com horizonte longo e capital reservado"},{"t":"PARTE 8 — ESTRATÉGIAS E FILOSOFIAS DE","c":"INVESTIMENTO\n\nBuy and Hold (Comprar e Manter)\nFilosofia de comprar bons ativos e manter por décadas, ignorando volatilidade de curto prazo. - Referência: Warren Buffett - Vantagem: reduz custos, aproveita juros compostos, isento de IR na isenção mensal - Para quem: investidores de longo prazo com paciência\nValue Investing (Investimento em Valor)\nBuscar empresas abaixo do valor intrínseco (P/L baixo, P/VP baixo) e aguardar a valorização. - Referência: Benjamin Graham, Warren Buffett - Requer análise fundamentalista profunda\nGrowth Investing (Investimento em Crescimento)\nBuscar empresas com alto potencial de crescimento, mesmo que caras pelos múltiplos atuais. - Aceita P/L alto se o crescimento justificar - Exemplos: WEG (WEGE3), Totvs (TOTS3)\nDividendos (Income Investing)\nFoco em construir renda passiva crescente através de dividendos e JCP.\n- Reinvestir dividendos acelera o processo (efeito bola de neve) - Ideal para quem quer viver de renda no futuro\nCarteira Permanente\nDivisão igual entre 4 ativos: ações, ouro, renda fixa longa, renda fixa curta - Objetivo: preservar capital em qualquer cenário econômico - Baixo retorno, mas alta estabilidade"},{"t":"PARTE 9 — CONTROLE FINANCEIRO PESSOAL","c":"Como economizar mais dinheiro\nRegra 50/30/20 - 50% da renda: necessidades (aluguel, alimentação, contas) - 30% da renda: desejos (lazer, restaurantes, entretenimento) - 20% da renda: investimentos e poupança\nPassos para organizar as finanças 1. Anote todos os gastos por 1 mês 2. Identifique gastos desnecessários 3. Crie um orçamento mensal 4. Automatize os investimentos (débito automático) 5. Aumente a taxa de poupança gradualmente\nDívidas — o que fazer primeiro - Dívidas acima de 2% ao mês: quitar urgente (cartão de crédito, cheque especial) - Dívidas de 1-2% ao mês: quitar antes de investir - Dívidas abaixo de 1% ao mês: pode investir paralelamente se o retorno superar"},{"t":"PARTE 10 — GLOSSÁRIO COMPLETO","c":"Ação: Fração do capital de uma empresa Alavancagem: Investir mais do que tem usando crédito\n\nAmortização:\n\nPagamento parcial do valor principal de um título\n\nAncoragem:\n\nViés\n cognitivo de se fixar em preço de compra Arbitragem: Lucrar com diferença de preço em mercados diferentes\n\nBenchmark:\n\nÍndice de referência para avaliar performance\n\nBeta:\n\nMede a volatilidade de um ativo em relação ao mercado Blue\n chip:\n\nAções de grandes empresas consolidadas e confiáveis\n\nBook:\n\nLivro de ofertas de compra e venda Bull\n market:\n\nMercado em alta (touro ataca de baixo para cima) Bear\n market:\n\nMercado em baixa (urso ataca de cima para baixo)\n\nCarteira:\n\nConjunto de investimentos de uma pessoa Circuit\n breaker:\n\nInterrupção temporária dos negócios por queda excessiva\n\nCota:\n\nFração de um fundo de investimento\n\nCustódia:\n\nGuarda e administração de ativos Day\n trade:\n\nCompra e venda do mesmo ativo no mesmo dia\n\nDeflação:\n\nQueda generalizada dos preços\n\nDebenture:\n\nTítulo de dívida emitido por empresa\n\nDerivativo:\n\nAtivo cujo valor deriva de outro ativo\n\nDiversificação:\n\nDistribuir investimentos em diferentes ativos\n\nDrawdown:\n\nQueda máxima do investimento em relação ao pico\n\nDuration:\n\nPrazo médio ponderado de um título\n\nEmissor:\n\nQuem emite o título (banco, governo, empresa)\n\nFGC:\n\nFundo Garantidor de Créditos\n\n—\n garante depósitos até R$250k\n\nFloat:\n\nAções disponíveis para negociação no mercado Fluxo de\n caixa:\n\nEntrada e saída de dinheiro de um investimento\n\nHegde:\n\nProteção contra riscos Home\n broker:\n\nPlataforma online para negociar ativos\n\nIBGE:\n\nInstituto Brasileiro de Geografia e Estatística\n\nIGPM:\n\nÍndice Geral de Preços do Mercado (usado em contratos)\n\nIPCA:\n\nÍndice de Preços ao Consumidor Amplo (inflação oficial)\n\nIPO:\n\nOferta Pública Inicial (abertura de capital na bolsa)"},{"t":"PARTE 1 — ANÁLISE FUNDAMENTALISTA","c":"AVANÇADA\n\nValuation — Como Precificar uma Empresa\nDCF — Fluxo de Caixa Descontado O DCF (Discounted Cash Flow) é o método mais rigoroso de valuation. Consiste em projetar os fluxos de caixa futuros da empresa e trazê-los a valor presente usando uma taxa de\n desconto.\nFórmula: VP = FCL ₁ /(1+r)¹ + FCL ₂ /(1+r)² + ... + FCLn/(1+r)n + Valor Terminal Onde: - FCL = Fluxo de Caixa Livre - r = Taxa de desconto (WACC) - n = Número de períodos projetados Passos do DCF: 1. Projetar receitas para os próximos 5-10 anos 2. Calcular margens operacionais esperadas 3. Estimar investimentos necessários (CAPEX) 4. Calcular o Fluxo de Caixa Livre 5. Definir o WACC (custo médio ponderado de capital) 6. Calcular o Valor Terminal 7. Trazer tudo a valor presente\n8. Dividir pelo número de ações = Preço justo por ação Limitações do DCF: - Extremamente sensível a pequenas mudanças nas premissas - Projeções de longo prazo são inerentemente incertas - \"Garbage in, garbage out\" — premissas ruins = resultado ruim\nWACC — Custo Médio Ponderado de Capital O WACC representa o retorno mínimo que uma empresa precisa gerar para satisfazer seus investidores.\nFórmula: WACC = (E/V × Re) + (D/V × Rd × (1-T)) Onde: - E = Valor de mercado do patrimônio líquido - D = Valor de mercado da dívida - V = E + D (valor total) - Re = Custo do capital próprio - Rd = Custo da dívida - T = Alíquota de imposto Custo do capital próprio (CAPM): Re = Rf + β × (Rm - Rf) Onde: - Rf = Taxa livre de risco (Selic ou NTN-B) - β = Beta da ação - Rm = Retorno esperado do mercado - (Rm - Rf) = Prêmio de risco do mercado\nModelo de Gordon (DDM) Para empresas que pagam dividendos crescentes e estáveis: Fórmula: P = D ₁ / (r - g) Onde:\n- P = Preço justo da ação - D ₁ = Dividendo esperado no próximo período - r = Taxa de retorno exigida pelo"},{"t":"PARTE 2 — ANÁLISE TÉCNICA AVANÇADA","c":"Candlesticks — Padrões Completos\nCandles de reversão de alta (fundo) Martelo (Hammer) - Corpo pequeno no topo - Sombra inferior longa (2-3x o corpo) - Aparece após tendência de baixa - Sinal: possível reversão para alta Martelo Invertido (Inverted Hammer) - Corpo pequeno na base - Sombra superior longa - Aparece após tendência de baixa - Menos confiável que o martelo Engolfo de Alta (Bullish Engulfing) - Dois candles: primeiro bearish, segundo bullish maior - O candle verde \"engole\" completamente o vermelho anterior - Sinal forte de reversão Estrela da Manhã (Morning Star) - Três candles: bearish, doji/pequeno, bullish - Pausa na tendência + retomada na alta - Um dos padrões mais confiáveis de reversão Harami de Alta - Candle bearish grande + candle bullish pequeno dentro do primeiro\n- Indecisão do mercado, possível reversão Pinça de Fundo (Tweezer Bottom) - Dois candles com a mesma mínima - Rejeição do nível de suporte\nCandles de reversão de baixa (topo) Estrela Cadente (Shooting Star) - Corpo pequeno na base - Sombra superior longa - Aparece após tendência de alta - Rejeição dos preços mais altos Homem Enforcado (Hanging Man) - Igual ao martelo, mas após tendência de alta - Contexto muda o significado Engolfo de Baixa (Bearish Engulfing) - Candle vermelho \"engole\" o verde anterior - Sinal forte de reversão para baixa Estrela da Noite (Evening Star) - Inverso da estrela da manhã - Três candles: bullish, doji/pequeno, bearish Doji - Abertura e fechamento praticamente iguais - Indecisão do mercado - Mais relevante após tendência definida Tipos de Doji: - Doji padrão: cruciforme - Doji Lápide: sombra superior longa (bearish)\n- Doji Libélula: sombra inferior longa (bullish) - Doji de 4 preços: sem sombras (raro)\nPadrões Gráficos\nPadrões de reversão Cabeça e Ombros (H&S) - "},{"t":"PARTE 3 — OPÇÕES AVANÇADO","c":"Os Greeks — Sensibilidades das Opções\nDelta (Δ) Mede quanto o preço da opção muda para cada R$1 de variação no ativo. - Delta call: 0 a 1 (ITM próximo de 1, OTM próximo de 0) - Delta put: -1 a 0 - Delta 0,5 = ATM (at the money) - Carteira delta-neutra: proteção contra movimentos direcionais\nGamma (Γ) Taxa de mudança do delta. Mede a aceleração. - Alta quando a opção está ATM - Importante para quem vende opções (risco de gamma) - Gamma alto = delta muda rapidamente = risco maior para o vendedor\nTheta (Θ) Decaimento temporal — quanto a opção perde de valor por dia que passa. - Sempre negativo para o comprador de opções - Positivo para o vendedor (o tempo trabalha a favor) - Acelera próximo ao vencimento - Uma opção ATM com 30 dias perde ~1/30 do valor por dia (simplificado)\nVega (ν) Sensibilidade ao VIX (volatilidade implícita). - Comprador de opção: quer que a volatilidade suba (vega positivo) - Vendedor de opção: quer que a volatilidade caia (vega negativo) - Quando o mercado cai, VIX sobe → opções ficam mais caras\nRho (ρ) Sensibilidade às taxas de juros. Pouco relevante no curto prazo.\n\nEstratégias Avançadas com Opções\nStraddle - Compra de call + compra de put no mesmo strike e vencimento - Aposta em MOVIMENTO (não importa a direção) - Ganha se o ativo se mover mais que o custo das duas opções - Usar antes de eventos (resultados, decisões do Copom)\nStrangle - Compra de call OTM + compra de put OTM - Mais barato que straddle - Precisa de movimento ainda maior para lucrar\nButterfly (Borboleta) - Compra de call OTM + venda de 2 calls ATM + compra de call ITM - Aposta que o ativo ficará próximo ao strike central - Risco limitado, lucro limitado\nIron Condor - Venda de strangle + compra de strangle mais OTM - Aposta em mercado lateral (baixa volatilidade) - Recebe prêmio enq"},{"t":"PARTE 4 — RENDA FIXA AVANÇADA","c":"Duration e Convexidade\nDuration de Macaulay Mede o prazo médio ponderado dos fluxos de caixa de um título. - Quanto maior a duration, maior a sensibilidade a mudanças de juros - Título com duration de 5 = perde ~5% se juros subirem 1% - Títulos prefixados longos têm duration alta (mais sensíveis) - Tesouro Selic tem duration próxima de zero (quase não oscila)\nDuration Modificada Duration = Duration Macaulay / (1 + yield) Mede a variação percentual do preço para variação de 1% no yield.\nConvexidade Ajuste para grandes variações nas taxas. - Títulos com maior convexidade sobem mais quando juros caem - E caem menos quando juros sobem - Convexidade alta é vantajosa para o investidor\nMarcação a Mercado (MtM)\nOs títulos de renda fixa têm seus preços atualizados diariamente de acordo com as taxas de mercado.\nPor que o Tesouro IPCA+ \"oscila\": - Se as taxas de mercado subirem, o preço do título cai (mesmo sendo renda fixa) - Se as taxas caírem, o preço sobe - Quem carrega até o vencimento recebe exatamente o contratado - Quem vende antes pode ter ganho ou perda\nExemplo prático: - Você compra Tesouro IPCA+ 2035 a IPCA + 6% - Taxa de mercado sobe para IPCA + 7% - Seu título vale menos no mercado agora (quem compraria a 6% se pode ter 7%?) - Mas se carregar até 2035, recebe IPCA + 6% do capital investido\nCurva de Juros (Yield Curve)\nA curva de juros mostra as taxas para diferentes prazos.\nFormatos da curva Normal (inclinada para cima): - Juros longos > juros curtos - Situação típica de economia saudável - Compensação pelo risco de prazo longo Invertida: - Juros curtos > juros longos - Sinal clássico de recessão futura - Banco central com juros altos para combater inflação Plana: - Juros similares em todos os prazos - Transição ou incerteza\nComo usar a curva de juros - Curva inclina"},{"t":"PARTE 5 — MACROECONOMIA PARA","c":"INVESTIDORES\n\nCiclos Econômicos\nAs 4 fases do ciclo Expansão: - PIB crescendo, desemprego caindo - Empresas aumentando produção - Crédito fácil e barato\n- Investimentos em alta - Melhores ativos: ações cíclicas, imóveis, commodities Pico: - Crescimento máximo, inflação subindo - Banco central começa a subir juros - Crédito começa a ficar mais caro - Atenção: começar a reduzir risco Contração (Recessão): - PIB caindo, desemprego subindo - Empresas cortando gastos - Banco central cortando juros para estimular - Melhores ativos: renda fixa, ouro, setores defensivos (energia, saúde) Vale: - Fundo da recessão - Banco central com juros baixos - Crédito barato disponível - Melhor momento para comprar: ações, FIIs, ativos de risco\nPolítica Monetária\nFerramentas do Banco Central Taxa de juros (Selic): - Principal ferramenta de política monetária - Sobe para combater inflação (esfria a economia) - Baixa para estimular crescimento Compulsório: - Percentual que os bancos devem manter depositado no BC - Aumentar = menos dinheiro circulando - Diminuir = mais crédito disponível\nOperações de mercado aberto: - Compra e venda de títulos públicos - Comprar títulos = injetar dinheiro na economia - Vender títulos = retirar dinheiro da economia\nCâmbio e seus Efeitos\nPor que o câmbio afeta seus investimentos Dólar subindo: - Empresas exportadoras ganham mais (VALE3, PETR4, AGRO3) - Empresas importadoras perdem (varejistas, companhias aéreas) - BDRs sobem (valem em dólares) - IVVB11 sobe - Inflação tende a subir (produtos importados ficam mais caros) Dólar caindo: - Empresas importadoras ganham - Exportadoras perdem receita em reais - BDRs caem - Inflação tende a cair\nHedge cambial Como se proteger da variação do dólar: - IVVB11, BOVA11 têm correlação com o dólar - BDRs de empresas americanas "},{"t":"PARTE 6 — ESTRATÉGIAS AVANÇADAS DE","c":"INVESTIMENTO\n\nFactor Investing (Investimento por Fatores)\nO que são fatores Fatores são características que historicamente explicam o retorno acima do mercado.\nPrincipais fatores Value (Valor): - Ações baratas pelos múltiplos têm retorno histórico superior - P/L baixo, P/VP baixo - Explicação: mercado frequentemente exagera no pessimismo Momentum: - Ações que subiram nos últimos 6-12 meses tendem a continuar subindo - \"Vencedores recentes tendem a continuar vencendo\" - Explicação: ajuste lento de preços à nova informação Quality (Qualidade): - Empresas com ROE alto, dívida baixa, lucros estáveis - WEG, Itaú, Raia Drogasil são exemplos - Tendem a performar bem no longo prazo Low Volatility (Baixa Volatilidade): - Ações menos voláteis têm risco/retorno superior - Contraintuitivo — menor risco com retorno similar - Explicação: investidores pagam prêmio por \"emoção\" nas voláteis Size (Tamanho): - Small caps historicamente superam large caps no longo prazo - Maior risco, maior retorno esperado - Mercado menos eficiente em empresas menores\n\nSmart Beta\nÍndices que aplicam estratégias de factor investing de forma sistemática. Exemplos no Brasil: - DIVO11 (ETF de dividendos) — fator dividendos - SMAL11 (ETF small caps) — fator tamanho - FIND11 (ETF financeiro) — setor específico Vantagem sobre gestão ativa: - Custo menor que fundos ativos - Disciplina automática (sem emoção) - Exposição a fatores comprovados academicamente\nLong & Short\nEstratégia que simultaneamente compra um ativo (long) e vende outro (short). Objetivo: Ganhar na diferença de performance entre os dois ativos, independente da direção do\n mercado.\nExemplo: - Long WEGE3 (empresa de qualidade) + Short MGLU3 (empresa com problemas) - Se WEGE3 sobe 10% e MGLU3 sobe 5% → ganho de 5% - Se mercado cai 10% e WEGE3 cai 8%"},{"t":"PARTE 7 — GESTÃO DE RISCO AVANÇADA","c":"Value at Risk (VaR)\nMede a perda máxima esperada em um determinado período com certo nível de confiança. Exemplo: - VaR 95% de R$10.000 por dia = há 95% de probabilidade de não perder mais que\nR$10.000 em um dia\nLimitações: - Não diz o que acontece nos 5% restantes - Subestima riscos em eventos extremos (caudas gordas)\nDrawdown\nQueda do pico ao vale de um investimento. Maximum Drawdown: - Maior queda histórica de pico a vale\n- Indicador importante de risco real - Pergunta: você consegue aguentar psicologicamente uma queda de 50%? Recovery Time: - Quanto tempo levou para recuperar o drawdown - Ibovespa em 2008: caiu 60%, levou 3 anos para recuperar\nCorrelação e Diversificação Real\nCorrelação: - +1: ativos se movem juntos - 0: sem relação - -1: ativos se movem em direções opostas Diversificação real: Misturar ativos com baixa correlação reduz o risco sem necessariamente reduzir o\n retorno.\nCorrelações históricas brasileiras: - Ações vs. Renda Fixa: correlação próxima de zero (diversificam bem) - Ações vs. FIIs: correlação moderada positiva - Ações vs. Dólar: correlação negativa (quando bolsa cai, dólar sobe) - Cripto vs. Tudo: correlação variável, mas aumenta em crises\nKelly Criterion\nFórmula para calcular o tamanho ideal de posição baseado na probabilidade de acerto e relação\n risco/retorno.\nFórmula: f = (bp - q) / b Onde: - f = fração do capital a investir - b = retorno esperado / risco (relação risco-retorno) - p = probabilidade de acerto - q = probabilidade de erro (1 - p) Na prática: Muitos traders usam \"meio Kelly\" (metade do resultado) para reduzir volatilidade."},{"t":"PARTE 8 — MERCADO INTERNACIONAL","c":"AVANÇADO Mercados Americanos\nNYSE (New York Stock Exchange) Maior bolsa do mundo por capitalização de mercado. - Ações de grandes empresas estabelecidas - Apple, Microsoft, Berkshire Hathaway\nNASDAQ Foco em tecnologia e crescimento. - Amazon, Google, Meta, Tesla, Nvidia - Mais volátil que NYSE\nS&P 500 Índice das 500 maiores empresas americanas — benchmark global. - Retorno histórico: ~10% ao ano em dólares - ETF no Brasil: IVVB11\nDow Jones 30 ações industriais americanas — índice mais antigo e famoso (mas menos representativo).\nRisco País e Rating Soberano\nO que é risco país: Prêmio exigido pelos investidores para emprestar dinheiro a um país acima dos EUA (considerado livre de\n risco).\nEMBI+ Brasil: - Spread entre o juro do Brasil e dos EUA - Quanto maior, maior a desconfiança dos investidores no Brasil\n- Impacta diretamente o custo de capital das empresas brasileiras Rating Soberano do Brasil (2025): - S&P: BB (abaixo de investment grade) - Moody's: Ba1 (abaixo de investment grade) - Fitch: BB - Brasil perdeu o investment grade em 2015-2016 Impacto do rating: - Fundos internacionais investment grade não podem alocar no Brasil - Recuperar o investment grade seria catalisador histórico para a bolsa\nDiversificação Internacional\nPor que diversificar internacionalmente 1. Exposição ao dólar (proteção cambial) 2. Acesso a setores pouco representados no Brasil (tecnologia, saúde) 3. Redução do risco concentrado no Brasil 4. Histórico de retorno do mercado americano\nComo diversificar pelo Brasil ETFs: - IVVB11: S&P 500 em reais (mais líquido) - NASD11: Nasdaq 100 - SPXI11: S&P 500 (alternativa ao IVVB11) BDRs: - Ações individuais americanas na B3 - AAPL34, MSFT34, AMZO34, GOGL34, NVDC34 Fundos internacionais: - Fundos de ações internacionais disponíveis nas corretoras - Hedge"},{"t":"PARTE 9 — PREVIDÊNCIA PRIVADA","c":"PGBL vs. VGBL\nPGBL (Plano Gerador de Benefício Livre) - Vantagem fiscal: deduz as contribuições da base de cálculo do IR (até 12% da renda bruta)\n- IR no resgate: incide sobre o valor total resgatado (principal + rendimentos) - Para quem: quem faz declaração completa do IR e quer reduzir imposto agora\nVGBL (Vida Gerador de Benefício Livre) - Sem benefício fiscal: contribuições não deduzem do IR - IR no resgate: incide apenas sobre os rendimentos - Para quem: quem faz declaração simplificada ou já usou o limite do PGBL\nTributação da previdência Tabela Regressiva (indicada para longo prazo): - Até 2 anos: 35% - 2 a 4 anos: 30% - 4 a 6 anos: 25% - 6 a 8 anos: 20% - 8 a 10 anos: 15% - Acima de 10 anos: 10% (menor alíquota possível em qualquer investimento) Tabela Progressiva: - Mesma tabela do IR pessoa física (até 27,5%) - Indicada para quem terá renda baixa na aposentadoria\nPrevidência privada vs. investir por conta própria Previdência vantajosa quando: - Usa PGBL e está na faixa de 27,5% do IR - Vai manter por mais de 10 anos (alíquota de 10%) - Quer proteção contra credores (em alguns casos) - Planejamento sucessório (não entra em inventário)\nInvestir por conta própria vantajoso quando: - Taxas de administração da previdência são altas (>1% ao ano) - Fundos disponíveis são ruins - Não usa PGBL (não deduz do IR)"},{"t":"PARTE 10 — FUNDOS DE INVESTIMENTO","c":"Tipos de Fundos\nFundos de Renda Fixa - Investem principalmente em títulos de renda fixa - Referenciados DI: seguem o CDI - Tributação: tabela regressiva (come-cotas semestral)\nFundos Multimercado - Liberdade para investir em renda fixa, ações, câmbio, derivativos - Performance histórica variada - Taxas: geralmente 2% de administração + 20% de performance - Come-cotas: maio e novembro\nFundos de Ações - Mínimo 67% em renda variável - IR: 15% sobre ganho no resgate (sem come-cotas) - Isenção do come-cotas é vantagem significativa\nFundos Internacionais - Acesso a mercados externos sem abrir conta no exterior - Com ou sem hedge cambial - Com hedge: retorno em reais sem exposição ao dólar - Sem hedge: retorno em reais com exposição cambial\nO que analisar em um fundo\n1. Histórico de performance: consistência ao longo de anos (não apenas 12 meses)\n2. Drawdown histórico: qual foi a pior perda? 3. Sharpe Ratio: retorno por unidade de risco 4. Taxa de administração: quanto o gestor cobra 5. Taxa de performance: percentual sobre o ganho acima do benchmark 6. Gestor: experiência, track record, alinhamento de interesses 7. Estratégia: como o fundo busca retorno? Consistente com o cenário? 8. Liquidez: prazo de resgate (D+0, D+30, D+60, D+360)\nSharpe Ratio\nMede o retorno ajustado ao risco. Fórmula: Sharpe = (Retorno do fundo - Taxa livre de risco) / Desvio padrão - Sharpe > 1: excelente (retorno alto por unidade de risco) - Sharpe entre 0,5 e 1: bom - Sharpe < 0: péssimo (não compensa o risco assumido)"},{"t":"PARTE 11 — VIESES COMPORTAMENTAIS DO","c":"INVESTIDOR\n\nPor que investidores perdem dinheiro (mesmo sabendo o que fazer)\n\nAversão à perda (Kahneman e Tversky) A dor de perder R$1.000 é psicologicamente 2x maior que o prazer de ganhar R$1.000. Consequência: - Investidores seguram ações perdedoras esperando \"recuperar\" - Vendem ações vencedoras cedo demais para \"garantir o lucro\" - Resultado: cortam os ganhos e deixam as perdas correr\nViés de confirmação Tendemos a buscar informações que confirmam o que já acreditamos. Consequência: - Investidor que comprou uma ação só lê notícias positivas sobre ela - Ignora sinais de deterioração fundamental\nAncoragem Nos fixamos no preço que pagamos pelo ativo. Consequência: - \"Não vendo abaixo de R$50\" (preço que pagou) - O mercado não sabe nem se importa com o preço que você pagou\nEfeito manada (Herding) Tendemos a seguir o que todos estão fazendo. Consequência: - Comprar na euforia (topos) e vender no pânico (fundos) - Exatamente o contrário do ideal\nExcesso de confiança Investidores superestimam sua capacidade de prever o mercado. Consequência: - Excesso de operações (pagar mais corretagem e IR) - Concentração em poucos ativos - Usar alavancagem sem compreender o risco\nComo combater os vieses 1. Ter um plano de investimento por escrito 2. Automatizar aportes mensais (remover a emoção) 3. Definir regras claras de entrada e saída ANTES de comprar 4. Revisar a carteira com periodicidade definida (não a toda hora) 5. Diário de investimentos: registrar o raciocínio de cada operação\n\nGLOSSÁRIO AVANÇADO\nAccrual: Receita ou despesa reconhecida contabilmente antes do caixa Alpha: Retorno acima do benchmark por habilidade do gestor\n\nArbitragem:\n\nLucro sem risco por diferença de preços Asset\n allocation:\n\nAlocação estratégica entre classes de ativos\n\nBacktest:\n\nTeste de estratégia em d"}];
+
+function _kbSearch(query,topN){
+  topN=topN||2;
+  var stop={'o':1,'a':1,'os':1,'as':1,'um':1,'uma':1,'de':1,'da':1,'do':1,'para':1,'em':1,'e':1,'que':1,'é':1,'se':1,'com':1,'na':1,'no':1,'por':1,'como':1,'mais':1,'mas':1,'ou':1,'ao':1,'à':1,'pela':1,'pelo':1,'dos':1,'das':1,'nas':1,'nos':1,'seu':1,'sua':1,'seus':1,'suas':1,'isso':1,'este':1,'esta':1,'esse':1,'essa':1,'ter':1,'tem':1,'são':1,'foi':1,'ser':1,'há':1,'não':1,'me':1,'te':1,'lhe':1,'meu':1,'minha':1,'isso':1,'desse':1,'desta':1,'num':1,'numa':1,'já':1,'também':1};
+  var words=query.toLowerCase().replace(/[^a-záéíóúãõâêôç0-9\s]/gi,' ').split(/\s+/).filter(function(w){return w.length>2&&!stop[w];});
+  if(!words.length) return [];
+  var scores=_KB.map(function(sec,i){
+    var hay=(sec.t+' '+sec.c).toLowerCase();
+    var score=0;
+    words.forEach(function(w){
+      try{
+        var re=new RegExp(w,'gi');
+        var m=hay.match(re);
+        if(m) score+=m.length*(w.length>5?2:1);
+      }catch(e){}
+    });
+    return {i:i,score:score};
+  });
+  scores.sort(function(a,b){return b.score-a.score;});
+  return scores.slice(0,topN).filter(function(s){return s.score>0;}).map(function(s){return _KB[s.i];});
+}
+
+// ── BLUEPRINT IA FETCH ──
 async function callBlueprintIA(message,history){
+  // Find relevant knowledge sections
+  var relevant=_kbSearch(message,2);
+  var enrichedMsg=message;
+  if(relevant.length>0){
+    var ctx=relevant.map(function(s){return '['+s.t+']\n'+s.c;}).join('\n\n');
+    enrichedMsg='[BASE DE CONHECIMENTO — Blueprint IA]\n'+ctx+'\n\n[PERGUNTA DO USUÁRIO]\n'+message;
+  }
   const {data:{session}}=await _supabase.auth.getSession();
   const headers={'Content-Type':'application/json'};
   if(session?.access_token)headers['Authorization']='Bearer '+session.access_token;
   const res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/blueprint-ia',{
     method:'POST',headers,
-    body:JSON.stringify({message,history})
+    body:JSON.stringify({message:enrichedMsg,history,originalMessage:message})
   });
   const data=await res.json();
   return data.reply||'Erro ao conectar.';
 }
 
-async function sendQuickAsk(){
-  const input=document.getElementById('qaInput');
-  const text=input.value.trim();
-  if(!text)return;
-  input.value='';
-  const preview=document.getElementById('qaPreview');
-  preview.innerHTML='<div style="display:flex;gap:4px;padding:4px 0"><span style="width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typeBounce 1.2s infinite;display:inline-block"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typeBounce 1.2s .2s infinite;display:inline-block"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typeBounce 1.2s .4s infinite;display:inline-block"></span></div>';
-  preview.classList.add('visible');
-  chatHistory.push({role:'user',content:text});
-  try{
-    const reply=await callBlueprintIA(text,chatHistory.slice(0,-1));
-    chatHistory.push({role:'assistant',content:reply});
-    preview.innerHTML=renderMarkdown(reply)+'<div class="qa-see-more"><button class="db-ai-link" onclick="goToFullChat()">Ver no chat completo →</button></div>';
-  }catch(e){
-    chatHistory.pop();
-    preview.innerHTML='<span style="color:var(--red)">⚠️ Erro de conexão. Tente novamente.</span>';
-  }
-}
-
-function quickAskSugg(text){
-  document.getElementById('qaInput').value=text;
-  sendQuickAsk();
-}
-
-function goToFullChat(){
-  switchSection('chat');
-  const preview=document.getElementById('qaPreview');
-  preview.classList.remove('visible');
-  preview.innerHTML='';
-  // Renderiza no chat as mensagens que vieram do quick ask
-  const msgs=document.getElementById('dbChatMessages');
-  document.querySelector('.chat-suggestions')&&(document.querySelector('.chat-suggestions').style.display='none');
-  const last2=chatHistory.slice(-2);
-  last2.forEach(m=>{
-    const existing=[...msgs.querySelectorAll('.chat-bubble')].some(b=>b.innerHTML.includes(m.content.substring(0,30)));
-    if(!existing)addMsg(m.role==='user'?'user':'ai',m.role==='user'?m.content:renderMarkdown(m.content));
-  });
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
 // ── CHAT IA ──
 let chatHistory=[];
 function sendSugg(text){
-  const preview=document.getElementById('qaPreview');
-  if(preview){preview.classList.remove('visible');preview.innerHTML='';}
+  // Hide suggestion chips
+  document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   document.getElementById('dbChatInput').value=text;
   sendDbChat();
 }
@@ -1625,7 +2073,12 @@ async function sendDbChat(){
   const btn=document.getElementById('dbSendBtn');
   const text=input.value.trim();
   if(!text)return;
-  document.querySelector('.chat-suggestions')&&(document.querySelector('.chat-suggestions').style.display='none');
+  // Check credits
+  if(userCredits<=0){
+    showBuyCreditsModal();
+    return;
+  }
+  document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   input.value='';input.disabled=true;btn.disabled=true;
   addMsg('user',text);
   chatHistory.push({role:'user',content:text});
@@ -1633,26 +2086,66 @@ async function sendDbChat(){
   try{
     const reply=await callBlueprintIA(text,chatHistory.slice(0,-1));
     document.getElementById(tid)?.remove();
-    chatHistory.push({role:'assistant',content:reply});
-    addMsg('ai',renderMarkdown(reply));
+    const cleanReply=stripEmojis(reply);
+    chatHistory.push({role:'assistant',content:cleanReply});
+    addMsg('ai',renderMarkdown(cleanReply));
+    await spendCredit();
   }catch(e){document.getElementById(tid)?.remove();addMsg('ai','⚠️ Erro de conexão. Tente novamente.');}
   input.disabled=false;btn.disabled=false;input.focus();
 }
 function addMsg(type,text){
   const c=document.getElementById('dbChatMessages');
   const d=document.createElement('div');
-  d.className='chat-msg '+type;
-  d.innerHTML=`<div class="chat-avatar">${type==='ai'?'⚡':'👤'}</div><div class="chat-bubble">${text}</div>`;
+  d.className='ia-msg '+type;
+  const label=type==='ai'?'Blueprint IA':'Você';
+  d.innerHTML=`<div class="ia-msg-who">${label}</div><div class="ia-bubble">${text}</div>`;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
 function addTyping(){
   const c=document.getElementById('dbChatMessages');
   const id='t'+Date.now();
   const d=document.createElement('div');
-  d.className='chat-msg ai';d.id=id;
-  d.innerHTML='<div class="chat-avatar">⚡</div><div class="typing-dot"><span></span><span></span><span></span></div>';
+  d.className='ia-msg ai';d.id=id;
+  d.innerHTML='<div class="ia-msg-who">Blueprint IA</div><div class="ia-typing"><span></span><span></span><span></span></div>';
   c.appendChild(d);c.scrollTop=c.scrollHeight;
   return id;
+}
+
+function newIaChat(){
+  // Save first user message as history item
+  const msgs=document.getElementById('dbChatMessages');
+  const firstUser=msgs.querySelector('.ia-msg.user .ia-bubble');
+  if(firstUser){
+    const histSlots=['iaHist1','iaHist2','iaHist3'];
+    const textSlots=['iaHist1Text','iaHist2Text','iaHist3Text'];
+    // Shift history down
+    for(let i=2;i>0;i--){
+      const prev=document.getElementById(textSlots[i-1]);
+      const curr=document.getElementById(textSlots[i]);
+      if(prev&&curr){curr.textContent=prev.textContent;document.getElementById(histSlots[i]).style.display=prev.textContent?'flex':'';}
+    }
+    const t0=document.getElementById('iaHist1Text');
+    if(t0){t0.textContent=firstUser.textContent.replace(/<[^>]+>/g,'').substring(0,28)+'…';document.getElementById('iaHist1').style.display='flex';}
+  }
+  // Reset chat
+  chatHistory=[];
+  msgs.innerHTML=`<div class="ia-msg ai"><div class="ia-msg-who">Blueprint IA</div><div class="ia-bubble">Novo chat. O que você quer analisar?</div></div>`;
+}
+
+// ── EMOJI STRIPPER ──
+function stripEmojis(text){
+  return text
+    // Remove Unicode emoji ranges
+    .replace(/[\u{1F300}-\u{1FAFF}]/gu,'')
+    .replace(/[\u{2600}-\u{27BF}]/gu,'')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu,'')
+    .replace(/[\u{1F000}-\u{1F02F}]/gu,'')
+    .replace(/\u200d/g,'')
+    // Specific common finance emojis that may slip through
+    .replace(/[📊📈📉💰💸🏦🏢✅⚠️🔍🚀💡🎯🔥⭐❌✔️📌💎🧠🌍🇧🇷]/g,'')
+    // Clean up double spaces left by removed emojis
+    .replace(/  +/g,' ')
+    .trim();
 }
 
 // ── MARKDOWN RENDERER ──
