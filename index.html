@@ -728,13 +728,34 @@ footer a:hover{color:var(--text)}
 .db-msgs-wrap { flex:1; overflow-y:auto; background:var(--d-bg) }
 .db-msgs-wrap::-webkit-scrollbar { width:3px }
 .db-msgs-wrap::-webkit-scrollbar-thumb { background:var(--d-border); border-radius:4px }
-.db-input-area { padding:16px 24px 20px; border-top:1px solid var(--d-border); flex-shrink:0; background:var(--d-surface) }
+.db-input-area { padding:14px 24px 18px; border-top:1px solid var(--d-border); flex-shrink:0; background:var(--d-surface) }
 .db-input-box {
-  display:flex; align-items:center; gap:10px;
-  background:var(--d-surface2); border:1px solid var(--d-border);
-  border-radius:13px; padding:10px 12px 10px 18px; transition:border-color .2s;
+  display:flex; align-items:center; gap:12px;
+  background:#0a0e1c; border:1px solid rgba(255,255,255,.1);
+  border-radius:16px; padding:13px 14px 13px 18px;
+  transition:border-color .25s, box-shadow .25s;
+  box-shadow:0 2px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
 }
-.db-input-box:focus-within { border-color:var(--d-accent) }
+.db-input-box:focus-within {
+  border-color:rgba(91,107,255,.5);
+  box-shadow:0 0 0 3px rgba(91,107,255,.12), 0 2px 20px rgba(0,0,0,.3);
+}
+#page-dashboard[data-theme="light"] .db-input-box {
+  background:#f0f4f8; border-color:rgba(0,0,0,.1);
+  box-shadow:0 2px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+}
+#page-dashboard[data-theme="light"] .db-input-box:focus-within {
+  border-color:rgba(37,99,235,.4); box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+.db-input-icon { font-size:15px; opacity:.35; flex-shrink:0; color:var(--d-text2); line-height:1 }
+.db-input-kbd { display:flex; align-items:center; gap:4px; flex-shrink:0; opacity:.45 }
+.db-kbd {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  border-radius:7px; padding:3px 8px;
+  font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2);
+  line-height:1.4; white-space:nowrap;
+}
+#page-dashboard[data-theme="light"] .db-kbd { background:rgba(0,0,0,.05); border-color:rgba(0,0,0,.12) }
 
 /* Side Panel */
 .db-side-panel {
@@ -1598,10 +1619,17 @@ footer a:hover{color:var(--text)}
       </div>
       <div class="db-input-area">
         <div class="db-input-box">
-          <input class="ia-field" id="dbChatInput" placeholder="Pergunte sobre ações, dividendos, estratégias..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
+          <span class="db-input-icon">◎</span>
+          <input class="ia-field" id="dbChatInput"
+            placeholder="Pergunte sobre ações, dividendos, estratégias..."
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
+          <div class="db-input-kbd">
+            <span class="db-kbd">↵</span>
+            <span class="db-kbd">Enter</span>
+          </div>
           <button class="ia-send" id="dbSendBtn" onclick="sendDbChat()" style="display:none"></button>
         </div>
-        <div class="ia-input-footer">Blueprint IA · dados da B3 · <span id="iaCreditsHint">50</span> créditos restantes</div>
+        <div class="ia-input-footer">Blueprint IA · <span id="iaCreditsHint">50</span> créditos restantes</div>
       </div>
     </div>
 
