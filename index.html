@@ -2552,7 +2552,7 @@ async function callBlueprintIA(message,history){
     profilePrefix='[PERFIL DO USUARIO]\nPerfil de investidor: '+_userProfile.risk_profile+'\nAporte mensal: '+monthlyStr+'\nObjetivo principal: '+(_userProfile.main_goal||'nao informado')+'\nHorizonte de investimento: '+horizStr+'\n\n';
   }
   // Find relevant knowledge sections
-  var relevant=_kbSearch(message,2);
+  var relevant=_kbSearch(message,3);
   var enrichedMsg=message;
   if(relevant.length>0){
     var ctx=relevant.map(function(s){return '['+s.t+']\n'+s.c;}).join('\n\n');
