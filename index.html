@@ -2340,14 +2340,6 @@ function updateCreditsUI(){
   }
 }
 
-// Recarrega créditos do banco após cada resposta da IA
-// A edge function já deduziu via deduct_credits() no servidor
-async function refreshCreditsAfterIA(){
-  try{
-    const{data:{session}}=await _supabase.auth.getSession();
-    if(session?.user?.id) await loadCredits(session.user.id);
-  }catch(e){console.warn('refreshCredits:',e);}
-}
 
 function showBuyCreditsModal(){
   document.getElementById('buyCreditsModal').classList.add('open');
@@ -2456,6 +2448,10 @@ function _kbSearch(query,topN){
 
 // ── BLUEPRINT IA FETCH ──
 async function callBlueprintIA(message,history){
+  // Sessão obrigatória — bloqueia sem token
+  const {data:{session}}=await _supabase.auth.getSession();
+  if(!session?.access_token) throw new Error('sessao_expirada');
+
   // Inject user profile context
   var profilePrefix='';
   if(_userProfile&&_userProfile.risk_profile){
@@ -2472,21 +2468,39 @@ async function callBlueprintIA(message,history){
   } else if(profilePrefix){
     enrichedMsg=profilePrefix+'[PERGUNTA DO USUARIO]\n'+message;
   }
-  const {data:{session}}=await _supabase.auth.getSession();
-  const headers={'Content-Type':'application/json'};
-  if(session?.access_token)headers['Authorization']='Bearer '+session.access_token;
-  const res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/blueprint-ia',{
-    method:'POST',headers,
-    body:JSON.stringify({message:enrichedMsg,history,originalMessage:message})
-  });
-  const data=await res.json();
-  return data.reply||'Erro ao conectar.';
+
+  // AbortController: timeout de 30 segundos
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),30000);
+
+  try{
+    const res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/blueprint-ia',{
+      method:'POST',
+      signal:controller.signal,
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({message:enrichedMsg,history,originalMessage:message})
+    });
+    clearTimeout(timeout);
+    const data=await res.json();
+    // Atualizar badge de créditos diretamente com o valor retornado pelo servidor
+    if(typeof data.credit_balance==='number'){
+      userCredits=data.credit_balance;
+      updateCreditsUI();
+    }
+    // Tratar erros específicos do servidor
+    if(res.status===401) throw new Error('sessao_expirada');
+    if(res.status===402) throw new Error('creditos_insuficientes');
+    if(!res.ok) throw new Error('erro_servidor');
+    return data.reply||'Erro ao conectar.';
+  }catch(e){
+    clearTimeout(timeout);
+    throw e;
+  }
 }
 
 // ── CHAT IA ──
 let chatHistory=[];
 function sendSugg(text){
-  // Hide suggestion chips
   document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   document.getElementById('dbChatInput').value=text;
   sendDbChat();
@@ -2496,11 +2510,8 @@ async function sendDbChat(){
   const btn=document.getElementById('dbSendBtn');
   const text=input.value.trim();
   if(!text)return;
-  // Check credits
-  if(userCredits<=0){
-    showBuyCreditsModal();
-    return;
-  }
+  // Verificar créditos locais antes de chamar (UX rápida)
+  if(userCredits<=0){showBuyCreditsModal();return;}
   document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   input.value='';input.disabled=true;btn.disabled=true;
   addMsg('user',text);
@@ -2512,8 +2523,20 @@ async function sendDbChat(){
     const cleanReply=stripEmojis(reply);
     chatHistory.push({role:'assistant',content:cleanReply});
     addMsg('ai',renderMarkdown(cleanReply));
-    await refreshCreditsAfterIA(); // atualiza badge com valor real do banco
-  }catch(e){document.getElementById(tid)?.remove();addMsg('ai','⚠️ Erro de conexão. Tente novamente.');}
+  }catch(e){
+    document.getElementById(tid)?.remove();
+    const msg=e.message||'';
+    if(msg==='sessao_expirada'){
+      addMsg('ai','Sua sessao expirou. Faca login novamente.');
+      setTimeout(()=>{_supabase.auth.signOut();goTo('landing');},2000);
+    }else if(msg==='creditos_insuficientes'){
+      showBuyCreditsModal();
+    }else if(msg==='AbortError'||e.name==='AbortError'){
+      addMsg('ai','Tempo de resposta excedido. Tente novamente.');
+    }else{
+      addMsg('ai','Erro de conexao. Tente novamente.');
+    }
+  }
   input.disabled=false;btn.disabled=false;input.focus();
 }
 function addMsg(type,text){
