@@ -1683,7 +1683,7 @@ footer a:hover{color:var(--text)}
         </div>
         <span class="dh-chevron">▾</span>
         <div class="dh-dropdown" id="dhDropdown">
-          <button class="dh-dd-item" onclick="openOnboarding(true);document.getElementById('dhUser').classList.remove('open')"><span class="dh-dd-icon">◎</span>Meu Perfil</button>
+          <button class="dh-dd-item" onclick="editProfile()"><span class="dh-dd-icon">◎</span>Meu Perfil</button>
           <button class="dh-dd-item" onclick="dhNav('modules')"><span class="dh-dd-icon">◫</span>Revisar Módulos</button>
           <button class="dh-dd-item" onclick="dhNav('plans')"><span class="dh-dd-icon">◉</span>Planos e Assinatura</button>
           <button class="dh-dd-item" onclick="showBuyCreditsModal()"><span class="dh-dd-icon">⚡</span>Créditos / Recarregar</button>
@@ -2255,8 +2255,14 @@ async function completeOnboarding(){
   var monthly=parseFloat(document.getElementById('obMonthly').value)||0;
   var {data:{session}}=await _supabase.auth.getSession();
   if(!session){btn.disabled=false;btn.textContent='Salvar meu perfil →';return;}
+  // Construir full_name a partir dos metadados do usuário
+  var meta=session.user.user_metadata||{};
+  var fullName=(meta.full_name||'').trim()||
+    (((meta.first_name||'')+' '+(meta.last_name||'')).trim())||
+    session.user.email.split('@')[0];
   var{error}=await _supabase.from('profiles').upsert({
     id:session.user.id,
+    full_name:fullName,
     risk_profile:_obData.risk,
     monthly_investment:monthly,
     main_goal:_obData.goal,
@@ -2266,14 +2272,58 @@ async function completeOnboarding(){
   },{onConflict:'id'});
   btn.disabled=false;btn.textContent='Salvar meu perfil →';
   if(!error){
-    _userProfile={risk_profile:_obData.risk,monthly_investment:monthly,main_goal:_obData.goal,investment_horizon:_obData.horizon,onboarding_completed:true};
+    _userProfile={
+      full_name:fullName,
+      risk_profile:_obData.risk,
+      monthly_investment:monthly,
+      main_goal:_obData.goal,
+      investment_horizon:_obData.horizon,
+      onboarding_completed:true
+    };
     closeOnboarding();
     var riskLabel={conservador:'Conservador',moderado:'Moderado',arrojado:'Arrojado'}[_obData.risk]||_obData.risk;
     var horizLabel=_obData.horizon<=2?'curto prazo (ate 2 anos)':_obData.horizon<=5?'medio prazo (2-5 anos)':_obData.horizon<=10?'longo prazo (5-10 anos)':'muito longo prazo (+10 anos)';
-    addMsg('assistant','Perfil salvo com sucesso! Agora sei que voce e um investidor '+riskLabel+' com objetivo de '+(_obData.goal||'').toLowerCase()+', aporte mensal de R$'+monthly.toLocaleString('pt-BR')+' e horizonte de '+horizLabel+'. Todas as minhas respostas serao personalizadas para o seu perfil. Como posso te ajudar hoje?');
+    addMsg('assistant','Perfil salvo! Agora sei que voce e um investidor '+riskLabel+' com objetivo de '+(_obData.goal||'').toLowerCase()+', aporte mensal de R$'+monthly.toLocaleString('pt-BR')+' e horizonte de '+horizLabel+'. Minhas respostas serao personalizadas para o seu perfil.');
   } else {
     alert('Erro ao salvar perfil. Tente novamente.');
   }
+}
+
+// Editar perfil: pré-preenche o onboarding com dados existentes
+function editProfile(){
+  document.getElementById('dhUser')?.classList.remove('open');
+  if(_userProfile){
+    _obData={
+      risk:_userProfile.risk_profile||null,
+      goal:_userProfile.main_goal||null,
+      horizon:_userProfile.investment_horizon||null
+    };
+    // Pré-selecionar opções visuais
+    if(_obData.risk){
+      ['conservador','moderado','arrojado'].forEach(function(v){
+        document.getElementById('obRisk_'+v)?.classList.toggle('selected',v===_obData.risk);
+      });
+      document.getElementById('obNext1').disabled=false;
+    }
+    if(_obData.goal){
+      ['reserva','renda','aposentadoria','patrimonio'].forEach(function(id){
+        document.getElementById('obGoal_'+id)?.classList.remove('selected');
+      });
+      var goalEl=document.getElementById('obGoal_'+_obData.goal);
+      if(goalEl)goalEl.classList.add('selected');
+    }
+    if(_obData.horizon){
+      [2,5,10,20].forEach(function(v){
+        document.getElementById('obHorizon_'+v)?.classList.toggle('selected',v===_obData.horizon);
+      });
+    }
+    if(_userProfile.monthly_investment){
+      var monthlyEl=document.getElementById('obMonthly');
+      if(monthlyEl)monthlyEl.value=_userProfile.monthly_investment;
+    }
+    obCheckStep2();
+  }
+  openOnboarding(true);
 }
 
 // ── DROPDOWN ──
