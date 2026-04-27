@@ -298,6 +298,45 @@ footer a:hover{color:var(--text)}
 .bcm-btn{width:100%;padding:14px;background:linear-gradient(135deg,#0369a1,var(--blue));border:none;border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;color:#fff;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(56,189,248,.2)}
 .bcm-btn:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(56,189,248,.4)}
 
+/* ═══ ONBOARDING / PERFIL MODAL ═══ */
+.ob-modal{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;padding:24px}
+.ob-modal.open{display:flex}
+.ob-bg{position:absolute;inset:0;background:rgba(2,4,12,.95);backdrop-filter:blur(16px)}
+.ob-card{position:relative;z-index:1;width:100%;max-width:500px;background:rgba(4,9,26,.98);border:1px solid rgba(59,130,246,.25);border-radius:24px;padding:40px 36px;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+.ob-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.6),transparent)}
+.ob-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#94a3b8;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ob-close:hover{background:rgba(255,255,255,.1);color:#f1f5f9}
+.ob-step{display:none}.ob-step.active{display:block}
+.ob-progress{display:flex;gap:6px;margin-bottom:28px}
+.ob-prog-dot{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.1);transition:background .3s}
+.ob-prog-dot.done{background:#3b82f6}
+.ob-label{font-family:'DM Mono',monospace;font-size:10px;color:#3b82f6;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.ob-title{font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;color:#f1f5f9;margin-bottom:6px}
+.ob-sub{font-size:13px;color:#94a3b8;margin-bottom:24px;line-height:1.6}
+.ob-risk-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+.ob-card-opt{background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.ob-card-opt:hover{border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.06)}
+.ob-card-opt.selected{border-color:#3b82f6;background:rgba(59,130,246,.12)}
+.ob-card-icon{font-size:26px;margin-bottom:8px}
+.ob-card-name{font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+.ob-card-desc{font-size:10px;color:#94a3b8;line-height:1.4}
+.ob-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.ob-opt{background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;text-align:left;cursor:pointer;transition:all .2s;font-family:'Cabinet Grotesk',sans-serif;font-size:14px;color:#f1f5f9;display:flex;align-items:center;gap:12px;width:100%}
+.ob-opt:hover{border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.06)}
+.ob-opt.selected{border-color:#3b82f6;background:rgba(59,130,246,.12)}
+.ob-opt-icon{font-size:18px;flex-shrink:0}
+.ob-input-wrap{margin-bottom:20px}
+.ob-input-label{font-size:12px;color:#94a3b8;margin-bottom:8px;display:block;font-family:'DM Mono',monospace;letter-spacing:.5px}
+.ob-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;font-family:'Cabinet Grotesk',sans-serif;font-size:15px;color:#f1f5f9;outline:none;box-sizing:border-box;transition:border .2s}
+.ob-input:focus{border-color:rgba(59,130,246,.5);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.ob-input::placeholder{color:#475569}
+.ob-actions{display:flex;gap:10px;margin-top:4px}
+.ob-btn-back{flex:0 0 auto;padding:13px 20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:14px;color:#94a3b8;cursor:pointer;transition:all .2s}
+.ob-btn-back:hover{background:rgba(255,255,255,.08);color:#f1f5f9}
+.ob-btn-next{flex:1;padding:13px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;color:#fff;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(59,130,246,.2)}
+.ob-btn-next:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 36px rgba(59,130,246,.4)}
+.ob-btn-next:disabled{opacity:.35;cursor:not-allowed}
+
 /* ═══ MOBILE ═══ */
 .app-mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(4,9,22,.97);border-top:1px solid var(--border2);backdrop-filter:blur(20px)}
 .app-mn-inner{display:flex;justify-content:space-around;padding:6px 0 calc(env(safe-area-inset-bottom,0px) + 6px)}
@@ -1512,6 +1551,81 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
+<!-- ══ ONBOARDING / PERFIL MODAL ══ -->
+<div class="ob-modal" id="obModal">
+  <div class="ob-bg"></div>
+  <div class="ob-card">
+    <button class="ob-close" id="obClose" onclick="closeOnboarding()" style="display:none">✕</button>
+    <div class="ob-progress">
+      <div class="ob-prog-dot done" id="obDot1"></div>
+      <div class="ob-prog-dot" id="obDot2"></div>
+      <div class="ob-prog-dot" id="obDot3"></div>
+    </div>
+    <!-- Step 1: Perfil de risco -->
+    <div class="ob-step active" id="obStep1">
+      <div class="ob-label">Passo 1 de 3</div>
+      <div class="ob-title">Qual é o seu perfil de investidor?</div>
+      <div class="ob-sub">A Blueprint IA vai personalizar cada resposta com base no seu perfil.</div>
+      <div class="ob-risk-cards">
+        <div class="ob-card-opt" id="obRisk_conservador" onclick="selectObOption('risk','conservador')">
+          <div class="ob-card-icon">🛡</div>
+          <div class="ob-card-name">Conservador</div>
+          <div class="ob-card-desc">Segurança acima de tudo</div>
+        </div>
+        <div class="ob-card-opt" id="obRisk_moderado" onclick="selectObOption('risk','moderado')">
+          <div class="ob-card-icon">⚖</div>
+          <div class="ob-card-name">Moderado</div>
+          <div class="ob-card-desc">Equilíbrio risco/retorno</div>
+        </div>
+        <div class="ob-card-opt" id="obRisk_arrojado" onclick="selectObOption('risk','arrojado')">
+          <div class="ob-card-icon">🚀</div>
+          <div class="ob-card-name">Arrojado</div>
+          <div class="ob-card-desc">Maximizar retorno longo prazo</div>
+        </div>
+      </div>
+      <div class="ob-actions">
+        <button class="ob-btn-next" id="obNext1" onclick="obGoStep(2)" disabled>Continuar →</button>
+      </div>
+    </div>
+    <!-- Step 2: Aporte mensal + Objetivo -->
+    <div class="ob-step" id="obStep2">
+      <div class="ob-label">Passo 2 de 3</div>
+      <div class="ob-title">Quanto você investe por mês?</div>
+      <div class="ob-sub">Informe seu aporte mensal e escolha seu objetivo principal.</div>
+      <div class="ob-input-wrap">
+        <label class="ob-input-label">APORTE MENSAL APROXIMADO (R$)</label>
+        <input class="ob-input" id="obMonthly" type="number" min="0" placeholder="ex: 500" oninput="obCheckStep2()">
+      </div>
+      <div class="ob-opts">
+        <button class="ob-opt" id="obGoal_reserva" onclick="selectObOption('goal','Reserva de emergência')"><span class="ob-opt-icon">🏦</span>Reserva de emergência</button>
+        <button class="ob-opt" id="obGoal_renda" onclick="selectObOption('goal','Renda passiva')"><span class="ob-opt-icon">💰</span>Renda passiva mensal</button>
+        <button class="ob-opt" id="obGoal_aposentadoria" onclick="selectObOption('goal','Aposentadoria')"><span class="ob-opt-icon">🏖</span>Aposentadoria</button>
+        <button class="ob-opt" id="obGoal_patrimonio" onclick="selectObOption('goal','Crescimento de patrimônio')"><span class="ob-opt-icon">📈</span>Crescimento de patrimônio</button>
+      </div>
+      <div class="ob-actions">
+        <button class="ob-btn-back" onclick="obGoStep(1)">← Voltar</button>
+        <button class="ob-btn-next" id="obNext2" onclick="obGoStep(3)" disabled>Continuar →</button>
+      </div>
+    </div>
+    <!-- Step 3: Horizonte -->
+    <div class="ob-step" id="obStep3">
+      <div class="ob-label">Passo 3 de 3</div>
+      <div class="ob-title">Qual é o seu horizonte de investimento?</div>
+      <div class="ob-sub">Em quanto tempo você pretende utilizar este dinheiro?</div>
+      <div class="ob-opts">
+        <button class="ob-opt" id="obHorizon_2" onclick="selectObOption('horizon',2)"><span class="ob-opt-icon">⏱</span>Curto prazo — menos de 2 anos</button>
+        <button class="ob-opt" id="obHorizon_5" onclick="selectObOption('horizon',5)"><span class="ob-opt-icon">📅</span>Médio prazo — 2 a 5 anos</button>
+        <button class="ob-opt" id="obHorizon_10" onclick="selectObOption('horizon',10)"><span class="ob-opt-icon">🗓</span>Longo prazo — 5 a 10 anos</button>
+        <button class="ob-opt" id="obHorizon_20" onclick="selectObOption('horizon',20)"><span class="ob-opt-icon">🌱</span>Muito longo prazo — mais de 10 anos</button>
+      </div>
+      <div class="ob-actions">
+        <button class="ob-btn-back" onclick="obGoStep(2)">← Voltar</button>
+        <button class="ob-btn-next" id="obNext3" onclick="completeOnboarding()" disabled>Salvar meu perfil →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ COMPRAR CRÉDITOS MODAL ══ -->
 <div class="buy-credits-modal" id="buyCreditsModal">
   <div class="bcm-bg" onclick="closeBuyCreditsModal()"></div>
@@ -1569,10 +1683,10 @@ footer a:hover{color:var(--text)}
         </div>
         <span class="dh-chevron">▾</span>
         <div class="dh-dropdown" id="dhDropdown">
+          <button class="dh-dd-item" onclick="openOnboarding(true);document.getElementById('dhUser').classList.remove('open')"><span class="dh-dd-icon">◎</span>Meu Perfil</button>
           <button class="dh-dd-item" onclick="dhNav('modules')"><span class="dh-dd-icon">◫</span>Revisar Módulos</button>
           <button class="dh-dd-item" onclick="dhNav('plans')"><span class="dh-dd-icon">◉</span>Planos e Assinatura</button>
           <button class="dh-dd-item" onclick="showBuyCreditsModal()"><span class="dh-dd-icon">⚡</span>Créditos / Recarregar</button>
-          <button class="dh-dd-item"><span class="dh-dd-icon">⚙</span>Configurações</button>
           <div class="dh-dd-divider"></div>
           <div class="dh-dd-theme">
             <span class="dh-dd-theme-label">🌙 Modo Escuro</span>
@@ -1894,6 +2008,7 @@ async function handleLogin(){
     if(error)return showError('loginError',error.message.includes('Invalid')?'Email ou senha incorretos.':error.message);
     const name=data.user.user_metadata?.first_name||data.user.email.split('@')[0];
     populateUserUI(data.user,name);
+    loadUserProfile(data.user.id);
     _authHandled=true;
     document.getElementById('loginSuccess').classList.add('show');
     setTimeout(()=>{_authHandled=false;goTo('dashboard');dhNav('chat');},1600);
@@ -1921,6 +2036,7 @@ async function handleRegister(){
     btn.classList.remove('loading');
     if(error)return showError('registerError',error.message.includes('already')?'Este email já está cadastrado.':error.message);
     populateUserUI(data.user,first);
+    loadUserProfile(data.user.id);
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
     setTimeout(()=>{_authHandled=false;goTo('dashboard');dhNav('chat');},1800);
@@ -1937,6 +2053,7 @@ async function handleLogout(){
   await _supabase.auth.signOut();
   chatHistory=[];
   userCredits=0;
+  _userProfile=null;
   goTo('landing');
 }
 
@@ -1947,6 +2064,7 @@ async function checkSession(){
     const user=session.user;
     const name=(user.user_metadata?.first_name||user.user_metadata?.full_name||user.email.split('@')[0]);
     populateUserUI(user,name);
+    loadUserProfile(user.id);
     goTo('dashboard');
   }
 }
@@ -1957,6 +2075,7 @@ _supabase.auth.onAuthStateChange((event,session)=>{
     const user=session.user;
     const name=(user.user_metadata?.first_name||user.user_metadata?.full_name||user.email.split('@')[0]);
     populateUserUI(user,name);
+    loadUserProfile(user.id);
     if(!_authHandled&&!document.getElementById('page-dashboard').classList.contains('active')){
       goTo('dashboard');
       dhNav('chat');
@@ -2027,6 +2146,115 @@ function dhNav(section){
   });
   if(section==='modules')document.getElementById('dbModulesOverlay')?.classList.add('open');
   else if(section==='plans')document.getElementById('dbPlansOverlay')?.classList.add('open');
+}
+
+// ── PERFIL DO USUÁRIO ──
+let _userProfile=null;
+let _obData={risk:null,goal:null,horizon:null};
+
+async function loadUserProfile(userId){
+  try{
+    const{data,error}=await _supabase.from('profiles')
+      .select('risk_profile,monthly_investment,main_goal,investment_horizon,onboarding_completed')
+      .eq('id',userId).single();
+    if(!error&&data){
+      _userProfile=data;
+      if(!data.onboarding_completed){
+        setTimeout(()=>openOnboarding(false),900);
+      }
+    }
+  }catch(e){console.warn('loadUserProfile:',e);}
+}
+
+function openOnboarding(closeable){
+  _obData={risk:null,goal:null,horizon:null};
+  // Reset UI
+  ['conservador','moderado','arrojado'].forEach(v=>document.getElementById('obRisk_'+v)?.classList.remove('selected'));
+  ['reserva','renda','aposentadoria','patrimonio'].forEach(v=>document.getElementById('obGoal_'+v)?.classList.remove('selected'));
+  [2,5,10,20].forEach(v=>document.getElementById('obHorizon_'+v)?.classList.remove('selected'));
+  var monthly=document.getElementById('obMonthly');if(monthly)monthly.value='';
+  ['obNext1','obNext2','obNext3'].forEach(id=>{var b=document.getElementById(id);if(b)b.disabled=true;});
+  // Pre-fill if editing existing profile
+  if(closeable&&_userProfile&&_userProfile.risk_profile){
+    selectObOption('risk',_userProfile.risk_profile);
+    if(_userProfile.monthly_investment&&monthly)monthly.value=_userProfile.monthly_investment;
+    if(_userProfile.main_goal){
+      selectObOption('goal',_userProfile.main_goal);
+    }
+    if(_userProfile.investment_horizon)selectObOption('horizon',_userProfile.investment_horizon);
+    obCheckStep2();
+  }
+  document.getElementById('obClose').style.display=closeable?'flex':'none';
+  document.getElementById('obModal').classList.add('open');
+  obGoStep(1);
+}
+
+function closeOnboarding(){
+  document.getElementById('obModal').classList.remove('open');
+}
+
+function obGoStep(n){
+  [1,2,3].forEach(function(i){
+    document.getElementById('obStep'+i).classList.toggle('active',i===n);
+    document.getElementById('obDot'+i).classList.toggle('done',i<=n);
+  });
+}
+
+function selectObOption(type,value){
+  if(type==='risk'){
+    _obData.risk=value;
+    ['conservador','moderado','arrojado'].forEach(function(v){
+      document.getElementById('obRisk_'+v).classList.toggle('selected',v===value);
+    });
+    document.getElementById('obNext1').disabled=false;
+  } else if(type==='goal'){
+    _obData.goal=value;
+    ['reserva','renda','aposentadoria','patrimonio'].forEach(function(id){
+      document.getElementById('obGoal_'+id).classList.remove('selected');
+    });
+    var keyMap={'Reserva de emergência':'reserva','Renda passiva':'renda','Aposentadoria':'aposentadoria','Crescimento de patrimônio':'patrimonio'};
+    var el=document.getElementById('obGoal_'+keyMap[value]);
+    if(el)el.classList.add('selected');
+    obCheckStep2();
+  } else if(type==='horizon'){
+    _obData.horizon=value;
+    [2,5,10,20].forEach(function(v){
+      document.getElementById('obHorizon_'+v).classList.toggle('selected',v===value);
+    });
+    document.getElementById('obNext3').disabled=false;
+  }
+}
+
+function obCheckStep2(){
+  var monthly=document.getElementById('obMonthly').value;
+  document.getElementById('obNext2').disabled=!(_obData.goal&&monthly!=='');
+}
+
+async function completeOnboarding(){
+  var btn=document.getElementById('obNext3');
+  btn.disabled=true;btn.textContent='Salvando...';
+  var monthly=parseFloat(document.getElementById('obMonthly').value)||0;
+  var {data:{session}}=await _supabase.auth.getSession();
+  if(!session){btn.disabled=false;btn.textContent='Salvar meu perfil →';return;}
+  var{error}=await _supabase.from('profiles').upsert({
+    id:session.user.id,
+    risk_profile:_obData.risk,
+    monthly_investment:monthly,
+    main_goal:_obData.goal,
+    investment_horizon:_obData.horizon,
+    onboarding_completed:true,
+    updated_at:new Date().toISOString()
+  },{onConflict:'id'});
+  btn.disabled=false;btn.textContent='Salvar meu perfil →';
+  if(!error){
+    _userProfile={risk_profile:_obData.risk,monthly_investment:monthly,main_goal:_obData.goal,investment_horizon:_obData.horizon,onboarding_completed:true};
+    closeOnboarding();
+    var riskLabel={conservador:'Conservador',moderado:'Moderado',arrojado:'Arrojado'}[_obData.risk]||_obData.risk;
+    var horizLabel=_obData.horizon<=2?'curto prazo (ate 2 anos)':_obData.horizon<=5?'medio prazo (2-5 anos)':_obData.horizon<=10?'longo prazo (5-10 anos)':'muito longo prazo (+10 anos)';
+    addMsg('assistant','Perfil salvo com sucesso! Agora sei que voce e um investidor '+riskLabel+' com objetivo de '+(_obData.goal||'').toLowerCase()+', aporte mensal de R$'+monthly.toLocaleString('pt-BR')+' e horizonte de '+horizLabel+'. Todas as minhas respostas serao personalizadas para o seu perfil. Como posso te ajudar hoje?');
+  } else {
+    alert('Erro ao salvar perfil. Tente novamente.');
+  }
 }
 
 // ── DROPDOWN ──
@@ -2203,12 +2431,21 @@ function _kbSearch(query,topN){
 
 // ── BLUEPRINT IA FETCH ──
 async function callBlueprintIA(message,history){
+  // Inject user profile context
+  var profilePrefix='';
+  if(_userProfile&&_userProfile.risk_profile){
+    var horizStr=_userProfile.investment_horizon?_userProfile.investment_horizon+' anos':'nao informado';
+    var monthlyStr=_userProfile.monthly_investment?'R$'+Number(_userProfile.monthly_investment).toLocaleString('pt-BR'):'nao informado';
+    profilePrefix='[PERFIL DO USUARIO]\nPerfil de investidor: '+_userProfile.risk_profile+'\nAporte mensal: '+monthlyStr+'\nObjetivo principal: '+(_userProfile.main_goal||'nao informado')+'\nHorizonte de investimento: '+horizStr+'\n\n';
+  }
   // Find relevant knowledge sections
   var relevant=_kbSearch(message,2);
   var enrichedMsg=message;
   if(relevant.length>0){
     var ctx=relevant.map(function(s){return '['+s.t+']\n'+s.c;}).join('\n\n');
-    enrichedMsg='[BASE DE CONHECIMENTO — Blueprint IA]\n'+ctx+'\n\n[PERGUNTA DO USUÁRIO]\n'+message;
+    enrichedMsg=profilePrefix+'[BASE DE CONHECIMENTO — Blueprint IA]\n'+ctx+'\n\n[PERGUNTA DO USUARIO]\n'+message;
+  } else if(profilePrefix){
+    enrichedMsg=profilePrefix+'[PERGUNTA DO USUARIO]\n'+message;
   }
   const {data:{session}}=await _supabase.auth.getSession();
   const headers={'Content-Type':'application/json'};
