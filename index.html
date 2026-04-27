@@ -2005,7 +2005,7 @@ function populateUserUI(user,name){
   const uavatar=document.getElementById('dbAvatar');
   if(uname)uname.textContent=display;
   if(uavatar)uavatar.textContent=name.charAt(0).toUpperCase();
-  loadCredits(user);
+  loadCredits(user.id);
 }
 
 let _authHandled=false;
@@ -2305,10 +2305,20 @@ function closeDrawer(){
 let userCredits=50;
 let _selectedPack={credits:100,price:'R$ 9,90'};
 
-async function loadCredits(user){
-  const credits=user?.user_metadata?.credits;
-  userCredits=(credits===undefined||credits===null)?50:credits;
-  updateCreditsUI();
+// Lê créditos direto de profiles.credit_balance (fonte de verdade no banco)
+async function loadCredits(userId){
+  if(!userId)return;
+  try{
+    const{data,error}=await _supabase
+      .from('profiles')
+      .select('credit_balance')
+      .eq('id',userId)
+      .single();
+    if(!error&&data!=null){
+      userCredits=data.credit_balance??50;
+      updateCreditsUI();
+    }
+  }catch(e){console.warn('loadCredits:',e);}
 }
 
 function updateCreditsUI(){
@@ -2330,15 +2340,13 @@ function updateCreditsUI(){
   }
 }
 
-async function spendCredit(){
-  if(userCredits<=0)return false;
-  userCredits=Math.max(0,userCredits-10);
-  updateCreditsUI();
-  // Persist to Supabase user_metadata
+// Recarrega créditos do banco após cada resposta da IA
+// A edge function já deduziu via deduct_credits() no servidor
+async function refreshCreditsAfterIA(){
   try{
-    await _supabase.auth.updateUser({data:{credits:userCredits}});
-  }catch(e){console.warn('Could not persist credits',e);}
-  return true;
+    const{data:{session}}=await _supabase.auth.getSession();
+    if(session?.user?.id) await loadCredits(session.user.id);
+  }catch(e){console.warn('refreshCredits:',e);}
 }
 
 function showBuyCreditsModal(){
@@ -2504,7 +2512,7 @@ async function sendDbChat(){
     const cleanReply=stripEmojis(reply);
     chatHistory.push({role:'assistant',content:cleanReply});
     addMsg('ai',renderMarkdown(cleanReply));
-    await spendCredit();
+    await refreshCreditsAfterIA(); // atualiza badge com valor real do banco
   }catch(e){document.getElementById(tid)?.remove();addMsg('ai','⚠️ Erro de conexão. Tente novamente.');}
   input.disabled=false;btn.disabled=false;input.focus();
 }
