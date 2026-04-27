@@ -1884,12 +1884,29 @@ function drawWave(){
 drawWave();
 
 // ── NAVEGAÇÃO ──
-function goTo(page){
+// Páginas que exigem sessão autenticada
+const _PROTECTED_PAGES=['dashboard'];
+
+async function goTo(page){
+  // Se a página for protegida, verificar sessão no Supabase antes de navegar
+  if(_PROTECTED_PAGES.includes(page)){
+    const{data:{session}}=await _supabase.auth.getSession();
+    if(!session){
+      // Redirecionar para login sem expor a página protegida
+      _doGoTo('landing');
+      return;
+    }
+  }
+  _doGoTo(page);
+}
+
+function _doGoTo(page){
   document.querySelectorAll('.page').forEach(p=>{
     p.classList.remove('active');
     p.style.display='';
   });
   const el=document.getElementById('page-'+page);
+  if(!el)return;
   el.classList.add('active');
   window.scrollTo(0,0);
 }
