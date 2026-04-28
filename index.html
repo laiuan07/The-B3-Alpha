@@ -1677,7 +1677,7 @@ footer a:hover{color:var(--text)}
         <span id="creditsNum">50</span>
         <span class="dh-credits-label">créditos</span>
       </div>
-      <div class="dh-plan-badge">Free</div>
+      <div class="dh-plan-badge" id="planBadge">Free</div>
       <div class="dh-user" id="dhUser" onclick="toggleDhDropdown(event)">
         <div class="dh-avatar" id="dbAvatar">U</div>
         <div class="dh-user-info">
@@ -1730,6 +1730,7 @@ footer a:hover{color:var(--text)}
               <div class="ia-sugg-chip" onclick="sendSugg('FII ou imóvel físico — qual rende mais?')">FII vs Imóvel</div>
               <div class="ia-sugg-chip" onclick="sendSugg('Vale investir em Bitcoin agora?')">Bitcoin</div>
               <div class="ia-sugg-chip" onclick="sendSugg('O que é o Ibovespa e como funciona?')">Ibovespa</div>
+              <div class="ia-sugg-chip premium-chip" onclick="runPremiumAnalysis()" style="background:linear-gradient(135deg,rgba(14,165,233,0.15),rgba(59,130,246,0.15));border-color:rgba(56,189,248,0.4);color:#67e8f9">✦ Análise Profunda da Carteira</div>
             </div>
           </div>
         </div>
@@ -1818,10 +1819,58 @@ footer a:hover{color:var(--text)}
           <div class="db-overlay-title">◉ Planos e Assinatura</div>
           <button class="db-overlay-close" onclick="dhNav('chat')">✕</button>
         </div>
+        <div id="plansCurrentStatus" style="text-align:center;margin-bottom:18px;font-size:13px;color:var(--muted)"></div>
         <div class="db-plan-grid">
-          <div class="db-plan-card"><div class="db-plan-badge">Mais em conta</div><div class="db-plan-name">Plano <span>Mensal</span></div><ul class="db-plan-features"><li><span class="db-plan-check">✦</span>IA com dados em tempo real</li><li><span class="db-plan-check">✦</span>Análise de ações e FIIs</li><li><span class="db-plan-check">✦</span>Tira-dúvidas ilimitado</li><li><span class="db-plan-check">✦</span>Acesso aos 4 módulos</li><li><span class="db-plan-check">✦</span>Cancele quando quiser</li></ul><div class="db-plan-price"><sup>R$</sup>27<span style="font-size:22px">,99</span></div><div class="db-plan-period">por mês · cobrado mensalmente</div><button class="db-plan-btn outline" onclick="window.open('https://pay.hotmart.com/E105279724U?off=jve556ja','_blank')">Assinar agora</button></div>
-          <div class="db-plan-card featured" style="position:relative"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0369a1,#3b82f6);color:#fff;font-family:'DM Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;letter-spacing:1px;white-space:nowrap">✦ Melhor custo-benefício</div><div class="db-plan-badge">Recomendado</div><div class="db-plan-name">Plano <span>Anual</span></div><ul class="db-plan-features"><li><span class="db-plan-check">✦</span>Tudo do plano mensal</li><li><span class="db-plan-check">✦</span>Alertas de mercado</li><li><span class="db-plan-check">✦</span>Prioridade em novas features</li><li><span class="db-plan-check">✦</span>Suporte prioritário</li><li><span class="db-plan-check">✦</span>Acesso antecipado</li></ul><div class="db-plan-price"><sup>R$</sup>23<span style="font-size:22px">,90</span></div><div class="db-plan-period">por mês · R$286,80/ano</div><div style="font-size:10px;color:#22c55e;margin-bottom:12px;font-family:'DM Mono',monospace">Economize R$50 por ano</div><button class="db-plan-btn primary" onclick="window.open('https://pay.hotmart.com/E105279724U?off=5tqdpmwm','_blank')">Quero o anual →</button></div>
-          <div class="db-plan-card"><div class="db-plan-badge">Sem recorrência</div><div class="db-plan-name">Plano <span>Teste 30 dias</span></div><ul class="db-plan-features"><li><span class="db-plan-check">✦</span>Acesso completo por 30 dias</li><li><span class="db-plan-check">✦</span>Sem cobrança recorrente</li><li><span class="db-plan-check">✦</span>Todas as funcionalidades</li><li><span class="db-plan-check">✦</span>Ideal para experimentar</li><li><span class="db-plan-check">✦</span>Sem compromisso</li></ul><div class="db-plan-price"><sup>R$</sup>49<span style="font-size:22px">,90</span></div><div class="db-plan-period">pagamento único · sem recorrência</div><button class="db-plan-btn outline" onclick="window.open('https://pay.hotmart.com/E105279724U?off=ur6adiwt','_blank')">Quero testar</button></div>
+          <!-- TRIAL -->
+          <div class="db-plan-card" id="planCardTrial">
+            <div class="db-plan-badge">Sem cartão</div>
+            <div class="db-plan-name">Teste <span>30 dias</span></div>
+            <ul class="db-plan-features">
+              <li><span class="db-plan-check">✦</span>200 créditos grátis</li>
+              <li><span class="db-plan-check">✦</span>Acesso à Blueprint IA</li>
+              <li><span class="db-plan-check">✦</span>Análises de ações e FIIs</li>
+              <li><span class="db-plan-check">✦</span>Todos os 4 módulos</li>
+              <li><span class="db-plan-check">✦</span>Sem cobrança automática</li>
+            </ul>
+            <div class="db-plan-price"><sup>R$</sup>0</div>
+            <div class="db-plan-period">grátis por 30 dias</div>
+            <button class="db-plan-btn outline" id="trialBtn" onclick="activateTrial()">Começar grátis →</button>
+            <div id="trialBtnErr" style="color:#f87171;font-size:12px;text-align:center;margin-top:8px;display:none"></div>
+          </div>
+          <!-- MENSAL -->
+          <div class="db-plan-card">
+            <div class="db-plan-badge">Flexível</div>
+            <div class="db-plan-name">Plano <span>Mensal</span></div>
+            <ul class="db-plan-features">
+              <li><span class="db-plan-check">✦</span>500 créditos por mês</li>
+              <li><span class="db-plan-check">✦</span>Análises especiais premium</li>
+              <li><span class="db-plan-check">✦</span>Análise profunda de carteira</li>
+              <li><span class="db-plan-check">✦</span>Comparativo de ativos</li>
+              <li><span class="db-plan-check">✦</span>Cancele quando quiser</li>
+            </ul>
+            <div class="db-plan-price"><sup>R$</sup>29<span style="font-size:22px">,90</span></div>
+            <div class="db-plan-period">por mês · cobrado mensalmente</div>
+            <button class="db-plan-btn outline" id="monthlyBtn" onclick="subscribePlan('price_1TRAg73lJp1Nui7cMG1f35H2','monthly')">Assinar agora</button>
+            <div id="monthlyBtnErr" style="color:#f87171;font-size:12px;text-align:center;margin-top:8px;display:none"></div>
+          </div>
+          <!-- ANUAL -->
+          <div class="db-plan-card featured" style="position:relative">
+            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0369a1,#3b82f6);color:#fff;font-family:'DM Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;letter-spacing:1px;white-space:nowrap">✦ Melhor custo-benefício</div>
+            <div class="db-plan-badge">Recomendado</div>
+            <div class="db-plan-name">Plano <span>Anual</span></div>
+            <ul class="db-plan-features">
+              <li><span class="db-plan-check">✦</span>500 créditos por mês</li>
+              <li><span class="db-plan-check">✦</span>Tudo do plano mensal</li>
+              <li><span class="db-plan-check">✦</span>Suporte prioritário</li>
+              <li><span class="db-plan-check">✦</span>Acesso antecipado a features</li>
+              <li><span class="db-plan-check">✦</span>Economize R$71,80 por ano</div></li>
+            </ul>
+            <div class="db-plan-price"><sup>R$</sup>23<span style="font-size:22px">,90</span></div>
+            <div class="db-plan-period">por mês · R$287,00/ano</div>
+            <div style="font-size:10px;color:#22c55e;margin-bottom:12px;font-family:'DM Mono',monospace">Economize R$71,80 vs mensal</div>
+            <button class="db-plan-btn primary" id="annualBtn" onclick="subscribePlan('price_1TRAgO3lJp1Nui7cOjp4JcR0','annual')">Quero o anual →</button>
+            <div id="annualBtnErr" style="color:#f87171;font-size:12px;text-align:center;margin-top:8px;display:none"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2182,10 +2231,11 @@ let _obData={risk:null,goal:null,horizon:null};
 async function loadUserProfile(userId){
   try{
     const{data,error}=await _supabase.from('profiles')
-      .select('risk_profile,monthly_investment,main_goal,investment_horizon,onboarding_completed')
+      .select('risk_profile,monthly_investment,main_goal,investment_horizon,onboarding_completed,plan_type,subscription_status,current_period_end,trial_ends_at,trial_used')
       .eq('id',userId).single();
     if(!error&&data){
       _userProfile=data;
+      _updatePlanUI(data);
       if(!data.onboarding_completed){
         setTimeout(()=>openOnboarding(false),900);
       }
@@ -2474,24 +2524,132 @@ async function buyCredits(){
     errEl.style.display='block';
   }
 }
-function choosePlan(name,price){
-  alert('Em breve: planos mensais.\n\nPlano '+name+' — '+price+'/mês');
+// ── PLANOS E ASSINATURAS ──
+async function subscribePlan(priceId, planName){
+  var btnId=planName==='monthly'?'monthlyBtn':'annualBtn';
+  var errId=planName==='monthly'?'monthlyBtnErr':'annualBtnErr';
+  var btn=document.getElementById(btnId);
+  var errEl=document.getElementById(errId);
+  btn.textContent='Redirecionando...'; btn.disabled=true;
+  errEl.style.display='none';
+  try{
+    var{data:{session}}=await _supabase.auth.getSession();
+    if(!session?.access_token) throw new Error('Sessão expirada. Faça login novamente.');
+    var res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/create-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({price_id:priceId, type:'subscription'})
+    });
+    var data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Erro ao iniciar assinatura');
+    window.location.href=data.url;
+  }catch(e){
+    btn.textContent=planName==='monthly'?'Assinar agora':'Quero o anual →';
+    btn.disabled=false;
+    errEl.textContent=e.message;
+    errEl.style.display='block';
+  }
+}
+
+async function activateTrial(){
+  var btn=document.getElementById('trialBtn');
+  var errEl=document.getElementById('trialBtnErr');
+  btn.textContent='Ativando...'; btn.disabled=true;
+  errEl.style.display='none';
+  try{
+    var{data:{session}}=await _supabase.auth.getSession();
+    if(!session?.user?.id) throw new Error('Sessão expirada.');
+    var{data,error}=await _supabase.rpc('activate_trial',{p_user_id:session.user.id});
+    if(error) throw new Error(error.message);
+    if(data?.error==='trial_already_used') throw new Error('Você já usou o período de teste.');
+    // Recarregar perfil e créditos
+    await loadUserProfile(session.user.id);
+    await loadCredits(session.user.id);
+    dhNav('chat');
+    showToast('Trial ativado! 200 créditos adicionados. Bom proveito!','success');
+  }catch(e){
+    btn.textContent='Começar grátis →'; btn.disabled=false;
+    errEl.textContent=e.message; errEl.style.display='block';
+  }
+}
+
+function _updatePlanUI(profile){
+  if(!profile) return;
+  var badge=document.getElementById('planBadge');
+  var status=document.getElementById('plansCurrentStatus');
+  var plan=profile.plan_type||'free';
+  var labels={free:'Free',trial:'Trial',monthly:'Mensal',annual:'Anual'};
+  var colors={free:'',trial:'background:#854d0e;color:#fef08a',monthly:'background:#065f46;color:#6ee7b7',annual:'background:#1e3a5f;color:#93c5fd'};
+  if(badge){
+    badge.textContent=labels[plan]||'Free';
+    badge.style.cssText=(colors[plan]||'')+(colors[plan]?';border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700':'');
+  }
+  // Status na tela de planos
+  if(status){
+    if(plan==='trial'&&profile.trial_ends_at){
+      var end=new Date(profile.trial_ends_at);
+      var days=Math.max(0,Math.ceil((end-Date.now())/86400000));
+      status.textContent='Trial ativo — '+days+' dias restantes';
+    }else if((plan==='monthly'||plan==='annual')&&profile.current_period_end){
+      var end=new Date(profile.current_period_end);
+      status.innerHTML='Plano <strong>'+labels[plan]+'</strong> ativo até '+end.toLocaleDateString('pt-BR');
+    }else if(plan==='free'&&profile.subscription_status==='canceled'&&profile.current_period_end){
+      var end=new Date(profile.current_period_end);
+      status.textContent='Assinatura cancelada. Acesso até '+end.toLocaleDateString('pt-BR');
+    }else{
+      status.textContent='';
+    }
+  }
+  // Atualizar botão trial se já usou
+  var trialBtn=document.getElementById('trialBtn');
+  if(trialBtn&&profile.trial_used){
+    trialBtn.textContent='Trial já utilizado'; trialBtn.disabled=true;
+  }
+  // Marcar plano ativo nos cards
+  if(plan==='monthly'){
+    var mb=document.getElementById('monthlyBtn');
+    if(mb){mb.textContent='Plano atual ✓'; mb.disabled=true;}
+  }
+  if(plan==='annual'){
+    var ab=document.getElementById('annualBtn');
+    if(ab){ab.textContent='Plano atual ✓'; ab.disabled=true;}
+  }
+}
+
+// Análise especial premium (só para assinantes)
+async function runPremiumAnalysis(){
+  var plan=_userProfile?.plan_type||'free';
+  if(plan==='free'||plan==='trial'){
+    dhNav('plans');
+    showToast('Análises especiais disponíveis nos planos Mensal e Anual.','warning');
+    return;
+  }
+  dhNav('chat');
+  var prompt='Faça uma ANÁLISE PROFUNDA DO MEU PERFIL DE INVESTIDOR. Com base no meu perfil (risco: '+(_userProfile?.risk_profile||'não informado')+', objetivo: '+(_userProfile?.main_goal||'não informado')+', horizonte: '+(_userProfile?.investment_horizon||'não informado')+', aporte mensal: R$'+(_userProfile?.monthly_investment||0)+'), me dê:\n1. Alocação ideal de carteira em % (renda fixa, ações, FIIs, exterior)\n2. Os 5 melhores ativos para meu perfil agora\n3. Riscos que devo evitar\n4. Próximos passos concretos';
+  var input=document.getElementById('dbChatInput');
+  if(input){input.value=prompt; sendDbChat();}
 }
 
 // ── HANDLER: retorno do Stripe (success / cancelled) ──
 async function handleStripeReturn(){
   var params=new URLSearchParams(window.location.search);
   var payment=params.get('payment');
+  var plan=params.get('plan');
   if(!payment)return;
-  // limpar param da URL sem recarregar
   history.replaceState({},'',window.location.pathname);
+  var{data:{session}}=await _supabase.auth.getSession();
   if(payment==='success'){
-    // recarregar créditos do servidor
-    var{data:{session}}=await _supabase.auth.getSession();
+    if(session?.user?.id) await loadCredits(session.user.id);
+    showToast('Pagamento aprovado! Seus créditos foram adicionados.','success');
+  }else if(payment==='sub_success'){
+    // Aguardar webhook processar (pequeno delay)
+    await new Promise(r=>setTimeout(r,2500));
     if(session?.user?.id){
+      await loadUserProfile(session.user.id);
       await loadCredits(session.user.id);
     }
-    showToast('Pagamento aprovado! Seus créditos foram adicionados.','success');
+    var planLabel=plan==='annual'?'Anual':'Mensal';
+    showToast('Assinatura '+planLabel+' ativada! 500 créditos adicionados.','success');
   }else if(payment==='cancelled'){
     showToast('Pagamento cancelado. Nenhuma cobrança foi realizada.','warning');
   }
