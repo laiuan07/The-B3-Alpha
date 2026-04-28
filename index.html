@@ -1637,23 +1637,24 @@ footer a:hover{color:var(--text)}
     <div class="bcm-title">Comprar Créditos</div>
     <div class="bcm-sub">Cada mensagem para a Blueprint IA consome 1 crédito. Compre mais para continuar investindo com inteligência.</div>
     <div class="bcm-packs">
-      <div class="bcm-pack selected" id="pack1" onclick="selectPack(this,100,'R$ 9,90')">
+      <div class="bcm-pack selected" id="pack1" onclick="selectPack(this,100,'R$ 9,90','price_1TR9Zc3lJp1Nui7cnYT9YT6U')">
         <div class="bcm-pack-credits">100</div>
         <div class="bcm-pack-label">créditos</div>
         <div class="bcm-pack-price">R$ 9,90</div>
       </div>
-      <div class="bcm-pack" id="pack2" onclick="selectPack(this,300,'R$ 24,90')">
+      <div class="bcm-pack" id="pack2" onclick="selectPack(this,300,'R$ 19,90','price_1TR9Zc3lJp1Nui7conwhy1b5')">
         <div class="bcm-pack-credits">300</div>
         <div class="bcm-pack-label">créditos</div>
-        <div class="bcm-pack-price">R$ 24,90</div>
+        <div class="bcm-pack-price">R$ 19,90</div>
       </div>
-      <div class="bcm-pack" id="pack3" onclick="selectPack(this,700,'R$ 49,90')">
+      <div class="bcm-pack" id="pack3" onclick="selectPack(this,700,'R$ 39,90','price_1TR9Zd3lJp1Nui7ctCfYZFEu')">
         <div class="bcm-pack-credits">700</div>
         <div class="bcm-pack-label">créditos</div>
-        <div class="bcm-pack-price">R$ 49,90</div>
+        <div class="bcm-pack-price">R$ 39,90</div>
       </div>
     </div>
-    <button class="bcm-btn" onclick="buyCredits()">Comprar agora →</button>
+    <button class="bcm-btn" id="bcmBuyBtn" onclick="buyCredits()">Comprar agora →</button>
+    <div id="bcmError" style="color:#f87171;font-size:13px;text-align:center;margin-top:10px;display:none"></div>
   </div>
 </div>
 
@@ -2104,6 +2105,8 @@ _supabase.auth.onAuthStateChange((event,session)=>{
       goTo('dashboard');
       dhNav('chat');
     }
+    // Verificar retorno do Stripe (success/cancelled)
+    handleStripeReturn();
   }
   if(event==='SIGNED_OUT') goTo('landing');
 });
@@ -2395,7 +2398,7 @@ function closeDrawer(){
 
 // ── CREDITS SYSTEM ──
 let userCredits=50;
-let _selectedPack={credits:100,price:'R$ 9,90'};
+let _selectedPack={credits:100,price:'R$ 9,90',priceId:'price_1TR9Zc3lJp1Nui7cnYT9YT6U'};
 
 // Lê créditos direto de profiles.credit_balance (fonte de verdade no banco)
 async function loadCredits(userId){
@@ -2434,23 +2437,74 @@ function updateCreditsUI(){
 
 
 function showBuyCreditsModal(){
+  document.getElementById('bcmError').style.display='none';
+  var btn=document.getElementById('bcmBuyBtn');
+  btn.textContent='Comprar agora →';btn.disabled=false;
   document.getElementById('buyCreditsModal').classList.add('open');
 }
 function closeBuyCreditsModal(){
   document.getElementById('buyCreditsModal').classList.remove('open');
 }
-function selectPack(el,credits,price){
+function selectPack(el,credits,price,priceId){
   document.querySelectorAll('.bcm-pack').forEach(p=>p.classList.remove('selected'));
   el.classList.add('selected');
-  _selectedPack={credits,price};
+  _selectedPack={credits,price,priceId};
 }
 async function buyCredits(){
-  // In production: redirect to payment. For now, show confirmation.
-  alert('Em breve: integração com pagamento.\n\nPacote selecionado: '+_selectedPack.credits+' créditos — '+_selectedPack.price);
-  closeBuyCreditsModal();
+  if(!_selectedPack?.priceId)return;
+  var btn=document.getElementById('bcmBuyBtn');
+  var errEl=document.getElementById('bcmError');
+  btn.textContent='Redirecionando...';btn.disabled=true;
+  errEl.style.display='none';
+  try{
+    var{data:{session}}=await _supabase.auth.getSession();
+    if(!session?.access_token)throw new Error('sessao_expirada');
+    var res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/create-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({price_id:_selectedPack.priceId})
+    });
+    var data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Erro ao iniciar pagamento');
+    closeBuyCreditsModal();
+    window.location.href=data.url;
+  }catch(e){
+    btn.textContent='Comprar agora →';btn.disabled=false;
+    errEl.textContent=e.message==='sessao_expirada'?'Sessão expirada. Faça login novamente.':(e.message||'Erro ao iniciar pagamento. Tente novamente.');
+    errEl.style.display='block';
+  }
 }
 function choosePlan(name,price){
-  alert('Em breve: integração com pagamento.\n\nPlano '+name+' — '+price+'/mês');
+  alert('Em breve: planos mensais.\n\nPlano '+name+' — '+price+'/mês');
+}
+
+// ── HANDLER: retorno do Stripe (success / cancelled) ──
+async function handleStripeReturn(){
+  var params=new URLSearchParams(window.location.search);
+  var payment=params.get('payment');
+  if(!payment)return;
+  // limpar param da URL sem recarregar
+  history.replaceState({},'',window.location.pathname);
+  if(payment==='success'){
+    // recarregar créditos do servidor
+    var{data:{session}}=await _supabase.auth.getSession();
+    if(session?.user?.id){
+      await loadCredits(session.user.id);
+    }
+    showToast('Pagamento aprovado! Seus créditos foram adicionados.','success');
+  }else if(payment==='cancelled'){
+    showToast('Pagamento cancelado. Nenhuma cobrança foi realizada.','warning');
+  }
+}
+
+function showToast(msg,type){
+  var t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.4);transition:opacity .4s';
+  t.style.background=type==='success'?'#059669':type==='warning'?'#d97706':'#dc2626';
+  t.style.color='#fff';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400);},4000);
 }
 
 // ── BLUEPRINT IA KNOWLEDGE BASE (v2 — baseado em blueprint-ia-knowledge-base_1.md) ──
