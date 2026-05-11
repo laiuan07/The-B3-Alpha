@@ -641,74 +641,165 @@ footer a:hover{color:var(--text)}
 }
 
 /* ═══════════════════════════════════════════════
-   DASHBOARD — MODERN FINTECH (LIGHT/DARK)
+   DASHBOARD — BUILDHUB / CHATGPT STYLE
+   Black + Gold Futuristic Theme
 ═══════════════════════════════════════════════ */
 
-/* Theme tokens — Dark (default) */
 #page-dashboard {
-  --d-bg:#070d1a; --d-surface:#0f1629; --d-surface2:#141d35;
-  --d-border:rgba(255,255,255,.08); --d-text:#f1f5f9; --d-text2:#94a3b8;
-  --d-muted:rgba(255,255,255,.06); --d-accent:#3b82f6;
-  --d-accent-glow:rgba(59,130,246,.12); --d-positive:#22c55e;
-  --d-user-bubble:#1e2d4d; font-family:'Cabinet Grotesk',sans-serif;
+  --d-bg:#0a0a0a; --d-sidebar:#111111;
+  --d-surface:#1a1a1a; --d-surface2:#222222;
+  --d-border:rgba(255,255,255,0.08); --d-border2:rgba(255,255,255,0.14);
+  --d-text:#f0f0f0; --d-text2:#888888;
+  --d-accent:#FFD700; --d-accent2:#FACC15;
+  --d-accent-glow:rgba(255,215,0,0.1);
+  --d-positive:#22c55e;
+  --d-user-bubble:#1c1c1c;
+  font-family:'Cabinet Grotesk',sans-serif;
 }
-/* Light theme */
-#page-dashboard[data-theme="light"] {
-  --d-bg:#f0f4f8; --d-surface:#ffffff; --d-surface2:#f8fafc;
-  --d-border:#e2e8f0; --d-text:#0f172a; --d-text2:#475569;
-  --d-muted:#e2e8f0; --d-accent:#2563eb;
-  --d-accent-glow:rgba(37,99,235,.1); --d-positive:#16a34a;
-  --d-user-bubble:#dbeafe;
-}
-#page-dashboard.active { display:flex !important; flex-direction:column; height:100vh; overflow:hidden; background:var(--d-bg) }
 
-/* ── HEADER ── */
-.dh {
+#page-dashboard.active {
+  display:flex !important;
+  flex-direction:row;
+  height:100vh;
+  overflow:hidden;
+  background:var(--d-bg);
+  position:relative;
+}
+
+/* Grid background */
+#page-dashboard.active::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(255,215,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,215,0,0.025) 1px, transparent 1px);
+  background-size:48px 48px;
+}
+/* Radial center glow */
+#page-dashboard.active::after {
+  content:'';
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:70vw; height:60vh; pointer-events:none; z-index:0;
+  background:radial-gradient(ellipse at center, rgba(255,215,0,0.035) 0%, transparent 65%);
+}
+
+/* ── SIDEBAR ── */
+.db-sidebar {
+  width:260px; flex-shrink:0; height:100vh;
+  background:var(--d-sidebar);
+  border-right:1px solid var(--d-border);
+  display:flex; flex-direction:column;
+  position:relative; z-index:10;
+}
+.db-sb-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 14px 10px; flex-shrink:0;
+}
+.db-sb-actions { display:flex; align-items:center; gap:6px }
+.db-sb-icon-btn {
+  width:32px; height:32px; background:none; border:none;
+  cursor:pointer; color:var(--d-text2);
+  display:flex; align-items:center; justify-content:center;
+  border-radius:8px; font-size:15px; transition:all .2s;
+}
+.db-sb-icon-btn:hover { background:var(--d-surface2); color:var(--d-text) }
+.db-sb-search { padding:0 12px 10px; flex-shrink:0 }
+.db-sb-search-wrap {
+  display:flex; align-items:center; gap:8px;
+  background:var(--d-surface); border:1px solid var(--d-border);
+  border-radius:10px; padding:8px 12px; transition:border-color .2s;
+}
+.db-sb-search-wrap:focus-within { border-color:rgba(255,215,0,.4) }
+.db-sb-search-input {
+  flex:1; background:none; border:none; outline:none;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:13px; color:var(--d-text);
+}
+.db-sb-search-input::placeholder { color:var(--d-text2) }
+.db-sb-search-icon { color:var(--d-text2); font-size:12px; flex-shrink:0 }
+.db-sb-history { flex:1; overflow-y:auto; padding:0 10px }
+.db-sb-history::-webkit-scrollbar { width:3px }
+.db-sb-history::-webkit-scrollbar-thumb { background:var(--d-border); border-radius:4px }
+.db-sb-section-title {
+  font-size:11px; font-weight:700; color:var(--d-text2);
+  padding:10px 4px 5px; letter-spacing:.3px;
+}
+.db-sb-chat-item {
+  display:flex; align-items:center; gap:8px;
+  background:var(--d-surface); border:1px solid var(--d-border);
+  border-radius:10px; padding:9px 12px; margin-bottom:5px;
+  cursor:pointer; transition:all .2s;
+}
+.db-sb-chat-item:hover { border-color:var(--d-border2); background:var(--d-surface2) }
+.db-sb-chat-item.active { border-color:rgba(255,215,0,.4); background:var(--d-accent-glow) }
+.db-sb-chat-text {
+  flex:1; font-size:12px; color:var(--d-text2);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.db-sb-chat-dots {
+  background:none; border:none; cursor:pointer; color:var(--d-text2);
+  font-size:14px; padding:0 2px; opacity:0; transition:opacity .2s; flex-shrink:0;
+}
+.db-sb-chat-item:hover .db-sb-chat-dots { opacity:1 }
+.db-sb-upgrade { flex-shrink:0; padding:12px }
+.db-sb-upgrade-card {
+  background:linear-gradient(135deg,rgba(255,215,0,.14),rgba(250,204,21,.06));
+  border:1px solid rgba(255,215,0,.25); border-radius:14px;
+  padding:16px; cursor:pointer; transition:all .2s;
+}
+.db-sb-upgrade-card:hover { border-color:rgba(255,215,0,.45); background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(250,204,21,.1)) }
+.db-sb-upgrade-icon { font-size:18px; display:block; margin-bottom:7px }
+.db-sb-upgrade-title { font-size:13px; font-weight:700; color:var(--d-accent); margin-bottom:4px; line-height:1.3 }
+.db-sb-upgrade-sub { font-size:11px; color:var(--d-text2); line-height:1.4; margin-bottom:10px }
+.db-sb-upgrade-btn {
+  width:28px; height:28px; background:var(--d-accent); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:#000; font-size:14px; font-weight:700; margin-left:auto;
+}
+
+/* ── MAIN AREA ── */
+.db-main {
+  flex:1; display:flex; flex-direction:column;
+  min-width:0; position:relative; z-index:1;
+}
+
+/* Header */
+.db-header {
   height:60px; flex-shrink:0;
-  background:var(--d-surface); border-bottom:1px solid var(--d-border);
-  display:flex; align-items:center; gap:16px; padding:0 20px;
-  position:relative; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px; position:relative; z-index:10;
 }
-.dh-logo { display:flex; align-items:center; gap:9px; background:none; border:none; cursor:pointer; padding:0 }
-.dh-logo-text { font-family:'Clash Display',sans-serif; font-size:15px; font-weight:700; color:var(--d-text) }
-.dh-center { flex:1; max-width:480px; margin:0 auto }
-.dh-search-wrap {
-  display:flex; align-items:center; gap:9px;
-  background:var(--d-surface2); border:1px solid var(--d-border);
-  border-radius:10px; padding:7px 14px; transition:border-color .2s;
-}
-.dh-search-wrap:focus-within { border-color:var(--d-accent) }
-.dh-search-icon { font-size:13px; opacity:.4; color:var(--d-text2) }
-.dh-search { flex:1; background:none; border:none; outline:none; font-family:'Cabinet Grotesk',sans-serif; font-size:13px; color:var(--d-text) }
-.dh-search::placeholder { color:var(--d-text2); opacity:.5 }
-.dh-right { flex-shrink:0; display:flex; align-items:center; gap:10px }
+.db-header-left { display:flex; align-items:center; gap:12px }
+.db-header-logo { display:flex; align-items:center; gap:9px; background:none; border:none; cursor:pointer; padding:0 }
+.db-header-logo-text { font-family:'Clash Display',sans-serif; font-size:15px; font-weight:700; color:var(--d-text) }
+.db-header-right { display:flex; align-items:center; gap:10px; flex-shrink:0 }
+
 .dh-credits {
   display:flex; align-items:center; gap:5px;
-  background:var(--d-surface2); border:1px solid var(--d-border);
+  background:var(--d-surface); border:1px solid var(--d-border);
   border-radius:8px; padding:5px 12px; cursor:pointer;
   font-family:'DM Mono',monospace; font-size:12px; color:var(--d-text2);
   transition:all .2s; white-space:nowrap;
 }
 .dh-credits:hover { border-color:var(--d-accent); color:var(--d-accent) }
-.dh-credits-icon { color:#fbbf24 }
+.dh-credits-icon { color:var(--d-accent) }
 .dh-plan-badge {
   font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.5px;
   background:var(--d-accent-glow); color:var(--d-accent);
-  border:1px solid rgba(59,130,246,.25); border-radius:6px;
+  border:1px solid rgba(255,215,0,.25); border-radius:6px;
   padding:4px 9px; text-transform:uppercase;
 }
 .dh-user {
   position:relative; display:flex; align-items:center; gap:9px;
-  background:var(--d-surface2); border:1px solid var(--d-border);
+  background:var(--d-surface); border:1px solid var(--d-border);
   border-radius:10px; padding:6px 12px 6px 6px;
   cursor:pointer; transition:all .2s; user-select:none;
 }
-.dh-user:hover,.dh-user.open { border-color:var(--d-accent) }
+.dh-user:hover,.dh-user.open { border-color:rgba(255,215,0,.4) }
 .dh-avatar {
-  width:28px; height:28px; border-radius:50%;
-  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,#FFD700,#B8860B);
   display:flex; align-items:center; justify-content:center;
-  font-size:12px; font-weight:800; color:#fff; flex-shrink:0;
+  font-size:13px; font-weight:800; color:#000; flex-shrink:0;
 }
 .dh-user-info { display:flex; flex-direction:column; line-height:1.2 }
 .dh-hello { font-size:10px; color:var(--d-text2); font-family:'DM Mono',monospace }
@@ -717,9 +808,9 @@ footer a:hover{color:var(--text)}
 .dh-user.open .dh-chevron { transform:rotate(180deg) }
 .dh-dropdown {
   position:absolute; top:calc(100% + 8px); right:0;
-  background:var(--d-surface); border:1px solid var(--d-border);
+  background:var(--d-sidebar); border:1px solid var(--d-border);
   border-radius:14px; padding:8px; min-width:220px;
-  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
   display:none; flex-direction:column; gap:2px; z-index:500;
 }
 .dh-user.open .dh-dropdown { display:flex }
@@ -740,133 +831,167 @@ footer a:hover{color:var(--text)}
 .dh-theme-track { position:absolute; inset:0; background:var(--d-border); border-radius:20px; transition:.3s }
 .dh-theme-track:before { content:''; position:absolute; width:14px; height:14px; left:3px; top:3px; background:var(--d-text2); border-radius:50%; transition:.3s }
 .dh-theme-sw input:checked + .dh-theme-track { background:var(--d-accent) }
-.dh-theme-sw input:checked + .dh-theme-track:before { transform:translateX(18px); background:#fff }
+.dh-theme-sw input:checked + .dh-theme-track:before { transform:translateX(18px); background:#000 }
 .dh-dd-logout { color:#ef4444 !important }
 .dh-dd-logout:hover { background:rgba(239,68,68,.08) !important; color:#ef4444 !important }
 
-/* ── BODY ── */
-.db-body { flex:1; display:flex; min-height:0; overflow:hidden; position:relative }
+/* ── WELCOME STATE ── */
+.db-welcome {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:20px 40px 60px; position:relative;
+}
+.db-orb-wrap { width:120px; height:120px; position:relative; margin-bottom:28px }
+.db-orb {
+  width:120px; height:120px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #FFE55C, #D4A000 45%, #6B4F00 80%, #2a1f00 100%);
+  box-shadow:0 0 40px rgba(255,215,0,.5),0 0 80px rgba(255,215,0,.2),inset 0 0 30px rgba(255,255,200,.12);
+  animation:orbPulse 3s ease-in-out infinite, orbFloat 5s ease-in-out infinite;
+}
+@keyframes orbPulse {
+  0%,100%{box-shadow:0 0 40px rgba(255,215,0,.5),0 0 80px rgba(255,215,0,.2),inset 0 0 30px rgba(255,255,200,.12)}
+  50%{box-shadow:0 0 60px rgba(255,215,0,.7),0 0 120px rgba(255,215,0,.3),inset 0 0 40px rgba(255,255,200,.18)}
+}
+@keyframes orbFloat {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)}
+}
+.db-welcome-title {
+  font-family:'Clash Display',sans-serif;
+  font-size:clamp(26px,3vw,38px); font-weight:700;
+  text-align:center; margin-bottom:8px;
+  color:var(--d-text);
+}
+.db-welcome-title .name { color:var(--d-accent) }
+.db-welcome-sub { font-size:14px; color:var(--d-text2); text-align:center; margin-bottom:36px }
+.db-action-cards {
+  display:flex; gap:12px; width:100%; max-width:700px; margin-top:4px;
+}
+.db-action-card {
+  flex:1; background:#111111; border:1px solid var(--d-border);
+  border-radius:18px; padding:16px 14px;
+  cursor:pointer; transition:all .25s;
+  display:flex; align-items:flex-start; gap:12px;
+}
+.db-action-card:hover { border-color:var(--d-accent); box-shadow:0 0 24px rgba(255,215,0,.12) }
+.db-action-icon {
+  width:36px; height:36px; background:var(--d-accent-glow);
+  border-radius:10px; display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0; color:var(--d-accent); border:1px solid rgba(255,215,0,.2);
+}
+.db-action-title { font-size:13px; font-weight:700; color:var(--d-text); margin-bottom:4px }
+.db-action-desc { font-size:11px; color:var(--d-text2); line-height:1.4 }
 
-/* Chat Panel */
-.db-chat-panel { flex:1; display:flex; flex-direction:column; min-width:0; border-right:1px solid var(--d-border) }
-.db-chat-top {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 24px; border-bottom:1px solid var(--d-border);
-  flex-shrink:0; background:var(--d-surface);
-}
-.db-chat-status { display:flex; align-items:center; gap:8px; font-family:'DM Mono',monospace; font-size:11px; color:var(--d-text2) }
-.db-online-dot { width:6px; height:6px; border-radius:50%; background:#22c55e; animation:pulse 2s infinite; flex-shrink:0 }
-.db-chat-action-btn {
-  display:flex; align-items:center; gap:6px;
-  background:none; border:1px solid var(--d-border);
-  border-radius:8px; padding:5px 12px; cursor:pointer;
-  font-family:'Cabinet Grotesk',sans-serif; font-size:12px; font-weight:600;
-  color:var(--d-text2); transition:all .2s;
-}
-.db-chat-action-btn:hover { border-color:var(--d-accent); color:var(--d-accent) }
-.db-msgs-wrap { flex:1; overflow-y:auto; background:var(--d-bg) }
+/* ── CHAT AREA ── */
+.db-chat-area { flex:1; display:flex; flex-direction:column; min-height:0 }
+.db-msgs-wrap { flex:1; overflow-y:auto; padding:24px }
 .db-msgs-wrap::-webkit-scrollbar { width:3px }
 .db-msgs-wrap::-webkit-scrollbar-thumb { background:var(--d-border); border-radius:4px }
-.db-input-area { padding:14px 24px 18px; border-top:1px solid var(--d-border); flex-shrink:0; background:var(--d-surface) }
+.ia-msgs { display:flex; flex-direction:column; gap:18px; max-width:700px; margin:0 auto }
+.ia-msg { display:flex; flex-direction:column; gap:5px }
+.ia-msg-who {
+  font-size:10px; font-weight:700; color:var(--d-text2);
+  font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;
+}
+.ia-msg.user .ia-msg-who { text-align:right }
+.ia-bubble { font-size:14px; line-height:1.65; color:var(--d-text2) }
+.ia-msg.user .ia-bubble {
+  background:var(--d-surface); border:1px solid var(--d-border);
+  color:var(--d-text); border-radius:18px 18px 4px 18px;
+  padding:12px 16px; align-self:flex-end; max-width:80%;
+}
+.ia-msg.ai .ia-bubble { background:none; padding:0 }
+.ia-msg.ai .ia-bubble strong { color:var(--d-text) }
+.ia-msg.ai .ia-bubble h2 { color:var(--d-text); font-size:15px; margin:10px 0 4px; font-family:'Clash Display',sans-serif }
+.ia-msg.ai .ia-bubble h3 { color:var(--d-text); font-size:13.5px; margin:8px 0 3px; font-weight:700 }
+.ia-msg.ai .ia-bubble ul,.ia-msg.ai .ia-bubble ol { padding-left:18px; margin:5px 0; display:flex; flex-direction:column; gap:2px }
+.ia-msg.ai .ia-bubble li { color:var(--d-text2); font-size:13.5px; line-height:1.55 }
+.ia-msg.ai .ia-bubble hr { border:none; border-top:1px solid var(--d-border); margin:8px 0 }
+.ia-msg.ai .ia-bubble table { border-collapse:collapse; width:100%; margin:8px 0; font-size:13px }
+.ia-msg.ai .ia-bubble th { padding:6px 10px; border:1px solid var(--d-border); color:var(--d-accent); font-weight:600; background:var(--d-surface); text-align:left }
+.ia-msg.ai .ia-bubble td { padding:6px 10px; border:1px solid var(--d-border); color:var(--d-text2) }
+.ia-typing { display:flex; gap:4px; align-items:center; padding:6px 0 }
+.ia-typing span { width:6px; height:6px; border-radius:50%; background:var(--d-accent); animation:typingDot 1.4s infinite }
+.ia-typing span:nth-child(2){animation-delay:.2s} .ia-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typingDot{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.ia-suggs { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px }
+.ia-sugg-chip {
+  background:var(--d-surface); border:1px solid var(--d-border);
+  border-radius:100px; padding:7px 14px; font-size:12px; font-weight:600;
+  color:var(--d-text2); cursor:pointer; transition:all .2s;
+}
+.ia-sugg-chip:hover { border-color:var(--d-accent); color:var(--d-accent); background:var(--d-accent-glow) }
+.chat-history-sep { display:flex; align-items:center; gap:10px; margin:12px 0; color:var(--d-text2); font-size:11px; opacity:.5 }
+.chat-history-sep::before,.chat-history-sep::after { content:''; flex:1; height:1px; background:var(--d-border) }
+
+/* ── INPUT AREA ── */
+.db-input-area {
+  padding:12px 24px 20px; flex-shrink:0; position:relative; z-index:5;
+}
 .db-input-box {
-  display:flex; align-items:center; gap:12px;
-  background:#0a0e1c; border:1px solid rgba(255,255,255,.1);
-  border-radius:16px; padding:13px 14px 13px 18px;
+  display:flex; align-items:center; gap:10px;
+  background:#111111; border:1px solid rgba(255,255,255,.1);
+  border-radius:100px; padding:10px 12px 10px 18px;
   transition:border-color .25s, box-shadow .25s;
-  box-shadow:0 2px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
+  max-width:700px; margin:0 auto;
+  box-shadow:0 2px 20px rgba(0,0,0,.3);
 }
 .db-input-box:focus-within {
-  border-color:rgba(91,107,255,.5);
-  box-shadow:0 0 0 3px rgba(91,107,255,.12), 0 2px 20px rgba(0,0,0,.3);
+  border-color:rgba(255,215,0,.35);
+  box-shadow:0 0 0 3px rgba(255,215,0,.07), 0 2px 20px rgba(0,0,0,.3);
 }
-#page-dashboard[data-theme="light"] .db-input-box {
-  background:#f0f4f8; border-color:rgba(0,0,0,.1);
-  box-shadow:0 2px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+.db-input-clip { font-size:17px; color:var(--d-text2); cursor:pointer; flex-shrink:0; transition:color .2s; line-height:1 }
+.db-input-clip:hover { color:var(--d-accent) }
+.db-input-model {
+  display:flex; align-items:center; gap:6px;
+  background:var(--d-surface); border:1px solid var(--d-border);
+  border-radius:100px; padding:5px 11px;
+  font-size:11px; font-weight:600; color:var(--d-text2);
+  cursor:pointer; flex-shrink:0; transition:all .2s;
 }
-#page-dashboard[data-theme="light"] .db-input-box:focus-within {
-  border-color:rgba(37,99,235,.4); box-shadow:0 0 0 3px rgba(37,99,235,.1);
+.db-input-model:hover { border-color:rgba(255,215,0,.3); color:var(--d-accent) }
+.db-input-model-dot { width:6px; height:6px; border-radius:50%; background:var(--d-accent) }
+.ia-field {
+  flex:1; background:none; border:none; outline:none;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:14px; color:var(--d-text);
 }
-.db-input-icon { font-size:15px; opacity:.35; flex-shrink:0; color:var(--d-text2); line-height:1 }
-.db-input-kbd { display:flex; align-items:center; gap:4px; flex-shrink:0; opacity:.45 }
-.db-kbd {
-  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
-  border-radius:7px; padding:3px 8px;
-  font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2);
-  line-height:1.4; white-space:nowrap;
+.ia-field::placeholder { color:var(--d-text2) }
+.ia-send {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--d-accent); border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .2s; color:#000; font-size:15px; line-height:1;
 }
-#page-dashboard[data-theme="light"] .db-kbd { background:rgba(0,0,0,.05); border-color:rgba(0,0,0,.12) }
+.ia-send:hover { transform:scale(1.08); box-shadow:0 0 20px rgba(255,215,0,.45) }
+.ia-send:disabled { opacity:.35; cursor:not-allowed; transform:none }
+.ia-input-footer {
+  text-align:center; font-size:10px; color:var(--d-text2);
+  margin-top:8px; font-family:'DM Mono',monospace; opacity:.45;
+}
 
-/* Side Panel */
-.db-side-panel {
-  width:310px; flex-shrink:0; overflow-y:auto;
-  padding:14px; display:flex; flex-direction:column; gap:10px;
-  background:var(--d-bg);
-}
-.db-side-panel::-webkit-scrollbar { width:3px }
-.db-side-panel::-webkit-scrollbar-thumb { background:var(--d-border) }
-
-/* Cards */
-.db-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:16px; transition:border-color .2s }
-.db-card:hover { border-color:rgba(59,130,246,.25) }
-.db-card-hdr { display:flex; align-items:center; gap:8px; margin-bottom:12px }
-.db-card-icon { font-size:15px }
-.db-card-title { flex:1; font-size:13px; font-weight:700; color:var(--d-text); font-family:'Clash Display',sans-serif; letter-spacing:-.2px }
-.db-card-badge { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.5px; background:var(--d-accent-glow); color:var(--d-accent); border:1px solid rgba(59,130,246,.25); border-radius:5px; padding:2px 7px }
-.db-card-badge.new { background:rgba(34,197,94,.1); color:#22c55e; border-color:rgba(34,197,94,.25) }
-.db-card-action { width:100%; margin-top:10px; padding:8px; background:var(--d-surface2); border:1px solid var(--d-border); border-radius:9px; font-family:'Cabinet Grotesk',sans-serif; font-size:12px; font-weight:700; color:var(--d-text2); cursor:pointer; transition:all .2s; text-align:center }
-.db-card-action:hover { border-color:var(--d-accent); color:var(--d-accent); background:var(--d-accent-glow) }
-.db-port-list { display:flex; flex-direction:column; gap:7px }
-.db-port-item { display:flex; align-items:center; gap:8px }
-.db-port-ticker { font-family:'DM Mono',monospace; font-size:11px; color:var(--d-text); font-weight:600; width:52px; flex-shrink:0 }
-.db-port-bar { flex:1; height:4px; background:var(--d-muted); border-radius:4px; overflow:hidden }
-.db-port-fill { height:100%; background:var(--d-accent); border-radius:4px }
-.db-port-pct { font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2); width:28px; text-align:right; flex-shrink:0 }
-.db-radar-list { display:flex; flex-direction:column; gap:6px }
-.db-radar-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:8px; border:1px solid var(--d-border); background:var(--d-surface2); cursor:pointer; transition:all .2s }
-.db-radar-item:hover { border-color:rgba(59,130,246,.3) }
-.db-radar-item.up .db-radar-arrow { color:#22c55e }
-.db-radar-item.neutral .db-radar-arrow { color:#f59e0b }
-.db-radar-ticker { font-family:'DM Mono',monospace; font-size:11px; color:var(--d-text); font-weight:700; width:46px; flex-shrink:0 }
-.db-radar-signal { flex:1; font-size:11px; color:var(--d-text2); line-height:1.3 }
-.db-radar-arrow { font-size:14px; font-weight:700; flex-shrink:0 }
-.db-indic-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px }
-.db-indic-item { background:var(--d-surface2); border:1px solid var(--d-border); border-radius:9px; padding:8px 10px }
-.db-indic-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--d-text2); letter-spacing:.4px; display:block; margin-bottom:3px }
-.db-indic-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:700; color:var(--d-text); display:block }
-.db-indic-val.up { color:#22c55e }
-.db-news-list { display:flex; flex-direction:column; gap:5px }
-.db-news-item { padding:8px 10px; border-radius:8px; cursor:pointer; border:1px solid transparent; transition:all .2s }
-.db-news-item:hover { background:var(--d-surface2); border-color:var(--d-border) }
-.db-news-src { font-family:'DM Mono',monospace; font-size:9px; color:var(--d-accent); letter-spacing:.4px; display:block; margin-bottom:2px; text-transform:uppercase }
-.db-news-text { font-size:12px; color:var(--d-text2); line-height:1.4 }
-
-/* ── Overlay panels ── */
+/* ── OVERLAY PANELS ── */
 .db-overlay { position:absolute; inset:0; z-index:150; background:var(--d-bg); display:none; overflow-y:auto; flex-direction:column }
 .db-overlay.open { display:flex; animation:slideUp .25s ease }
-@keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .db-overlay-inner { max-width:920px; width:100%; margin:0 auto; padding:28px 24px }
 .db-overlay-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px }
 .db-overlay-title { font-family:'Clash Display',sans-serif; font-size:20px; font-weight:700; color:var(--d-text) }
-.db-overlay-close { width:36px; height:36px; border-radius:10px; background:var(--d-surface2); border:1px solid var(--d-border); font-size:14px; color:var(--d-text2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s }
+.db-overlay-close { width:36px; height:36px; border-radius:10px; background:var(--d-surface); border:1px solid var(--d-border); font-size:14px; color:var(--d-text2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s }
 .db-overlay-close:hover { border-color:#ef4444; color:#ef4444 }
-.db-overlay-ia-cta { width:100%; margin-top:28px; padding:14px; background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(99,102,241,.1)); border:1px solid rgba(59,130,246,.25); border-radius:12px; cursor:pointer; transition:all .2s; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:15px; color:var(--d-accent); text-align:center }
-.db-overlay-ia-cta:hover { background:rgba(59,130,246,.2); border-color:rgba(59,130,246,.4) }
-/* Modules inside overlay */
-.db-overlay .mod-ov-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px }
+.db-overlay-ia-cta { width:100%; margin-top:28px; padding:14px; background:linear-gradient(135deg,rgba(255,215,0,.14),rgba(250,204,21,.08)); border:1px solid rgba(255,215,0,.25); border-radius:12px; cursor:pointer; transition:all .2s; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:15px; color:var(--d-accent); text-align:center }
+.db-overlay-ia-cta:hover { background:rgba(255,215,0,.2); border-color:rgba(255,215,0,.4) }
 .db-mod-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:18px; cursor:pointer; transition:all .2s }
-.db-mod-card:hover { border-color:rgba(59,130,246,.35); transform:translateY(-2px) }
-.db-mod-num { font-family:'DM Mono',monospace; font-size:9px; background:var(--d-accent-glow); color:var(--d-accent); border:1px solid rgba(59,130,246,.2); border-radius:5px; padding:2px 8px; letter-spacing:.5px }
+.db-mod-card:hover { border-color:rgba(255,215,0,.35); transform:translateY(-2px) }
+.db-mod-num { font-family:'DM Mono',monospace; font-size:9px; background:var(--d-accent-glow); color:var(--d-accent); border:1px solid rgba(255,215,0,.2); border-radius:5px; padding:2px 8px; letter-spacing:.5px }
 .db-mod-icon { font-size:24px; display:block; margin:10px 0 6px }
 .db-mod-title { font-family:'Clash Display',sans-serif; font-size:14px; font-weight:700; color:var(--d-text); margin-bottom:5px }
 .db-mod-desc { font-size:12px; color:var(--d-text2); line-height:1.5; margin-bottom:10px }
 .db-mod-meta { display:flex; gap:10px; padding-top:10px; border-top:1px solid var(--d-border) }
 .db-mod-meta span { font-size:11px; color:var(--d-text2) }
 .db-mod-cta { font-size:12px; color:var(--d-accent); font-weight:700; margin-top:8px }
-/* Plans inside overlay */
 .db-plan-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px }
 .db-plan-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:20px; position:relative; transition:all .2s }
-.db-plan-card:hover { border-color:rgba(59,130,246,.3) }
-.db-plan-card.featured { border-color:rgba(59,130,246,.4); background:var(--d-surface2) }
+.db-plan-card:hover { border-color:rgba(255,215,0,.3) }
+.db-plan-card.featured { border-color:rgba(255,215,0,.4); background:var(--d-surface) }
 .db-plan-badge { font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2); margin-bottom:10px }
 .db-plan-name { font-family:'Clash Display',sans-serif; font-size:18px; font-weight:700; color:var(--d-text); margin-bottom:14px }
 .db-plan-name span { color:var(--d-accent) }
@@ -877,87 +1002,36 @@ footer a:hover{color:var(--text)}
 .db-plan-price sup { font-size:16px; vertical-align:super }
 .db-plan-period { font-size:11px; color:var(--d-text2); margin-bottom:14px }
 .db-plan-btn { width:100%; padding:11px; border-radius:10px; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:13px; cursor:pointer; transition:all .2s; border:none }
-.db-plan-btn.outline { background:var(--d-surface2); border:1px solid var(--d-border); color:var(--d-text2) }
+.db-plan-btn.outline { background:var(--d-surface); border:1px solid var(--d-border); color:var(--d-text2) }
 .db-plan-btn.outline:hover { border-color:var(--d-accent); color:var(--d-accent) }
-.db-plan-btn.primary { background:var(--d-accent); color:#fff }
+.db-plan-btn.primary { background:var(--d-accent); color:#000; font-weight:800 }
 .db-plan-btn.primary:hover { opacity:.9 }
 
-/* ── IA messages adapted to theme ── */
-.db-msgs-wrap .ia-msgs { padding:20px 24px; gap:10px; min-height:100%; display:flex; flex-direction:column }
-.db-msgs-wrap .ia-msg-who { color:var(--d-text2) }
-.db-msgs-wrap .ia-bubble { color:var(--d-text2); font-size:13.5px; line-height:1.58 }
-.db-msgs-wrap .ia-msg.user .ia-bubble { background:var(--d-user-bubble); border:1px solid rgba(59,130,246,.2); color:var(--d-text); border-radius:16px 16px 4px 16px; padding:10px 16px }
-.db-msgs-wrap .ia-msg.ai .ia-bubble { background:none; padding:0 }
-.db-msgs-wrap .ia-msg.ai .ia-bubble strong { color:var(--d-text) }
-.db-msgs-wrap .ia-msg.ai .ia-bubble h2 { color:var(--d-text); font-size:15px; margin:10px 0 4px; font-family:'Clash Display',sans-serif }
-.db-msgs-wrap .ia-msg.ai .ia-bubble h3 { color:var(--d-text); font-size:13.5px; margin:8px 0 3px; font-weight:700 }
-.db-msgs-wrap .ia-msg.ai .ia-bubble ul,.db-msgs-wrap .ia-msg.ai .ia-bubble ol { padding-left:18px; margin:5px 0; display:flex; flex-direction:column; gap:2px }
-.db-msgs-wrap .ia-msg.ai .ia-bubble li { color:var(--d-text2); font-size:13.5px; line-height:1.55 }
-.db-msgs-wrap .ia-msg.ai .ia-bubble hr { border:none; border-top:1px solid var(--d-border); margin:8px 0 }
-.db-msgs-wrap .ia-msg.ai .ia-bubble table { border-collapse:collapse; width:100%; margin:8px 0; font-size:13px }
-.db-msgs-wrap .ia-msg.ai .ia-bubble th { padding:6px 10px; border:1px solid var(--d-border); color:var(--d-text); font-weight:600; background:var(--d-surface2); text-align:left }
-.db-msgs-wrap .ia-msg.ai .ia-bubble td { padding:6px 10px; border:1px solid var(--d-border); color:var(--d-text2) }
-.db-msgs-wrap .ia-typing span { background:var(--d-text2) }
-.chat-history-sep { display:flex;align-items:center;gap:10px;margin:12px 0;color:var(--d-text2);font-size:11px;opacity:.5 }
-.chat-history-sep::before,.chat-history-sep::after { content:'';flex:1;height:1px;background:var(--d-border) }
-.db-msgs-wrap .ia-sugg-chip { background:var(--d-surface); border:1px solid var(--d-border); color:var(--d-text2) }
-.db-msgs-wrap .ia-sugg-chip:hover { border-color:var(--d-accent); color:var(--d-accent); background:var(--d-accent-glow) }
-.db-input-area .ia-field { color:var(--d-text) }
-.db-input-area .ia-field::placeholder { color:var(--d-text2); opacity:.5 }
-.db-input-area .ia-send { background:var(--d-accent); color:#fff }
-.db-input-area .ia-send:hover { opacity:.85; transform:scale(1.06) }
-.db-input-area .ia-send:disabled { opacity:.35; cursor:not-allowed; transform:none }
-.db-input-area .ia-input-footer { color:var(--d-text2); opacity:.5; font-size:10px; text-align:center; margin-top:8px; font-family:'DM Mono',monospace }
+/* ── TICKER (kept for JS compatibility) ── */
+.db-ticker { display:none }
 
-/* ── Ticker / Carousel ── */
-.db-ticker{flex-shrink:0;overflow:hidden;border-bottom:1px solid var(--d-border);background:var(--d-surface);position:relative;height:58px}
-.db-ticker::before,.db-ticker::after{content:'';position:absolute;top:0;bottom:0;width:48px;z-index:10;pointer-events:none}
-.db-ticker::before{left:0;background:linear-gradient(to right,var(--d-surface),transparent)}
-.db-ticker::after{right:0;background:linear-gradient(to left,var(--d-surface),transparent)}
-.db-ticker-track{display:flex;gap:6px;padding:8px 10px;height:100%;align-items:center;width:max-content;animation:tickerScroll 40s linear infinite}
-.db-ticker-track:hover{animation-play-state:paused}
-@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.db-ticker-card{flex-shrink:0;background:var(--d-surface2);border:1px solid var(--d-border);border-radius:10px;padding:5px 11px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:2px;min-width:108px;user-select:none}
-.db-ticker-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.25)}
-.db-ticker-card.up{border-color:rgba(34,197,94,.18)}
-.db-ticker-card.up:hover{border-color:rgba(34,197,94,.45)}
-.db-ticker-card.down{border-color:rgba(239,68,68,.18)}
-.db-ticker-card.down:hover{border-color:rgba(239,68,68,.45)}
-.db-ticker-row1{display:flex;align-items:baseline;gap:5px}
-.db-ticker-ticker{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--d-text)}
-.db-ticker-name{font-size:10px;color:var(--d-text2);white-space:nowrap;overflow:hidden;max-width:60px;text-overflow:ellipsis}
-.db-ticker-row2{display:flex;align-items:center;justify-content:space-between}
-.db-ticker-price{font-family:'DM Mono',monospace;font-size:11.5px;font-weight:700;color:var(--d-text)}
-.db-ticker-var{font-family:'DM Mono',monospace;font-size:10px;font-weight:700}
-.db-ticker-var.up{color:#22c55e}
-.db-ticker-var.down{color:#ef4444}
-.db-ticker-dot{width:5px;height:5px;border-radius:50%;margin-right:2px;flex-shrink:0;display:inline-block;vertical-align:middle}
-.db-ticker-dot.up{background:#22c55e}
-.db-ticker-dot.down{background:#ef4444}
-
-/* Mobile drawer */
+/* Mobile */
 .db-mob-menu-btn { display:none; background:none; border:none; cursor:pointer; font-size:20px; color:var(--d-text2); padding:4px }
-.db-drawer-overlay { display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,.55); backdrop-filter:blur(2px) }
+.db-drawer-overlay { display:none; position:fixed; inset:0; z-index:299; background:rgba(0,0,0,.6); backdrop-filter:blur(4px) }
 .db-drawer-overlay.open { display:block }
-.db-drawer { position:fixed; top:0; left:0; bottom:0; width:280px; z-index:400; background:var(--d-surface); border-right:1px solid var(--d-border); display:flex; flex-direction:column; padding:20px 16px; transform:translateX(-100%); transition:transform .3s ease }
-.db-drawer.open { transform:translateX(0) }
-.db-drawer-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--d-border) }
-.db-drawer-nav { display:flex; flex-direction:column; gap:4px }
-.db-drawer-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; border:none; background:none; text-align:left; cursor:pointer; transition:all .2s; font-family:'Cabinet Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--d-text2) }
+.db-drawer { position:fixed; top:0; left:0; bottom:0; width:280px; z-index:400; background:var(--d-sidebar); border-right:1px solid var(--d-border); display:flex; flex-direction:column; transform:translateX(-100%); transition:transform .3s }
+.db-drawer.open { transform:none }
+.db-drawer-hdr { display:flex; align-items:center; justify-content:space-between; padding:20px 16px 14px; border-bottom:1px solid var(--d-border) }
+.db-drawer-nav { display:flex; flex-direction:column; gap:4px; padding:12px 8px }
+.db-drawer-item { display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px; border:none; background:none; width:100%; text-align:left; cursor:pointer; font-family:'Cabinet Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--d-text2); transition:all .2s }
 .db-drawer-item:hover { background:var(--d-surface2); color:var(--d-text) }
 
-@media(max-width:960px){
-  .db-side-panel { display:none }
+@media(max-width:900px){
+  .db-sidebar { display:none }
   .db-mob-menu-btn { display:flex }
-  .dh-center { display:none }
-  .db-input-area { padding:12px 16px 16px }
-  .db-msgs-wrap .ia-msgs { padding:14px 16px }
-  .db-chat-top { padding:10px 16px }
+  .db-action-cards { flex-direction:column }
 }
 @media(max-width:600px){
-  .dh { padding:0 14px; gap:10px }
+  .db-welcome { padding:20px 16px 60px }
+  .db-header { padding:0 16px }
+  .db-input-area { padding:10px 12px 16px }
   .dh-plan-badge,.dh-hello { display:none }
-  .db-chat-top { gap:8px }
+  .dh-user-info { display:none }
 }
 
 </style>
@@ -1661,139 +1735,152 @@ footer a:hover{color:var(--text)}
 <!-- ══ APP PÓS-LOGIN ══ -->
 <div id="page-dashboard" class="page" data-theme="dark">
 
-  <!-- HEADER -->
-  <header class="dh">
-    <div class="dh-left">
-      <button class="dh-logo" onclick="dhNav('chat')">
-        <svg width="26" height="20" viewBox="0 0 110 90" fill="none"><defs><linearGradient id="lg4" x1="0" y1="0" x2="110" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#67e8f9"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="url(#lg4)"/></svg>
-        <span class="dh-logo-text">Blueprint</span>
-      </button>
-    </div>
-    <div class="dh-center"></div>
-    <div class="dh-right">
-      <button class="db-mob-menu-btn" onclick="openDrawer()">☰</button>
-      <div class="dh-credits" id="creditsBadge" onclick="showBuyCreditsModal()">
-        <span class="dh-credits-icon">⚡</span>
-        <span id="creditsNum">50</span>
-        <span class="dh-credits-label">créditos</span>
+  <!-- ═══ SIDEBAR ═══ -->
+  <div class="db-sidebar">
+    <div class="db-sb-top">
+      <div class="db-sb-actions">
+        <button class="db-sb-icon-btn" title="Nova conversa" onclick="newIaChat()">✏</button>
       </div>
-      <div class="dh-plan-badge" id="planBadge">Free</div>
-      <div class="dh-user" id="dhUser" onclick="toggleDhDropdown(event)">
-        <div class="dh-avatar" id="dbAvatar">U</div>
-        <div class="dh-user-info">
-          <span class="dh-hello">Olá,</span>
-          <span class="dh-username" id="dbUserName">Usuário</span>
+      <button class="db-sb-icon-btn" title="Histórico">☰</button>
+    </div>
+
+    <div class="db-sb-search">
+      <div class="db-sb-search-wrap">
+        <span class="db-sb-search-icon">🔍</span>
+        <input class="db-sb-search-input" placeholder="Buscar conversa..." type="text">
+      </div>
+    </div>
+
+    <div class="db-sb-history" id="dbSbHistory">
+      <div class="db-sb-section-title">Hoje</div>
+      <div class="db-sb-chat-item" id="iaHist1" style="display:none" onclick="newIaChat()">
+        <span class="db-sb-chat-text" id="iaHist1Text"></span>
+        <button class="db-sb-chat-dots">···</button>
+      </div>
+      <div class="db-sb-section-title">Ontem</div>
+      <div class="db-sb-chat-item" id="iaHist2" style="display:none">
+        <span class="db-sb-chat-text" id="iaHist2Text"></span>
+        <button class="db-sb-chat-dots">···</button>
+      </div>
+      <div class="db-sb-section-title">7 dias atrás</div>
+      <div class="db-sb-chat-item" id="iaHist3" style="display:none">
+        <span class="db-sb-chat-text" id="iaHist3Text"></span>
+        <button class="db-sb-chat-dots">···</button>
+      </div>
+    </div>
+
+    <div class="db-sb-upgrade">
+      <div class="db-sb-upgrade-card" onclick="dhNav('plans')">
+        <span class="db-sb-upgrade-icon">🔒</span>
+        <div class="db-sb-upgrade-title">Assine um plano para desbloquear recursos avançados</div>
+        <div class="db-sb-upgrade-sub">Análises profundas e 500 créditos/mês</div>
+        <div class="db-sb-upgrade-btn">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN AREA ═══ -->
+  <div class="db-main">
+
+    <!-- HEADER -->
+    <header class="db-header">
+      <div class="db-header-left">
+        <button class="db-mob-menu-btn" onclick="openDrawer()">☰</button>
+        <button class="db-header-logo" onclick="showWelcome()">
+          <svg width="26" height="20" viewBox="0 0 110 90" fill="none"><defs><linearGradient id="lg4" x1="0" y1="0" x2="110" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FACC15"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="url(#lg4)"/></svg>
+          <span class="db-header-logo-text">Blueprint</span>
+        </button>
+      </div>
+      <div class="db-header-right">
+        <div class="dh-credits" id="creditsBadge" onclick="showBuyCreditsModal()">
+          <span class="dh-credits-icon">⚡</span>
+          <span id="creditsNum">50</span>
+          <span>créditos</span>
         </div>
-        <span class="dh-chevron">▾</span>
-        <div class="dh-dropdown" id="dhDropdown">
-          <button class="dh-dd-item" onclick="editProfile()"><span class="dh-dd-icon">◎</span>Meu Perfil</button>
-          <button class="dh-dd-item" onclick="dhNav('modules')"><span class="dh-dd-icon">◫</span>Revisar Módulos</button>
-          <button class="dh-dd-item" onclick="dhNav('plans')"><span class="dh-dd-icon">◉</span>Planos e Assinatura</button>
-          <button class="dh-dd-item" onclick="showBuyCreditsModal()"><span class="dh-dd-icon">⚡</span>Créditos / Recarregar</button>
-          <div class="dh-dd-divider"></div>
-          <div class="dh-dd-theme">
-            <span class="dh-dd-theme-label">🌙 Modo Escuro</span>
-            <label class="dh-theme-sw"><input type="checkbox" id="themeToggle" checked onchange="toggleDashTheme(this)"><span class="dh-theme-track"></span></label>
+        <div class="dh-plan-badge" id="planBadge">Free</div>
+        <div class="dh-user" id="dhUser" onclick="toggleDhDropdown(event)">
+          <div class="dh-avatar" id="dbAvatar">U</div>
+          <div class="dh-user-info">
+            <span class="dh-hello">Olá,</span>
+            <span class="dh-username" id="dbUserName">Usuário</span>
           </div>
-          <div class="dh-dd-divider"></div>
-          <button class="dh-dd-item dh-dd-logout" onclick="handleLogout()"><span class="dh-dd-icon">↩</span>Sair</button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- BODY -->
-  <div class="db-body">
-
-    <!-- LEFT: IA Chat -->
-    <div class="db-chat-panel">
-      <div class="db-chat-top">
-        <div class="db-chat-status"><span class="db-online-dot"></span>Blueprint IA — Online</div>
-        <div class="db-chat-actions">
-          <button class="db-chat-action-btn" onclick="newIaChat()">⊕ Novo chat</button>
-        </div>
-      </div>
-      <!-- Ticker B3 -->
-      <div class="db-ticker" id="dbTicker">
-        <div class="db-ticker-track" id="dbTickerTrack"></div>
-      </div>
-
-      <div class="db-msgs-wrap">
-        <div class="ia-msgs" id="dbChatMessages">
-          <div class="ia-msg ai">
-            <div class="ia-msg-who">Blueprint IA</div>
-            <div class="ia-bubble">Olá. Sou a <strong>Blueprint IA</strong> — especialista em investimentos brasileiros.<br>Posso analisar ações, FIIs, renda fixa, criptos e ajudar a montar sua carteira com base em dados reais da B3.<br>O que você quer saber?</div>
-            <div class="ia-suggs">
-              <div class="ia-sugg-chip" onclick="sendSugg('Analise a PETR4 — vale comprar agora?')">Analisar PETR4</div>
-              <div class="ia-sugg-chip" onclick="sendSugg('Qual o melhor CDB com a Selic a 14,75%?')">Melhor CDB</div>
-              <div class="ia-sugg-chip" onclick="sendSugg('Como montar uma carteira com R$1.000?')">Montar carteira</div>
-              <div class="ia-sugg-chip" onclick="sendSugg('FII ou imóvel físico — qual rende mais?')">FII vs Imóvel</div>
-              <div class="ia-sugg-chip" onclick="sendSugg('Vale investir em Bitcoin agora?')">Bitcoin</div>
-              <div class="ia-sugg-chip" onclick="sendSugg('O que é o Ibovespa e como funciona?')">Ibovespa</div>
-              <div class="ia-sugg-chip premium-chip" onclick="runPremiumAnalysis()" style="background:linear-gradient(135deg,rgba(14,165,233,0.15),rgba(59,130,246,0.15));border-color:rgba(56,189,248,0.4);color:#67e8f9">✦ Análise Profunda da Carteira</div>
+          <span class="dh-chevron">▾</span>
+          <div class="dh-dropdown" id="dhDropdown">
+            <button class="dh-dd-item" onclick="editProfile()"><span class="dh-dd-icon">◎</span>Meu Perfil</button>
+            <button class="dh-dd-item" onclick="dhNav('modules')"><span class="dh-dd-icon">◫</span>Revisar Módulos</button>
+            <button class="dh-dd-item" onclick="dhNav('plans')"><span class="dh-dd-icon">◉</span>Planos e Assinatura</button>
+            <button class="dh-dd-item" onclick="showBuyCreditsModal()"><span class="dh-dd-icon">⚡</span>Créditos / Recarregar</button>
+            <div class="dh-dd-divider"></div>
+            <div class="dh-dd-theme">
+              <span class="dh-dd-theme-label">🌙 Modo Escuro</span>
+              <label class="dh-theme-sw"><input type="checkbox" id="themeToggle" checked onchange="toggleDashTheme(this)"><span class="dh-theme-track"></span></label>
             </div>
+            <div class="dh-dd-divider"></div>
+            <button class="dh-dd-item dh-dd-logout" onclick="handleLogout()"><span class="dh-dd-icon">↩</span>Sair</button>
           </div>
         </div>
       </div>
-      <div class="db-input-area">
-        <div class="db-input-box">
-          <span class="db-input-icon">◎</span>
-          <input class="ia-field" id="dbChatInput"
-            placeholder="Pergunte sobre ações, dividendos, estratégias..."
-            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
-          <div class="db-input-kbd">
-            <span class="db-kbd">↵</span>
-            <span class="db-kbd">Enter</span>
+    </header>
+
+    <!-- WELCOME STATE -->
+    <div class="db-welcome" id="dbWelcome">
+      <div class="db-orb-wrap">
+        <div class="db-orb"></div>
+      </div>
+      <h1 class="db-welcome-title">Bem-vindo de volta, <span class="name" id="dbWelcomeName">Investidor</span>!</h1>
+      <p class="db-welcome-sub">Qual análise de investimento você quer fazer hoje?</p>
+      <div class="db-action-cards">
+        <div class="db-action-card" onclick="sendSugg('Quais as melhores ações da B3 para comprar agora?')">
+          <div class="db-action-icon">📈</div>
+          <div>
+            <div class="db-action-title">Analisar ações</div>
+            <div class="db-action-desc">Melhores oportunidades na B3 com análise fundamentalista</div>
           </div>
-          <button class="ia-send" id="dbSendBtn" onclick="sendDbChat()" style="display:none"></button>
         </div>
-        <div class="ia-input-footer">Blueprint IA · <span id="iaCreditsHint">50</span> créditos restantes</div>
+        <div class="db-action-card" onclick="sendSugg('Como montar uma carteira diversificada com renda fixa e variável?')">
+          <div class="db-action-icon">💼</div>
+          <div>
+            <div class="db-action-title">Montar carteira</div>
+            <div class="db-action-desc">Carteira personalizada para o seu perfil de investidor</div>
+          </div>
+        </div>
+        <div class="db-action-card" onclick="sendSugg('Qual o melhor investimento com a Selic a 14,75%?')">
+          <div class="db-action-icon">🧮</div>
+          <div>
+            <div class="db-action-title">Calcular rendimentos</div>
+            <div class="db-action-desc">Compare CDB, LCI, Tesouro Direto e FIIs</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RIGHT: Info Panel -->
-    <aside class="db-side-panel">
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">💼</span><span class="db-card-title">Carteira Sugerida</span><span class="db-card-badge">IA</span></div>
-        <div class="db-port-list">
-          <div class="db-port-item"><span class="db-port-ticker">PETR4</span><div class="db-port-bar"><div class="db-port-fill" style="width:25%"></div></div><span class="db-port-pct">25%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">MXRF11</span><div class="db-port-bar"><div class="db-port-fill" style="width:20%"></div></div><span class="db-port-pct">20%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">Tesouro</span><div class="db-port-bar"><div class="db-port-fill" style="width:30%;background:#22c55e"></div></div><span class="db-port-pct">30%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">BTC</span><div class="db-port-bar"><div class="db-port-fill" style="width:10%;background:#f59e0b"></div></div><span class="db-port-pct">10%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">CDB</span><div class="db-port-bar"><div class="db-port-fill" style="width:15%;background:#8b5cf6"></div></div><span class="db-port-pct">15%</span></div>
-        </div>
-        <button class="db-card-action" onclick="sendSugg('Monte uma carteira diversificada para mim')">Personalizar com IA →</button>
+    <!-- CHAT AREA (shown when conversation is active) -->
+    <div class="db-chat-area" id="dbChatArea" style="display:none">
+      <div class="db-msgs-wrap" id="dbMsgsWrap">
+        <div class="ia-msgs" id="dbChatMessages"></div>
       </div>
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">📡</span><span class="db-card-title">Radar de Oportunidades</span><span class="db-card-badge new">NOVO</span></div>
-        <div class="db-radar-list">
-          <div class="db-radar-item up" onclick="sendSugg('Analise a VALE3 — está em oportunidade de entrada?')"><span class="db-radar-ticker">VALE3</span><span class="db-radar-signal">Oportunidade de entrada</span><span class="db-radar-arrow">↑</span></div>
-          <div class="db-radar-item neutral" onclick="sendSugg('Analise o BBAS3 — vale esperar o suporte?')"><span class="db-radar-ticker">BBAS3</span><span class="db-radar-signal">Aguardar próximo suporte</span><span class="db-radar-arrow">→</span></div>
-          <div class="db-radar-item up" onclick="sendSugg('Analise o KNRI11 — o dividend yield está atrativo?')"><span class="db-radar-ticker">KNRI11</span><span class="db-radar-signal">DY atrativo 0,8%/mês</span><span class="db-radar-arrow">↑</span></div>
+    </div>
+
+    <!-- Ticker hidden (kept for JS compatibility) -->
+    <div class="db-ticker" id="dbTicker" style="display:none">
+      <div class="db-ticker-track" id="dbTickerTrack"></div>
+    </div>
+
+    <!-- INPUT BAR -->
+    <div class="db-input-area">
+      <div class="db-input-box">
+        <span class="db-input-clip" title="Anexar">📎</span>
+        <div class="db-input-model">
+          <span class="db-input-model-dot"></span>
+          Blueprint IA
         </div>
-        <button class="db-card-action" onclick="sendSugg('Quais as melhores oportunidades na B3 agora?')">Analisar com IA →</button>
+        <input class="ia-field" id="dbChatInput"
+          placeholder="Pergunte sobre ações, dividendos, estratégias..."
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
+        <button class="ia-send" id="dbSendBtn" onclick="sendDbChat()">➤</button>
       </div>
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">📊</span><span class="db-card-title">Indicadores Econômicos</span></div>
-        <div class="db-indic-grid">
-          <div class="db-indic-item"><span class="db-indic-label">SELIC</span><span class="db-indic-val">14,75%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">CDI</span><span class="db-indic-val">14,65%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IPCA</span><span class="db-indic-val">5,48%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IBOV</span><span class="db-indic-val up">134.2k</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">Dólar</span><span class="db-indic-val">R$5,68</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IGP-M</span><span class="db-indic-val">6,2%</span></div>
-        </div>
-      </div>
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">📰</span><span class="db-card-title">Notícias do Mercado</span></div>
-        <div class="db-news-list">
-          <div class="db-news-item" onclick="sendSugg('O que aconteceu com a Petrobras recentemente?')"><span class="db-news-src">Infomoney</span><span class="db-news-text">Petrobras anuncia dividendos acima do esperado</span></div>
-          <div class="db-news-item" onclick="sendSugg('Como o Fed impacta os investimentos no Brasil?')"><span class="db-news-src">Valor Econômico</span><span class="db-news-text">Fed mantém juros, Ibovespa reage positivamente</span></div>
-          <div class="db-news-item" onclick="sendSugg('O que é o Tesouro IPCA+ e vale investir agora?')"><span class="db-news-src">XP Investimentos</span><span class="db-news-text">Tesouro IPCA+ atinge maior rentabilidade em 2 anos</span></div>
-        </div>
-        <button class="db-card-action" onclick="sendSugg('Quais as principais notícias do mercado hoje?')">Ver análise da IA →</button>
-      </div>
-    </aside>
+      <div class="ia-input-footer">Blueprint IA · <span id="iaCreditsHint">50</span> créditos restantes</div>
+    </div>
 
     <!-- OVERLAY: Módulos -->
     <div class="db-overlay" id="dbModulesOverlay">
@@ -1802,7 +1889,7 @@ footer a:hover{color:var(--text)}
           <div class="db-overlay-title">◫ Módulos do Curso</div>
           <button class="db-overlay-close" onclick="dhNav('chat')">✕</button>
         </div>
-        <div class="db-mod-ov-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
           <div class="db-mod-card" onclick="openModule(1)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 01</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">🚀</span><div class="db-mod-title">Investindo na B3</div><div class="db-mod-desc">Do zero ao primeiro investimento. Ações, Ibovespa e como abrir conta em uma corretora.</div><div class="db-mod-meta"><span>📹 12 aulas</span><span>⏱ ~2h</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
           <div class="db-mod-card" onclick="openModule(2)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 02</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">🏢</span><div class="db-mod-title">Fundos Imobiliários</div><div class="db-mod-desc">Invista em imóveis sem ter um imóvel. FIIs, dividendos mensais e como analisar um fundo.</div><div class="db-mod-meta"><span>📹 10 aulas</span><span>⏱ ~1h40</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
           <div class="db-mod-card" onclick="openModule(3)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="db-mod-num">MOD 03</span><span style="font-size:10px;color:#22c55e;margin-left:auto">✦ Disponível</span></div><span class="db-mod-icon">💰</span><div class="db-mod-title">Renda Fixa & Impostos</div><div class="db-mod-desc">Tesouro Direto, CDB, LCI e LCA. Quanto rende, como declarar e qual escolher.</div><div class="db-mod-meta"><span>📹 8 aulas</span><span>⏱ ~1h20</span></div><div class="db-mod-cta">Acessar módulo →</div></div>
@@ -1821,7 +1908,6 @@ footer a:hover{color:var(--text)}
         </div>
         <div id="plansCurrentStatus" style="text-align:center;margin-bottom:18px;font-size:13px;color:var(--muted)"></div>
         <div class="db-plan-grid">
-          <!-- TRIAL -->
           <div class="db-plan-card" id="planCardTrial">
             <div class="db-plan-badge">Sem cartão</div>
             <div class="db-plan-name">Teste <span>30 dias</span></div>
@@ -1837,7 +1923,6 @@ footer a:hover{color:var(--text)}
             <button class="db-plan-btn outline" id="trialBtn" onclick="activateTrial()">Começar grátis →</button>
             <div id="trialBtnErr" style="color:#f87171;font-size:12px;text-align:center;margin-top:8px;display:none"></div>
           </div>
-          <!-- MENSAL -->
           <div class="db-plan-card">
             <div class="db-plan-badge">Flexível</div>
             <div class="db-plan-name">Plano <span>Mensal</span></div>
@@ -1853,9 +1938,8 @@ footer a:hover{color:var(--text)}
             <button class="db-plan-btn outline" id="monthlyBtn" onclick="subscribePlan('price_1TRAg73lJp1Nui7cMG1f35H2','monthly')">Assinar agora</button>
             <div id="monthlyBtnErr" style="color:#f87171;font-size:12px;text-align:center;margin-top:8px;display:none"></div>
           </div>
-          <!-- ANUAL -->
           <div class="db-plan-card featured" style="position:relative">
-            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0369a1,#3b82f6);color:#fff;font-family:'DM Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;letter-spacing:1px;white-space:nowrap">✦ Melhor custo-benefício</div>
+            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#a07800,#FFD700);color:#000;font-family:'DM Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;letter-spacing:1px;white-space:nowrap;font-weight:700">✦ Melhor custo-benefício</div>
             <div class="db-plan-badge">Recomendado</div>
             <div class="db-plan-name">Plano <span>Anual</span></div>
             <ul class="db-plan-features">
@@ -1875,7 +1959,7 @@ footer a:hover{color:var(--text)}
       </div>
     </div>
 
-  </div>
+  </div><!-- /db-main -->
 
   <!-- Mobile Drawer -->
   <div class="db-drawer-overlay" id="dbDrawerOverlay" onclick="closeDrawer()"></div>
@@ -1885,7 +1969,7 @@ footer a:hover{color:var(--text)}
       <button style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--d-text2)" onclick="closeDrawer()">✕</button>
     </div>
     <div class="db-drawer-nav">
-      <button class="db-drawer-item" onclick="closeDrawer();dhNav('chat')"><span>💬</span>Blueprint IA</button>
+      <button class="db-drawer-item" onclick="closeDrawer();newIaChat()"><span>✏</span>Nova conversa</button>
       <button class="db-drawer-item" onclick="closeDrawer();dhNav('modules')"><span>◫</span>Revisar Módulos</button>
       <button class="db-drawer-item" onclick="closeDrawer();dhNav('plans')"><span>◉</span>Planos</button>
       <button class="db-drawer-item" onclick="closeDrawer();showBuyCreditsModal()"><span>⚡</span>Créditos</button>
@@ -2055,8 +2139,10 @@ function populateUserUI(user,name){
   const display=name.charAt(0).toUpperCase()+name.slice(1);
   const uname=document.getElementById('dbUserName');
   const uavatar=document.getElementById('dbAvatar');
+  const welcomeName=document.getElementById('dbWelcomeName');
   if(uname)uname.textContent=display;
   if(uavatar)uavatar.textContent=name.charAt(0).toUpperCase();
+  if(welcomeName)welcomeName.textContent=display;
   loadCredits(user.id);
 }
 
@@ -2125,10 +2211,17 @@ async function handleLogout(){
   chatHistory=[];
   userCredits=0;
   _userProfile=null;
-  // Restaurar mensagem de boas-vindas para o próximo login
   const container=document.getElementById('dbChatMessages');
-  if(container&&_WELCOME_HTML)container.innerHTML=_WELCOME_HTML;
+  if(container)container.innerHTML='';
+  showWelcome();
   _doGoTo('landing');
+}
+
+function showWelcome(){
+  var welcome=document.getElementById('dbWelcome');
+  var chatArea=document.getElementById('dbChatArea');
+  if(welcome)welcome.style.display='flex';
+  if(chatArea)chatArea.style.display='none';
 }
 
 // ── SESSÃO PERSISTENTE ──
@@ -2257,15 +2350,17 @@ async function loadChatHistory(userId){
       .order('created_at',{ascending:true})
       .limit(40);
     if(error||!data||data.length===0)return;
-    // Limpar mensagem de boas-vindas e chips
+    // Show chat area, hide welcome
+    var welcome=document.getElementById('dbWelcome');
+    var chatArea=document.getElementById('dbChatArea');
+    if(welcome)welcome.style.display='none';
+    if(chatArea)chatArea.style.display='flex';
     const container=document.getElementById('dbChatMessages');
     container.innerHTML='';
-    // Separador visual
     const sep=document.createElement('div');
     sep.className='chat-history-sep';
     sep.textContent='Conversa anterior';
     container.appendChild(sep);
-    // Renderizar mensagens e popular chatHistory
     chatHistory=[];
     data.forEach(function(msg){
       var type=msg.role==='user'?'user':'ai';
@@ -2273,7 +2368,6 @@ async function loadChatHistory(userId){
       addMsg(type,text);
       chatHistory.push({role:msg.role,content:msg.content});
     });
-    // Manter chatHistory nos últimos 20
     if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
   }catch(e){console.warn('loadChatHistory:',e);}
 }
@@ -2805,7 +2899,6 @@ async function callBlueprintIA(message,history){
 // ── CHAT IA ──
 let chatHistory=[];
 function sendSugg(text){
-  document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   document.getElementById('dbChatInput').value=text;
   sendDbChat();
 }
@@ -2814,13 +2907,15 @@ async function sendDbChat(){
   const btn=document.getElementById('dbSendBtn');
   const text=input.value.trim();
   if(!text)return;
-  // Verificar créditos locais antes de chamar (UX rápida)
   if(userCredits<=0){showBuyCreditsModal();return;}
-  document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
+  // Transition: hide welcome, show chat area
+  var welcome=document.getElementById('dbWelcome');
+  var chatArea=document.getElementById('dbChatArea');
+  if(welcome)welcome.style.display='none';
+  if(chatArea)chatArea.style.display='flex';
   input.value='';input.disabled=true;btn.disabled=true;
   addMsg('user',text);
   chatHistory.push({role:'user',content:text});
-  // Manter apenas as últimas 20 mensagens (10 pares) para não inflar o payload
   if(chatHistory.length>20) chatHistory=chatHistory.slice(-20);
   const tid=addTyping();
   try{
@@ -2847,11 +2942,14 @@ async function sendDbChat(){
 }
 function addMsg(type,text){
   const c=document.getElementById('dbChatMessages');
+  if(!c)return;
   const d=document.createElement('div');
   d.className='ia-msg '+type;
   const label=type==='ai'?'Blueprint IA':'Você';
   d.innerHTML=`<div class="ia-msg-who">${label}</div><div class="ia-bubble">${text}</div>`;
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
+  c.appendChild(d);
+  const wrap=document.getElementById('dbMsgsWrap');
+  if(wrap)wrap.scrollTop=wrap.scrollHeight;
 }
 function addTyping(){
   const c=document.getElementById('dbChatMessages');
@@ -2859,29 +2957,37 @@ function addTyping(){
   const d=document.createElement('div');
   d.className='ia-msg ai';d.id=id;
   d.innerHTML='<div class="ia-msg-who">Blueprint IA</div><div class="ia-typing"><span></span><span></span><span></span></div>';
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
+  c.appendChild(d);
+  const wrap=document.getElementById('dbMsgsWrap');
+  if(wrap)wrap.scrollTop=wrap.scrollHeight;
   return id;
 }
 
 function newIaChat(){
-  // Save first user message as history item
+  // Save first user message to sidebar history
   const msgs=document.getElementById('dbChatMessages');
-  const firstUser=msgs.querySelector('.ia-msg.user .ia-bubble');
+  const firstUser=msgs?.querySelector('.ia-msg.user .ia-bubble');
   if(firstUser){
     const histSlots=['iaHist1','iaHist2','iaHist3'];
     const textSlots=['iaHist1Text','iaHist2Text','iaHist3Text'];
-    // Shift history down
     for(let i=2;i>0;i--){
       const prev=document.getElementById(textSlots[i-1]);
       const curr=document.getElementById(textSlots[i]);
-      if(prev&&curr){curr.textContent=prev.textContent;document.getElementById(histSlots[i]).style.display=prev.textContent?'flex':'';}
+      if(prev&&curr){
+        curr.textContent=prev.textContent;
+        document.getElementById(histSlots[i]).style.display=prev.textContent?'flex':'none';
+      }
     }
     const t0=document.getElementById('iaHist1Text');
-    if(t0){t0.textContent=firstUser.textContent.replace(/<[^>]+>/g,'').substring(0,28)+'…';document.getElementById('iaHist1').style.display='flex';}
+    if(t0){
+      t0.textContent=firstUser.textContent.replace(/<[^>]+>/g,'').substring(0,28)+'…';
+      document.getElementById('iaHist1').style.display='flex';
+    }
   }
-  // Reset chat
+  // Reset chat and show welcome
   chatHistory=[];
-  msgs.innerHTML=`<div class="ia-msg ai"><div class="ia-msg-who">Blueprint IA</div><div class="ia-bubble">Novo chat. O que você quer analisar?</div></div>`;
+  if(msgs)msgs.innerHTML='';
+  showWelcome();
 }
 
 // ── EMOJI STRIPPER ──
