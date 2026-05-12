@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B3 Alpha — Investimentos com IA</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<meta name="theme-color" content="#03060f">
+<meta name="description" content="Plataforma de análise de investimentos com IA. Dados em tempo real da B3, análise de ações, FIIs e renda fixa.">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HGL019H0LT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HGL019H0LT');
+</script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Fontes -->
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#03060f; --bg2:#060c1a;
+  --surface:rgba(255,255,255,0.03); --surface2:rgba(255,255,255,0.06);
+  --border:rgba(56,189,248,0.08); --border2:rgba(56,189,248,0.15);
+  --blue:#38bdf8; --blue2:#0ea5e9; --cyan:#67e8f9;
+  --green:#34d399; --red:#f87171; --yellow:#fbbf24;
+  --text:#e8f4ff; --muted:#4a6580;
+  --mono:'DM Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--text)}
+
+/* ── CANVAS ── */
+#waveCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.4}
+
+/* ── PAGES ── */
+.page{display:none;position:relative;z-index:1}
+.page.active{display:block}
+.auth-page{display:none}
+.auth-page.active{display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(3,6,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-actions{display:flex;gap:10px;align-items:center}
+.nav-login{background:transparent;border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s}
+.nav-login:hover{background:var(--surface2)}
+.nav-cta{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;border:none;padding:10px 22px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:13px;cursor:pointer;transition:all .3s;box-shadow:0 0 24px rgba(56,189,248,0.25)}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(56,189,248,0.4)}
+
+/* ── MODULES BAR ── */
+.modules-bar{position:fixed;top:65px;left:0;right:0;z-index:99;background:rgba(3,6,15,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0}
+.modules-bar-inner{display:flex;align-items:stretch;max-width:100%;margin:0 auto}
+.mbar-tab{display:flex;align-items:center;justify-content:center;gap:10px;flex:1;padding:13px 8px;background:none;border:none;cursor:pointer;transition:all .2s;border-right:1px solid var(--border);position:relative}
+.mbar-tab:last-child{border-right:none}
+.mbar-tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan));transform:scaleX(0);transition:transform .25s}
+.mbar-tab:hover::after{transform:scaleX(1)}
+.mbar-tab:hover{background:rgba(56,189,248,0.05)}
+.mbar-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mbar-name{font-family:'Clash Display',sans-serif;font-size:13px;font-weight:600;color:var(--text);white-space:nowrap}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:180px 40px 80px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--blue);border:1px solid rgba(56,189,248,0.25);background:rgba(56,189,248,0.07);padding:6px 14px;border-radius:100px;margin-bottom:28px;letter-spacing:1.5px;text-transform:uppercase}
+.hero h1{font-family:'Clash Display',sans-serif;font-size:clamp(42px,6.5vw,82px);font-weight:700;line-height:1.05;letter-spacing:-2.5px;margin-bottom:20px}
+.hero h1 em{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:normal}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--muted);max-width:500px;line-height:1.75;margin-bottom:36px;font-weight:500}
+.hero-btns{display:flex;gap:12px;justify-content:center;margin-bottom:24px}
+.btn-primary{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;border:none;padding:16px 32px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:all .3s;box-shadow:0 0 30px rgba(56,189,248,0.25)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(56,189,248,0.4)}
+.btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--text);padding:16px 32px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{background:var(--surface2)}
+
+/* ── TICKER ── */
+.ticker-wrap{position:relative;overflow:hidden;background:rgba(6,12,26,0.8);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 0;margin-top:20px}
+.ticker-track{display:flex;gap:0;animation:tickerMove 35s linear infinite;white-space:nowrap}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;padding:0 20px;border-right:1px solid var(--border);font-family:var(--mono)}
+.ti-sym{font-size:11px;font-weight:700;color:var(--text)}
+.ti-price{font-size:11px;color:var(--muted)}
+.ti-change{font-size:11px;font-weight:600}
+.ti-change.up{color:var(--green)}.ti-change.dn{color:var(--red)}
+@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+.section{padding:100px 40px;max-width:1200px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:'Clash Display',sans-serif;font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.section-title em{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:normal}
+.section-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:560px;margin-bottom:52px}
+
+/* ── PRICING ── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.price-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px 28px;transition:all .3s;position:relative}
+.price-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.price-card.featured{border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04)}
+.pc-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.pc-price{font-family:'Clash Display',sans-serif;font-size:42px;font-weight:700;letter-spacing:-1.5px;margin-bottom:4px}
+.pc-price sup{font-size:18px;vertical-align:top;margin-top:8px}
+.pc-period{font-size:13px;color:var(--muted);margin-bottom:24px}
+.pc-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.pc-features li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.pc-features li::before{content:'✦';color:var(--blue);font-size:10px;flex-shrink:0}
+.pc-btn{display:block;width:100%;padding:14px;border-radius:100px;text-align:center;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;text-decoration:none;transition:all .3s}
+.pc-btn.primary{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;box-shadow:0 0 24px rgba(56,189,248,0.25)}
+.pc-btn.primary:hover{box-shadow:0 0 40px rgba(56,189,248,0.4);transform:translateY(-2px)}
+.pc-btn.outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.pc-btn.outline:hover{background:var(--surface2)}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:12px;margin-top:40px;max-width:720px}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.faq-item.open{border-color:var(--border2)}
+.faq-q{width:100%;background:none;border:none;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--text);text-align:left}
+.faq-icon{font-size:18px;color:var(--muted);transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;font-size:13px;color:var(--muted);line-height:1.7}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a-inner{padding:0 22px 18px}
+
+/* ── CTA ── */
+.cta-section{text-align:center;padding:100px 40px;background:linear-gradient(180deg,transparent,rgba(56,189,248,0.04))}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);position:relative;z-index:1}
+footer a{color:var(--muted);text-decoration:none;transition:color .2s}
+footer a:hover{color:var(--text)}
+
+/* ── AUTH ── */
+.auth-card{background:rgba(4,9,22,0.97);border:1px solid var(--border2);border-radius:24px;padding:40px 40px 36px;width:100%;max-width:420px;position:relative;z-index:1;box-shadow:0 40px 100px rgba(0,0,0,0.8)}
+.auth-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,0.5),transparent)}
+.auth-back{background:none;border:none;color:var(--muted);font-size:12px;font-family:'Cabinet Grotesk',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:24px;padding:0;transition:color .2s}
+.auth-back:hover{color:var(--text)}
+.auth-title{font-family:'Clash Display',sans-serif;font-size:26px;font-weight:700;letter-spacing:-0.8px;margin-bottom:6px}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6}
+.btn-google{width:100%;padding:13px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--text);cursor:pointer;transition:all .2s;margin-bottom:20px}
+.btn-google:hover{background:var(--surface2);border-color:rgba(255,255,255,0.15)}
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:20px;font-size:12px;color:var(--muted)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-family:'Cabinet Grotesk',sans-serif;font-size:14px;color:var(--text);outline:none;transition:all .2s}
+.form-input:focus{border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.03)}
+.form-input::placeholder{color:var(--muted)}
+.pass-wrap{position:relative}
+.pass-wrap .form-input{padding-right:70px}
+.pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-submit{width:100%;padding:14px;background:linear-gradient(135deg,#0369a1,var(--blue));border:none;border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;color:#fff;cursor:pointer;transition:all .3s;box-shadow:0 0 24px rgba(56,189,248,0.2);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(56,189,248,0.4)}
+.btn-submit.loading{opacity:0.7;pointer-events:none}
+.btn-loader{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.btn-submit.loading .btn-text{display:none}
+.btn-submit.loading .btn-loader{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-box{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:14px;display:none}
+.error-box.show{display:block}
+.auth-switch{text-align:center;margin-top:18px;font-size:13px;color:var(--muted)}
+.auth-switch a{color:var(--blue);cursor:pointer;font-weight:600;text-decoration:none}
+.auth-switch a:hover{text-decoration:underline}
+.strength-wrap{margin-top:8px;display:none}
+.strength-bars{display:flex;gap:4px;margin-bottom:4px}
+.strength-bar{flex:1;height:3px;border-radius:2px;background:var(--border)}
+.strength-bar.weak{background:var(--red)}
+.strength-bar.medium{background:var(--yellow)}
+.strength-bar.strong{background:var(--green)}
+.strength-lbl{font-size:11px;color:var(--muted)}
+.success-overlay{position:absolute;inset:0;border-radius:24px;background:rgba(4,9,22,0.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .4s;z-index:10}
+.success-overlay.show{opacity:1;pointer-events:all}
+.success-icon{width:56px;height:56px;border-radius:50%;background:rgba(52,211,153,0.15);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--green)}
+.success-title{font-family:'Clash Display',sans-serif;font-size:20px;font-weight:700;color:var(--text)}
+.success-sub{font-size:13px;color:var(--muted)}
+.age-warning{font-size:11px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:4px}
+
+/* ── DASHBOARD ── */
+.db-layout{display:flex;height:100vh;overflow:hidden}
+.db-sidebar{width:220px;flex-shrink:0;background:rgba(4,9,22,0.95);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0}
+.db-logo{display:flex;align-items:center;gap:10px;padding:0 20px 20px;border-bottom:1px solid var(--border)}
+.db-nav{flex:1;padding:16px 10px;display:flex;flex-direction:column;gap:4px}
+.db-nav-section{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:10px 10px 6px}
+.db-nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;color:var(--muted);border:1px solid transparent}
+.db-nav-item:hover{background:var(--surface);color:var(--text)}
+.db-nav-item.active{background:rgba(56,189,248,0.08);border-color:rgba(56,189,248,0.2);color:var(--blue)}
+.db-user{padding:16px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.db-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0369a1,var(--blue));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.db-username{font-size:13px;font-weight:700;color:var(--text)}
+.db-plan{font-family:var(--mono);font-size:9px;color:var(--blue);letter-spacing:.5px}
+.db-logout{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;transition:color .2s}
+.db-logout:hover{color:var(--red)}
+.db-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.db-topbar{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(3,6,15,0.6);flex-shrink:0}
+.db-page-title{font-family:'Clash Display',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.5px}
+.db-content{flex:1;overflow-y:auto;padding:28px}
+.db-content::-webkit-scrollbar{width:4px}
+.db-content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;transition:all .2s}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.sc-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.sc-value{font-family:'Clash Display',sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px}
+.sc-change{font-family:var(--mono);font-size:11px}
+.sc-change.up{color:var(--green)}.sc-change.dn{color:var(--red)}
+.db-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.db-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.dc-title{font-family:'Clash Display',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.dc-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,0.4)}50%{box-shadow:0 0 0 5px rgba(52,211,153,0)}}
+.signal-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;transition:all .2s}
+.signal-item:hover{background:var(--surface2)}
+.sig-ticker{font-family:var(--mono);font-size:12px;font-weight:700;min-width:52px}
+.sig-info{font-size:12px;color:var(--muted);flex:1;margin:0 10px}
+.sig-badge{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700}
+.sig-badge.buy{background:rgba(52,211,153,0.1);color:var(--green);border:1px solid rgba(52,211,153,0.2)}
+.sig-badge.sell{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
+.sig-badge.hold{background:rgba(56,189,248,0.1);color:var(--blue);border:1px solid rgba(56,189,248,0.2)}
+
+/* Chat */
+.chat-wrap{height:calc(100vh - 130px);display:flex;flex-direction:column}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.chat-messages::-webkit-scrollbar{width:3px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.chat-msg{display:flex;gap:10px;max-width:85%}
+.chat-msg.user{flex-direction:row-reverse;align-self:flex-end}
+.chat-avatar{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2)}
+.chat-bubble{padding:11px 14px;border-radius:12px;font-size:13px;line-height:1.7}
+.chat-msg.ai .chat-bubble{background:rgba(6,12,26,0.8);border:1px solid var(--border2);border-top-left-radius:4px}
+.chat-msg.user .chat-bubble{background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-top-right-radius:4px}
+.chat-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 8px 36px}
+.chat-sugg{font-size:11px;font-weight:600;color:var(--blue);background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.2);padding:5px 11px;border-radius:100px;cursor:pointer;transition:all .2s}
+.chat-sugg:hover{background:rgba(56,189,248,0.14);transform:translateY(-1px)}
+.typing-dot{display:flex;gap:4px;padding:11px 14px;background:rgba(6,12,26,0.8);border:1px solid var(--border2);border-radius:12px;border-top-left-radius:4px}
+.typing-dot span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typeBounce 1.2s infinite}
+.typing-dot span:nth-child(2){animation-delay:.2s}
+.typing-dot span:nth-child(3){animation-delay:.4s}
+@keyframes typeBounce{0%,60%,100%{transform:translateY(0);background:var(--muted)}30%{transform:translateY(-6px);background:var(--blue)}}
+.chat-input-area{padding:14px 16px;border-top:1px solid var(--border);background:rgba(3,6,15,0.8)}
+.chat-input-row{display:flex;gap:8px}
+.chat-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;font-family:'Cabinet Grotesk',sans-serif;font-size:13px;color:var(--text);outline:none;transition:all .2s}
+.chat-input:focus{border-color:rgba(56,189,248,0.4)}
+.chat-input::placeholder{color:var(--muted)}
+.chat-send{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0369a1,var(--blue));border:none;color:#fff;font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-send:hover{transform:translateY(-2px);box-shadow:0 0 20px rgba(56,189,248,0.3)}
+.chat-send:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* Modal módulos */
+.module-modal{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center}
+.module-modal.open{display:flex}
+.modal-bg{position:absolute;inset:0;background:rgba(2,4,12,0.92);backdrop-filter:blur(16px)}
+.modal-frame{position:relative;z-index:1;width:95vw;height:92vh;border-radius:20px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 40px 120px rgba(0,0,0,0.8)}
+.modal-close{position:absolute;top:16px;right:16px;z-index:10;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border2);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:rgba(248,113,113,0.15);color:var(--red)}
+.modal-iframe{width:100%;height:100%;border:none;background:#000}
+
+/* Popup curso */
+.course-popup{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:24px}
+.course-popup.open{display:flex}
+.course-popup-bg{position:absolute;inset:0;background:rgba(2,4,12,0.88);backdrop-filter:blur(14px)}
+.course-popup-card{position:relative;z-index:1;width:100%;max-width:480px;background:rgba(4,9,22,0.97);border:1px solid rgba(56,189,248,0.2);border-radius:24px;padding:40px 36px;box-shadow:0 40px 100px rgba(0,0,0,0.8);overflow:hidden}
+.course-popup-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,0.6),transparent)}
+.popup-gift{font-size:52px;text-align:center;display:block;margin-bottom:16px}
+.popup-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--green);background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);padding:4px 12px;border-radius:100px;margin-bottom:16px;letter-spacing:1px;text-transform:uppercase}
+.popup-title{font-family:'Clash Display',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.8px;line-height:1.2;margin-bottom:10px}
+.popup-title span{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.popup-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:22px}
+.popup-modules{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+.popup-mod{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 13px;cursor:pointer;transition:all .2s}
+.popup-mod:hover{background:var(--surface2);border-color:rgba(56,189,248,0.2)}
+.popup-mod-icon{font-size:20px}
+.popup-mod-num{font-family:var(--mono);font-size:9px;color:var(--blue);letter-spacing:1px}
+.popup-mod-name{font-size:12px;font-weight:600;color:var(--text)}
+.popup-btn-yes{width:100%;padding:13px;background:linear-gradient(135deg,#0369a1,var(--blue));border:none;border-radius:12px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;color:#fff;cursor:pointer;transition:all .3s;box-shadow:0 0 24px rgba(56,189,248,0.2);margin-bottom:8px}
+.popup-btn-yes:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(56,189,248,0.4)}
+.popup-btn-no{width:100%;padding:10px;background:transparent;border:none;font-family:'Cabinet Grotesk',sans-serif;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;transition:color .2s}
+.popup-btn-no:hover{color:var(--text)}
+.popup-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.popup-close:hover{background:rgba(248,113,113,0.1);color:var(--red)}
+
+@media(max-width:900px){
+  nav{padding:15px 22px}.nav-links{display:none}
+  .modules-bar{padding:0}.mbar-name{font-size:11px}.mbar-num{width:20px;height:20px;font-size:9px}
+  .hero{padding:160px 22px 60px}.pricing-grid{grid-template-columns:1fr}
+  .db-sidebar{display:none}.stat-grid{grid-template-columns:1fr 1fr}.db-grid{grid-template-columns:1fr}
+}
+
+/* ══ HERO EXTRAS ══ */
+.hero-checks{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.hero-check{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+
+/* ══ SOCIAL PROOF ══ */
+.social-proof{position:relative;z-index:1;padding:40px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(6,12,26,0.8)}
+.sp-inner{display:flex;align-items:center;justify-content:center;gap:0;max-width:900px;margin:0 auto;flex-wrap:wrap}
+.sp-stat{text-align:center;padding:0 40px}
+.sp-num{font-family:'Clash Display',sans-serif;font-size:36px;font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sp-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+.sp-divider{width:1px;height:48px;background:var(--border)}
+
+/* ══ BENEFITS ══ */
+.benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.benefit-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .3s;position:relative}
+.benefit-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.featured-card{grid-column:span 3;background:rgba(56,189,248,0.04);border-color:rgba(56,189,248,0.2)}
+.bc-icon{font-size:28px;margin-bottom:10px}
+.bc-tag{font-family:var(--mono);font-size:9px;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.bc-title{font-family:'Clash Display',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+.bc-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:12px}
+.bc-example{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px}
+.bc-ex-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.bc-ex-msg{font-size:12px;color:var(--text);background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);border-radius:8px;padding:8px 12px;margin-bottom:8px}
+.bc-ex-reply{font-size:12px;color:var(--muted);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:8px 12px;line-height:1.6}
+.bc-pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.bc-pill{font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);padding:3px 9px;border-radius:100px}
+
+/* ══ CTA BANNER ══ */
+.cta-banner{background:linear-gradient(135deg,rgba(3,105,161,0.15),rgba(56,189,248,0.08));border:1px solid rgba(56,189,248,0.2);border-radius:16px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.cta-banner-title{font-family:'Clash Display',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px}
+.cta-banner-sub{font-size:13px;color:var(--muted)}
+
+/* ══ AUDIENCE ══ */
+.audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px}
+.audience-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;transition:all .3s;position:relative}
+.audience-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.featured-aud{background:rgba(56,189,248,0.04);border-color:rgba(56,189,248,0.25)}
+.aud-badge{position:absolute;top:-12px;left:24px;background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;font-family:var(--mono);font-size:9px;padding:4px 12px;border-radius:100px;letter-spacing:1px}
+.aud-icon{font-size:32px;margin-bottom:10px}
+.aud-nivel{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.aud-title{font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;line-height:1.2;margin-bottom:10px;letter-spacing:-.5px}
+.aud-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:18px}
+.aud-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.aud-list li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.aud-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:12px 20px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;width:100%}
+.aud-btn:hover{background:rgba(56,189,248,0.1)}
+.featured-btn{background:linear-gradient(135deg,#0369a1,var(--blue));border:none;color:#fff;box-shadow:0 0 24px rgba(56,189,248,0.2)}
+.featured-btn:hover{box-shadow:0 0 40px rgba(56,189,248,0.4);background:linear-gradient(135deg,#0369a1,var(--blue))}
+
+/* ══ MODULES GRID ══ */
+.modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan));transform:scaleX(0);transition:transform .3s}
+.module-card:hover{border-color:rgba(56,189,248,0.3);transform:translateY(-4px)}
+.module-card:hover::before{transform:scaleX(1)}
+.mc-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue);background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);padding:3px 9px;border-radius:100px;width:fit-content;margin-bottom:12px}
+.mc-icon{font-size:28px;margin-bottom:8px}
+.mc-badge{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);padding:2px 8px;border-radius:100px;width:fit-content}
+.mc-title{font-family:'Clash Display',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+.mc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.mc-topics{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.mc-topics li{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.mc-topics li::before{content:'›';color:var(--blue);font-weight:700}
+.mc-cta{font-size:12px;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:4px}
+
+/* ══ STEPS ══ */
+.steps-grid{display:flex;align-items:center;gap:0;margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto}
+.step-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;transition:all .3s}
+.step-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.step-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue);background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.step-icon{font-size:28px;margin-bottom:10px}
+.step-title{font-family:'Clash Display',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.65}
+.step-arrow{font-size:24px;color:var(--border2);padding:0 10px;flex-shrink:0}
+
+/* ══ FEATURES ══ */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;transition:all .3s}
+.feature-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.fc-icon{font-size:24px;display:block;margin-bottom:10px}
+.fc-title{font-family:'Clash Display',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px}
+.fc-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+@media(max-width:900px){
+  .benefits-grid{grid-template-columns:1fr}.featured-card{grid-column:span 1}
+  .audience-grid{grid-template-columns:1fr}
+  .modules-grid{grid-template-columns:1fr 1fr}
+  .steps-grid{flex-direction:column}.step-arrow{transform:rotate(90deg)}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .sp-inner{gap:20px}.sp-divider{display:none}
+  .cta-banner{flex-direction:column;text-align:center}
+}
+@media(max-width:600px){
+  .modules-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="waveCanvas"></canvas>
+
+<!-- ══ MODAL MÓDULOS ══ -->
+<div class="module-modal" id="modal-modules">
+  <div class="modal-bg" onclick="closeModule()"></div>
+  <div class="modal-frame">
+    <button class="modal-close" onclick="closeModule()">✕</button>
+    <iframe class="modal-iframe" id="moduleIframe" src="" title="Módulo"></iframe>
+  </div>
+</div>
+
+<!-- ══ POPUP CURSO GRATUITO ══ -->
+<div class="course-popup" id="coursePopup">
+  <div class="course-popup-bg" onclick="closeCoursePopup()"></div>
+  <div class="course-popup-card">
+    <button class="popup-close" onclick="closeCoursePopup()">✕</button>
+    <span class="popup-gift">🎁</span>
+    <div class="popup-badge">✦ 100% Gratuito</div>
+    <div class="popup-title">Antes de começar,<br>que tal aprender de <span>graça?</span></div>
+    <div class="popup-sub">4 módulos explicativos para te dar uma base sólida. Zero custo.</div>
+    <div class="popup-modules">
+      <div class="popup-mod" onclick="closeCoursePopup();openModule(1)"><span class="popup-mod-icon">🚀</span><div><div class="popup-mod-num">Módulo 01</div><div class="popup-mod-name">Investindo na B3</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModule(2)"><span class="popup-mod-icon">🏢</span><div><div class="popup-mod-num">Módulo 02</div><div class="popup-mod-name">Fundos Imobiliários</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModule(3)"><span class="popup-mod-icon">💰</span><div><div class="popup-mod-num">Módulo 03</div><div class="popup-mod-name">Renda Fixa</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModule(4)"><span class="popup-mod-icon">₿</span><div><div class="popup-mod-num">Módulo 04</div><div class="popup-mod-name">Corretoras & Criptos</div></div></div>
+    </div>
+    <button class="popup-btn-yes" onclick="closeCoursePopup();openModule(1)">Quero começar pelo Módulo 1 →</button>
+    <button class="popup-btn-no" onclick="closeCoursePopup();goTo('dashboard')">Agora não, ir para o dashboard</button>
+  </div>
+</div>
+
+<!-- ══ LANDING PAGE ══ -->
+<div id="page-landing" class="page active">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo" onclick="window.scrollTo(0,0)">
+      <svg width="38" height="30" viewBox="0 0 110 90" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="110" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#67e8f9"/><stop offset="55%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="url(#lg1)"/></svg>
+      <span style="font-family:'Clash Display',sans-serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent">B3 Alpha</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#beneficios" onclick="event.preventDefault();scrollTo('beneficios')">Benefícios</a></li>
+      <li><a href="#modulos" onclick="event.preventDefault();scrollTo('modulos')">Módulos</a></li>
+      <li><a href="#como-funciona" onclick="event.preventDefault();scrollTo('como-funciona')">Como funciona</a></li>
+      <li><a href="#planos" onclick="event.preventDefault();scrollTo('planos')">Planos</a></li>
+      <li><a href="#faq" onclick="event.preventDefault();scrollTo('faq')">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-login" onclick="goTo('login')">Entrar</button>
+      <button class="nav-cta" onclick="goTo('register')">Começar agora</button>
+    </div>
+  </nav>
+
+  <!-- BARRA MÓDULOS -->
+  <div class="modules-bar">
+    <div class="modules-bar-inner">
+      <button class="mbar-tab" onclick="openModule(1)"><span class="mbar-num">01</span><span class="mbar-name">Módulo 1</span></button>
+      <button class="mbar-tab" onclick="openModule(2)"><span class="mbar-num">02</span><span class="mbar-name">Módulo 2</span></button>
+      <button class="mbar-tab" onclick="openModule(3)"><span class="mbar-num">03</span><span class="mbar-name">Módulo 3</span></button>
+      <button class="mbar-tab" onclick="openModule(4)"><span class="mbar-num">04</span><span class="mbar-name">Módulo 4</span></button>
+    </div>
+  </div>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero-badge">⚡ IA treinada exclusivamente para o mercado brasileiro</div>
+    <h1>Invista com <em>inteligência.</em><br>Pare de adivinhar.</h1>
+    <p class="hero-sub">A B3 Alpha IA analisa ações, FIIs, Selic e criptos em tempo real — e te diz o que fazer, com dados reais, sem enrolação.</p>
+    <div class="hero-checks">
+      <span class="hero-check">✦ Dados ao vivo da B3</span>
+      <span class="hero-check">✦ Sem contratos longos</span>
+      <span class="hero-check">✦ 4 módulos gratuitos</span>
+      <span class="hero-check">✦ Cancele quando quiser</span>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="goTo('register')">Quero meu acesso agora →</button>
+      <button class="btn-secondary" onclick="goTo('login')">Já tenho conta</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px">Sem cartão de crédito para começar · Cancele quando quiser</p>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap" style="width:100%;max-width:900px;border-radius:12px;border:1px solid var(--border);margin-top:32px">
+      <div class="ticker-track" id="tickerTrack">
+        <div class="ticker-item"><span class="ti-sym">IBOV</span><span class="ti-price">128.4k</span><span class="ti-change up">▲ +1.24%</span></div>
+        <div class="ticker-item"><span class="ti-sym">PETR4</span><span class="ti-price">R$38,20</span><span class="ti-change up">▲ +0.87%</span></div>
+        <div class="ticker-item"><span class="ti-sym">VALE3</span><span class="ti-price">R$61,45</span><span class="ti-change up">▲ +1.12%</span></div>
+        <div class="ticker-item"><span class="ti-sym">SELIC</span><span class="ti-price">14.75%</span><span class="ti-change dn">▼ -0.25%</span></div>
+        <div class="ticker-item"><span class="ti-sym">HGLG11</span><span class="ti-price">R$162,50</span><span class="ti-change up">▲ +0.31%</span></div>
+        <div class="ticker-item"><span class="ti-sym">ITUB4</span><span class="ti-price">R$33,80</span><span class="ti-change dn">▼ -0.32%</span></div>
+        <div class="ticker-item"><span class="ti-sym">WEGE3</span><span class="ti-price">R$52,10</span><span class="ti-change up">▲ +1.80%</span></div>
+        <div class="ticker-item"><span class="ti-sym">BTC</span><span class="ti-price">$84.2k</span><span class="ti-change up">▲ +2.10%</span></div>
+        <div class="ticker-item"><span class="ti-sym">IBOV</span><span class="ti-price">128.4k</span><span class="ti-change up">▲ +1.24%</span></div>
+        <div class="ticker-item"><span class="ti-sym">PETR4</span><span class="ti-price">R$38,20</span><span class="ti-change up">▲ +0.87%</span></div>
+        <div class="ticker-item"><span class="ti-sym">VALE3</span><span class="ti-price">R$61,45</span><span class="ti-change up">▲ +1.12%</span></div>
+        <div class="ticker-item"><span class="ti-sym">SELIC</span><span class="ti-price">14.75%</span><span class="ti-change dn">▼ -0.25%</span></div>
+        <div class="ticker-item"><span class="ti-sym">HGLG11</span><span class="ti-price">R$162,50</span><span class="ti-change up">▲ +0.31%</span></div>
+        <div class="ticker-item"><span class="ti-sym">ITUB4</span><span class="ti-price">R$33,80</span><span class="ti-change dn">▼ -0.32%</span></div>
+        <div class="ticker-item"><span class="ti-sym">WEGE3</span><span class="ti-price">R$52,10</span><span class="ti-change up">▲ +1.80%</span></div>
+        <div class="ticker-item"><span class="ti-sym">BTC</span><span class="ti-price">$84.2k</span><span class="ti-change up">▲ +2.10%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SOCIAL PROOF ══ -->
+  <section class="social-proof">
+    <div class="sp-inner">
+      <div class="sp-stat"><div class="sp-num">5M+</div><div class="sp-label">Investidores na B3</div></div>
+      <div class="sp-divider"></div>
+      <div class="sp-stat"><div class="sp-num">R$1</div><div class="sp-label">Para começar a investir</div></div>
+      <div class="sp-divider"></div>
+      <div class="sp-stat"><div class="sp-num">14,75%</div><div class="sp-label">Selic hoje — renda fixa em alta</div></div>
+      <div class="sp-divider"></div>
+      <div class="sp-stat"><div class="sp-num">24h</div><div class="sp-label">IA disponível todo dia</div></div>
+    </div>
+  </section>
+
+  <!-- ══ BENEFÍCIOS DA IA ══ -->
+  <section class="section" id="beneficios">
+    <div class="section-label">B3 Alpha IA</div>
+    <h2 class="section-title">Sua IA especialista em<br><em>investimentos brasileiros</em></h2>
+    <p class="section-sub">Não é um chatbot genérico. É uma IA treinada especificamente para o mercado financeiro brasileiro — que entende de ações, FIIs, renda fixa, criptos e muito mais.</p>
+
+    <div class="benefits-grid">
+      <div class="benefit-card featured-card">
+        <div class="bc-icon">📊</div>
+        <div class="bc-tag">Tempo real</div>
+        <h3 class="bc-title">Análise com dados ao vivo da B3</h3>
+        <p class="bc-desc">Pergunte sobre qualquer ativo e a IA busca os dados reais na hora — preço atual, variação, dividendos, P/L — e te entrega uma análise completa em segundos.</p>
+        <div class="bc-example">
+          <div class="bc-ex-label">Exemplo real</div>
+          <div class="bc-ex-msg">💬 "PETR4 vale a pena comprar agora?"</div>
+          <div class="bc-ex-reply">⚡ "Com base nos dados de hoje: PETR4 está a R$38,20 (▲0.87%), DY de 8.2% ao ano. Momento de atenção — petróleo internacional em queda. Ideal aguardar suporte em R$36..."</div>
+        </div>
+      </div>
+
+      <div class="benefit-card">
+        <div class="bc-icon">🏢</div>
+        <div class="bc-tag">FIIs</div>
+        <h3 class="bc-title">FIIs que pagam todo mês</h3>
+        <p class="bc-desc">A IA analisa dividend yield, vacância, tipo de fundo e momento de entrada. Você recebe uma recomendação clara — comprar, aguardar ou evitar.</p>
+        <div class="bc-pill-row">
+          <span class="bc-pill">HGLG11</span>
+          <span class="bc-pill">XPML11</span>
+          <span class="bc-pill">MCCI11</span>
+          <span class="bc-pill">+400 FIIs</span>
+        </div>
+      </div>
+
+      <div class="benefit-card">
+        <div class="bc-icon">🏦</div>
+        <div class="bc-tag">Renda Fixa</div>
+        <h3 class="bc-title">Selic, CDB e Tesouro sem mistério</h3>
+        <p class="bc-desc">Com Selic a 14,75%, a renda fixa nunca foi tão atrativa. A IA te orienta qual CDB escolher, qual Tesouro faz mais sentido e quando é hora de migrar para variável.</p>
+        <div class="bc-pill-row">
+          <span class="bc-pill">Selic 14.75%</span>
+          <span class="bc-pill">CDI 14.65%</span>
+          <span class="bc-pill">IPCA 4.8%</span>
+        </div>
+      </div>
+
+      <div class="benefit-card">
+        <div class="bc-icon">₿</div>
+        <div class="bc-tag">Criptomoedas</div>
+        <h3 class="bc-title">Cripto com estratégia, não com sorte</h3>
+        <p class="bc-desc">Bitcoin, Ethereum e altcoins explicados com contexto real. A IA te mostra ciclos, riscos e quando faz sentido ter cripto na sua carteira.</p>
+        <div class="bc-pill-row">
+          <span class="bc-pill">Bitcoin</span>
+          <span class="bc-pill">Ethereum</span>
+          <span class="bc-pill">Altcoins</span>
+        </div>
+      </div>
+
+      <div class="benefit-card">
+        <div class="bc-icon">🎯</div>
+        <div class="bc-tag">Carteira</div>
+        <h3 class="bc-title">Monte e otimize sua carteira</h3>
+        <p class="bc-desc">Diga quanto tem para investir e a IA monta uma carteira diversificada com base no seu perfil — conservador, moderado ou arrojado.</p>
+        <div class="bc-pill-row">
+          <span class="bc-pill">Diversificação</span>
+          <span class="bc-pill">Rebalanceamento</span>
+          <span class="bc-pill">IR</span>
+        </div>
+      </div>
+
+      <div class="benefit-card">
+        <div class="bc-icon">🏠</div>
+        <div class="bc-tag">Imóveis</div>
+        <h3 class="bc-title">Imóvel físico ou FII — qual vale mais?</h3>
+        <p class="bc-desc">A IA compara liquidez, custo, rentabilidade e imposto de renda entre imóvel físico e FIIs para você tomar a melhor decisão.</p>
+        <div class="bc-pill-row">
+          <span class="bc-pill">Liquidez</span>
+          <span class="bc-pill">Rentabilidade</span>
+          <span class="bc-pill">IR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA 1 -->
+    <div class="cta-banner">
+      <div class="cta-banner-left">
+        <div class="cta-banner-title">Pronto para investir com inteligência?</div>
+        <div class="cta-banner-sub">Acesse a IA agora e faça sua primeira análise em menos de 2 minutos.</div>
+      </div>
+      <button class="btn-primary" onclick="goTo('register')">Acessar a B3 Alpha IA →</button>
+    </div>
+  </section>
+
+  <!-- ══ PARA QUEM É ══ -->
+  <section class="section" id="para-quem" style="padding-top:0">
+    <div class="section-label">Público</div>
+    <h2 class="section-title">Feito para <em>você,</em><br>independente do nível.</h2>
+
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="aud-icon">🌱</div>
+        <div class="aud-nivel">Iniciante</div>
+        <h3 class="aud-title">Nunca investiu?<br>Começa aqui.</h3>
+        <p class="aud-desc">A IA explica tudo do zero — o que é uma ação, como funciona a bolsa, qual o primeiro passo. Sem jargão, sem complicação.</p>
+        <ul class="aud-list">
+          <li>✦ O que é a B3 e como funciona</li>
+          <li>✦ Primeiros investimentos com segurança</li>
+          <li>✦ Como evitar os erros clássicos</li>
+          <li>✦ Reserva de emergência — onde deixar</li>
+          <li>✦ Qual corretora escolher</li>
+        </ul>
+        <button class="aud-btn" onclick="goTo('register')">Quero começar →</button>
+      </div>
+
+      <div class="audience-card featured-aud">
+        <div class="aud-badge">Mais popular</div>
+        <div class="aud-icon">🚀</div>
+        <div class="aud-nivel">Intermediário</div>
+        <h3 class="aud-title">Já investe,<br>quer ir além.</h3>
+        <p class="aud-desc">Use dados reais para tomar decisões melhores. A IA analisa seus ativos em tempo real e responde dúvidas complexas.</p>
+        <ul class="aud-list">
+          <li>✦ Análise com IA em tempo real</li>
+          <li>✦ Timing de compra e venda assertivo</li>
+          <li>✦ Estratégias de curto e longo prazo</li>
+          <li>✦ Otimização de carteira existente</li>
+          <li>✦ IR sobre investimentos — como declarar</li>
+        </ul>
+        <button class="aud-btn featured-btn" onclick="goTo('register')">Quero evoluir →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MÓDULOS ══ -->
+  <section class="section" id="modulos" style="padding-top:0">
+    <div class="section-label">Mini Curso Gratuito</div>
+    <h2 class="section-title">4 módulos que vão mudar<br>como você vê <em>dinheiro.</em></h2>
+    <p class="section-sub">Mexer com investimentos não é brincadeira. Por isso criamos 4 módulos educativos — gratuitos — para você entender o mercado antes de colocar dinheiro nele.</p>
+
+    <div class="modules-grid">
+      <div class="module-card" onclick="openModule(1)">
+        <div class="mc-num">01</div>
+        <div class="mc-icon">🚀</div>
+        <div class="mc-badge">Iniciante</div>
+        <h3 class="mc-title">Investindo na B3</h3>
+        <p class="mc-desc">O que é a bolsa, como funciona, por que investir agora e como dar o primeiro passo com segurança.</p>
+        <ul class="mc-topics">
+          <li>Por que investir na B3?</li>
+          <li>A história da bolsa brasileira</li>
+          <li>Como começar com R$100</li>
+          <li>O que é uma ação?</li>
+        </ul>
+        <div class="mc-cta">Acessar módulo →</div>
+      </div>
+
+      <div class="module-card" onclick="openModule(2)">
+        <div class="mc-num">02</div>
+        <div class="mc-icon">🏢</div>
+        <div class="mc-badge">Iniciante</div>
+        <h3 class="mc-title">Fundos Imobiliários</h3>
+        <p class="mc-desc">Invista em imóveis sem comprar um imóvel. FIIs pagam dividendos todo mês — isento de IR para pessoa física.</p>
+        <ul class="mc-topics">
+          <li>O que são FIIs?</li>
+          <li>Dividendos mensais isentos de IR</li>
+          <li>Melhores FIIs de 2026</li>
+          <li>Como montar sua carteira</li>
+        </ul>
+        <div class="mc-cta">Acessar módulo →</div>
+      </div>
+
+      <div class="module-card" onclick="openModule(3)">
+        <div class="mc-num">03</div>
+        <div class="mc-icon">💰</div>
+        <div class="mc-badge">Ambos</div>
+        <h3 class="mc-title">Renda Fixa & Impostos</h3>
+        <p class="mc-desc">Selic a 14,75% — momento histórico para renda fixa. Entenda CDB, Tesouro Direto e como pagar menos IR.</p>
+        <ul class="mc-topics">
+          <li>Selic & CDI explicados</li>
+          <li>CDB vs Tesouro Direto</li>
+          <li>Renda Fixa vs Variável</li>
+          <li>Tabela de IR e como pagar menos</li>
+        </ul>
+        <div class="mc-cta">Acessar módulo →</div>
+      </div>
+
+      <div class="module-card" onclick="openModule(4)">
+        <div class="mc-num">04</div>
+        <div class="mc-icon">₿</div>
+        <div class="mc-badge">Ambos</div>
+        <h3 class="mc-title">Corretoras & Criptos</h3>
+        <p class="mc-desc">Qual corretora escolher, como abrir conta e por que Bitcoin e Ethereum podem fazer sentido na sua carteira.</p>
+        <ul class="mc-topics">
+          <li>Nu Invest, XP, Rico — qual é melhor?</li>
+          <li>A história das criptomoedas</li>
+          <li>Bitcoin e Ethereum com estratégia</li>
+          <li>3 motivos para ter cripto</li>
+        </ul>
+        <div class="mc-cta">Acessar módulo →</div>
+      </div>
+    </div>
+
+    <!-- CTA 2 -->
+    <div class="cta-banner" style="margin-top:40px">
+      <div class="cta-banner-left">
+        <div class="cta-banner-title">📚 Acesse os 4 módulos gratuitamente</div>
+        <div class="cta-banner-sub">Sem precisar assinar — conhecimento antes do dinheiro.</div>
+      </div>
+      <button class="btn-primary" onclick="openModule(1)">Começar pelo Módulo 1 →</button>
+    </div>
+  </section>
+
+  <!-- ══ COMO FUNCIONA ══ -->
+  <section class="section" id="como-funciona" style="padding-top:0">
+    <div class="section-label">Passo a passo</div>
+    <h2 class="section-title">Simples assim.<br><em>3 passos</em> para investir melhor.</h2>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">🔐</div>
+        <h3 class="step-title">Crie sua conta</h3>
+        <p class="step-desc">Cadastro em menos de 2 minutos. Email e senha — sem burocracia. Acesso imediato a todos os módulos gratuitos.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">💬</div>
+        <h3 class="step-title">Pergunte o que quiser</h3>
+        <p class="step-desc">Digite o ticker ou sua dúvida. "Quanto está VALE3?", "Vale a pena CDB agora?", "Como montar carteira com R$500?" — a IA responde com dados reais.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">📈</div>
+        <h3 class="step-title">Invista com confiança</h3>
+        <p class="step-desc">Com análise clara, dados reais e orientação especializada — você toma decisões melhores, evita erros e cresce seu patrimônio com estratégia.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURES ══ -->
+  <section class="section" style="padding-top:0">
+    <div class="section-label">Tudo incluso</div>
+    <h2 class="section-title">Tudo que você precisa<br>para <em>investir melhor.</em></h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="fc-icon">⚡</span>
+        <h4 class="fc-title">IA em tempo real</h4>
+        <p class="fc-desc">Cotações ao vivo da B3. Análise atualizada no momento da consulta.</p>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">📊</span>
+        <h4 class="fc-title">Análise de ações e FIIs</h4>
+        <p class="fc-desc">Por que vale — ou não — investir em um ativo agora. Com dados reais.</p>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">🎯</span>
+        <h4 class="fc-title">Timing de compra e venda</h4>
+        <p class="fc-desc">A IA analisa o momento certo para entrar ou sair de um ativo.</p>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">🏦</span>
+        <h4 class="fc-title">Renda fixa descomplicada</h4>
+        <p class="fc-desc">Selic, CDB, Tesouro — qual escolher e quando migrar para variável.</p>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">💬</span>
+        <h4 class="fc-title">Tira-dúvidas ilimitado</h4>
+        <p class="fc-desc">Qualquer dúvida sobre investimentos, respondida sem julgamento.</p>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">📱</span>
+        <h4 class="fc-title">Acesso em qualquer lugar</h4>
+        <p class="fc-desc">Celular, tablet ou computador. Sem instalação. 24 horas por dia.</p>
+      </div>
+    </div>
+
+    <!-- CTA 3 -->
+    <div class="cta-banner" style="margin-top:40px">
+      <div class="cta-banner-left">
+        <div class="cta-banner-title">Comece hoje — planos a partir de R$23,90/mês</div>
+        <div class="cta-banner-sub">Menos que um almoço. Vale cada centavo.</div>
+      </div>
+      <button class="btn-primary" onclick="scrollTo('planos')">Ver planos →</button>
+    </div>
+  </section>
+
+  <!-- ══ PLANOS ══ -->
+  <section class="section" id="planos" style="padding-top:0">
+    <div class="section-label">Preços</div>
+    <h2 class="section-title">Simples, direto,<br><em>sem pegadinha.</em></h2>
+    <p class="section-sub">Escolha o plano certo para você. Cancele quando quiser, sem burocracia.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="pc-label">Mensal</div>
+        <div class="pc-price"><sup>R$</sup>27<small style="font-size:20px">,99</small></div>
+        <div class="pc-period">por mês · cobrado mensalmente</div>
+        <ul class="pc-features">
+          <li>IA com dados em tempo real</li>
+          <li>Análise de ações e FIIs</li>
+          <li>Tira-dúvidas ilimitado</li>
+          <li>Acesso aos 4 módulos</li>
+          <li>Cancele quando quiser</li>
+        </ul>
+        <a href="https://pay.hotmart.com/E105279724U?off=jve556ja" class="pc-btn outline">Assinar agora</a>
+      </div>
+
+      <div class="price-card featured">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;font-family:var(--mono);font-size:9px;padding:4px 14px;border-radius:100px;letter-spacing:1px;white-space:nowrap">✦ Melhor custo-benefício</div>
+        <div class="pc-label">Anual</div>
+        <div class="pc-price"><sup>R$</sup>23<small style="font-size:20px">,90</small></div>
+        <div class="pc-period">por mês · R$286,80 cobrado anualmente</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-bottom:16px">Economize R$50 por ano</div>
+        <ul class="pc-features">
+          <li>Tudo do plano mensal</li>
+          <li>Alertas de mercado</li>
+          <li>Prioridade em novas features</li>
+          <li>Suporte prioritário</li>
+          <li>Acesso antecipado a novidades</li>
+        </ul>
+        <a href="https://pay.hotmart.com/E105279724U?off=5tqdpmwm" class="pc-btn primary">Quero o anual →</a>
+      </div>
+
+      <div class="price-card">
+        <div class="pc-label">Teste 30 dias</div>
+        <div class="pc-price"><sup>R$</sup>49<small style="font-size:20px">,90</small></div>
+        <div class="pc-period">pagamento único · sem recorrência</div>
+        <ul class="pc-features">
+          <li>Acesso completo por 30 dias</li>
+          <li>Sem cobrança recorrente</li>
+          <li>Todas as funcionalidades</li>
+          <li>Ideal para experimentar</li>
+          <li>Sem compromisso</li>
+        </ul>
+        <a href="https://pay.hotmart.com/E105279724U?off=ur6adiwt" class="pc-btn outline">Quero testar</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FAQ ══ -->
+  <section class="section" id="faq" style="padding-top:0">
+    <div class="section-label">Dúvidas</div>
+    <h2 class="section-title">Perguntas <em>& Respostas</em></h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Preciso saber investir para usar?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Não. A IA foi feita para explicar tudo de forma simples, mesmo para quem está começando do zero. Os 4 módulos gratuitos te dão a base necessária antes mesmo de usar a IA.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Os dados são realmente em tempo real?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sim. A plataforma integra com a API da B3 via Brapi, trazendo cotações e indicadores atualizados no momento da consulta — incluindo preço, variação, volume e dividendos.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">A IA garante lucros?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Não, e desconfie de qualquer plataforma que prometa isso. A IA fornece análises baseadas em dados reais — mas todo investimento envolve risco. Nosso objetivo é te dar informação de qualidade para tomar decisões melhores.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Posso cancelar quando quiser?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sim. Nos planos mensais você cancela a qualquer momento direto no painel. No plano de teste de 30 dias, não há recorrência — você paga uma vez e acaba.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Funciona para FIIs, renda fixa e criptos também?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sim. A IA cobre ações, FIIs, Selic, CDB, Tesouro Direto, LCI/LCA, criptomoedas, corretoras e estratégias de carteira completa.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Os módulos são realmente gratuitos?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sim, 100% gratuitos. Você acessa os 4 módulos educativos sem precisar assinar nada. Basta criar uma conta gratuita.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA FINAL ══ -->
+  <section class="cta-section">
+    <div class="section-label" style="text-align:center">Sua jornada começa agora</div>
+    <h2 class="section-title" style="text-align:center;margin:0 auto 16px">Invista com <em>inteligência.</em><br>Sem adivinhar.</h2>
+    <p style="color:var(--muted);margin-bottom:12px;text-align:center;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7">Junte-se a quem já usa dados reais para investir melhor. A B3 Alpha IA está disponível 24h para te orientar em cada decisão.</p>
+    <p style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:32px">📚 4 módulos gratuitos · ⚡ IA em tempo real · 🎯 Análise personalizada</p>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="goTo('register')" style="font-size:16px;padding:18px 36px">Começar agora — é grátis →</button>
+      <button class="btn-secondary" onclick="goTo('login')">Já tenho conta</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:16px;text-align:center">Sem cartão de crédito · Cancele quando quiser · Dados protegidos</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 B3 Alpha · Todos os direitos reservados</span>
+    <div style="display:flex;gap:20px"><a href="#">Termos</a><a href="#">Privacidade</a><a href="#">Contato</a></div>
+  </footer>
+
+</div>
+
+
+<!-- ══ LOGIN ══ -->
+<div id="page-login" class="page auth-page">
+  <div class="auth-card">
+    <div class="success-overlay" id="loginSuccess">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Bem-vindo de volta!</div>
+      <div class="success-sub">Redirecionando...</div>
+    </div>
+    <button class="auth-back" onclick="goTo('landing')">← Voltar</button>
+    <div class="auth-title">Entrar</div>
+    <div class="auth-sub">Continue de onde parou. O mercado não espera.</div>
+    <button class="btn-google" onclick="authGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Entrar com Google
+    </button>
+    <div class="divider">ou</div>
+    <div class="error-box" id="loginError"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="loginEmail" type="email" placeholder="seu@email.com"></div>
+    <div class="form-group"><label class="form-label">Senha</label><div class="pass-wrap"><input class="form-input" id="loginPassword" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()"><button class="pass-toggle" onclick="togglePass('loginPassword',this)">mostrar</button></div></div>
+    <button class="btn-submit" id="loginBtn" onclick="handleLogin()"><span class="btn-text">Entrar na plataforma →</span><div class="btn-loader"></div></button>
+    <div class="auth-switch">Novo por aqui? <a onclick="goTo('register')">Criar conta grátis</a></div>
+  </div>
+</div>
+
+<!-- ══ CADASTRO ══ -->
+<div id="page-register" class="page auth-page">
+  <div class="auth-card">
+    <div class="success-overlay" id="registerSuccess">
+      <div class="success-icon">🚀</div>
+      <div class="success-title">Conta criada!</div>
+      <div class="success-sub">Redirecionando...</div>
+    </div>
+    <button class="auth-back" onclick="goTo('landing')">← Voltar</button>
+    <div class="auth-title">Criar conta</div>
+    <div class="auth-sub">Comece a investir com inteligência agora mesmo.</div>
+    <button class="btn-google" onclick="authGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Cadastrar com Google
+    </button>
+    <div class="divider">ou preencha os dados</div>
+    <div class="error-box" id="registerError"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="regFirst" type="text" placeholder="João"></div>
+      <div class="form-group"><label class="form-label">Sobrenome</label><input class="form-input" id="regLast" type="text" placeholder="Silva"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Data de nascimento</label>
+      <input class="form-input" id="regBirth" type="date">
+      <div class="age-warning">🔞 Plataforma exclusiva para maiores de 18 anos.</div>
+    </div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="regEmail" type="email" placeholder="seu@email.com"></div>
+    <div class="form-group">
+      <label class="form-label">Senha</label>
+      <div class="pass-wrap"><input class="form-input" id="regPassword" type="password" placeholder="mín. 8 caracteres" oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter')handleRegister()"><button class="pass-toggle" onclick="togglePass('regPassword',this)">mostrar</button></div>
+      <div class="strength-wrap" id="strengthWrap"><div class="strength-bars"><div class="strength-bar" id="sb1"></div><div class="strength-bar" id="sb2"></div><div class="strength-bar" id="sb3"></div><div class="strength-bar" id="sb4"></div></div><span class="strength-lbl" id="strengthLbl"></span></div>
+    </div>
+    <button class="btn-submit" id="registerBtn" onclick="handleRegister()"><span class="btn-text">Criar minha conta →</span><div class="btn-loader"></div></button>
+    <div class="auth-switch">Já tem conta? <a onclick="goTo('login')">Entrar →</a></div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="page-dashboard" class="page">
+  <div class="db-layout">
+    <div class="db-sidebar">
+      <div class="db-logo">
+        <svg width="28" height="22" viewBox="0 0 110 90" fill="none"><defs><linearGradient id="lg2" x1="0" y1="0" x2="110" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#67e8f9"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="url(#lg2)"/></svg>
+        <span style="font-family:'Clash Display',sans-serif;font-size:13px;font-weight:700;color:var(--text)">B3 Alpha</span>
+      </div>
+      <nav class="db-nav">
+        <div class="db-nav-section">Principal</div>
+        <div class="db-nav-item active" onclick="dbNav(this,'overview')">📊 Dashboard</div>
+        <div class="db-nav-item" onclick="dbNav(this,'chat')">⚡ Análise IA</div>
+        <div class="db-nav-item" onclick="dbNav(this,'modules')">📚 Módulos</div>
+        <div class="db-nav-section">Mercado</div>
+        <div class="db-nav-item">👁 Watchlist</div>
+        <div class="db-nav-item">🔔 Alertas</div>
+        <div class="db-nav-section">Conta</div>
+        <div class="db-nav-item">⚙️ Configurações</div>
+      </nav>
+      <div class="db-user">
+        <div class="db-avatar" id="dbAvatar">U</div>
+        <div><div class="db-username" id="dbUserName">Usuário</div><div class="db-plan">Plano Ativo</div></div>
+        <button class="db-logout" onclick="goTo('landing')" title="Sair">↩</button>
+      </div>
+    </div>
+    <div class="db-main">
+      <div class="db-topbar">
+        <div class="db-page-title" id="dbPageTitle">Dashboard</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">● Mercado ao vivo</div>
+      </div>
+      <div class="db-content">
+        <!-- Overview -->
+        <div id="db-overview">
+          <div class="stat-grid">
+            <div class="stat-card"><div class="sc-label">IBOVESPA</div><div class="sc-value">128.4k</div><div class="sc-change up">▲ +1.24%</div></div>
+            <div class="stat-card"><div class="sc-label">PETR4</div><div class="sc-value">R$38,20</div><div class="sc-change up">▲ +0.87%</div></div>
+            <div class="stat-card"><div class="sc-label">SELIC</div><div class="sc-value">14.75%</div><div class="sc-change dn">▼ -0.25%</div></div>
+            <div class="stat-card"><div class="sc-label">HGLG11</div><div class="sc-value">R$162,50</div><div class="sc-change up">▲ +0.31%</div></div>
+          </div>
+          <div class="db-grid">
+            <div class="db-card">
+              <div class="dc-title"><div class="dc-dot"></div>Sinais de IA — Hoje</div>
+              <div class="signal-item"><span class="sig-ticker">VALE3</span><span class="sig-info">Momento favorável de entrada</span><span class="sig-badge buy">COMPRAR</span></div>
+              <div class="signal-item"><span class="sig-ticker">ITUB4</span><span class="sig-info">Aguardar próximo suporte</span><span class="sig-badge hold">AGUARDAR</span></div>
+              <div class="signal-item"><span class="sig-ticker">MGLU3</span><span class="sig-info">Pressão vendedora elevada</span><span class="sig-badge sell">VENDER</span></div>
+              <div class="signal-item"><span class="sig-ticker">WEGE3</span><span class="sig-info">Rompimento de resistência</span><span class="sig-badge buy">COMPRAR</span></div>
+            </div>
+            <div class="db-card">
+              <div class="dc-title">📚 Módulos do Curso</div>
+              <div class="signal-item" onclick="openModule(1)" style="cursor:pointer"><span class="sig-ticker">MOD 1</span><span class="sig-info">Investindo na B3</span><span class="sig-badge hold">Acessar</span></div>
+              <div class="signal-item" onclick="openModule(2)" style="cursor:pointer"><span class="sig-ticker">MOD 2</span><span class="sig-info">Fundos Imobiliários</span><span class="sig-badge hold">Acessar</span></div>
+              <div class="signal-item" onclick="openModule(3)" style="cursor:pointer"><span class="sig-ticker">MOD 3</span><span class="sig-info">Renda Fixa & Impostos</span><span class="sig-badge hold">Acessar</span></div>
+              <div class="signal-item" onclick="openModule(4)" style="cursor:pointer"><span class="sig-ticker">MOD 4</span><span class="sig-info">Corretoras & Criptos</span><span class="sig-badge hold">Acessar</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- Chat IA -->
+        <div id="db-chat" style="display:none">
+          <div class="chat-wrap">
+            <div class="chat-messages" id="dbChatMessages">
+              <div class="chat-msg ai">
+                <div class="chat-avatar">⚡</div>
+                <div class="chat-bubble">Olá! Sou a <strong>B3 Alpha IA</strong> — especialista em investimentos brasileiros. 🇧🇷<br><br>Posso te ajudar com <strong>ações, FIIs, Selic, CDB, criptos, carteira</strong> e muito mais.<br><br>O que você quer saber hoje?</div>
+              </div>
+              <div class="chat-suggestions">
+                <div class="chat-sugg" onclick="sendSugg('Analise a PETR4 — vale comprar agora?')">📊 Analisar PETR4</div>
+                <div class="chat-sugg" onclick="sendSugg('Melhor CDB com Selic a 14,75%?')">🏦 Melhor CDB</div>
+                <div class="chat-sugg" onclick="sendSugg('Como montar carteira com R$1.000?')">🎯 Montar carteira</div>
+                <div class="chat-sugg" onclick="sendSugg('FII ou imóvel físico — qual é melhor?')">🏢 FII vs Imóvel</div>
+                <div class="chat-sugg" onclick="sendSugg('Vale investir em Bitcoin agora?')">₿ Bitcoin</div>
+                <div class="chat-sugg" onclick="sendSugg('O que é o Ibovespa?')">📈 Ibovespa</div>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <div class="chat-input-row">
+                <input class="chat-input" id="dbChatInput" placeholder="Pergunte sobre ações, FIIs, Selic, cripto..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDbChat()}">
+                <button class="chat-send" id="dbSendBtn" onclick="sendDbChat()">↑</button>
+              </div>
+              <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:var(--muted);">
+                <span id="msgCounter">10/10 mensagens este mês</span>
+                <a href="https://pay.hotmart.com/E105279724U?off=5tqdpmwm" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:600;">Upgrade →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Módulos -->
+        <div id="db-modules" style="display:none">
+          <div class="db-grid">
+            <div class="db-card" onclick="openModule(1)" style="cursor:pointer">
+              <div class="dc-title">🚀 Módulo 1</div>
+              <p style="font-size:13px;color:var(--muted)">Investindo na B3 — do zero ao primeiro investimento.</p>
+            </div>
+            <div class="db-card" onclick="openModule(2)" style="cursor:pointer">
+              <div class="dc-title">🏢 Módulo 2</div>
+              <p style="font-size:13px;color:var(--muted)">Fundos Imobiliários — dividendos todo mês.</p>
+            </div>
+            <div class="db-card" onclick="openModule(3)" style="cursor:pointer">
+              <div class="dc-title">💰 Módulo 3</div>
+              <p style="font-size:13px;color:var(--muted)">Renda Fixa & Impostos — Selic, CDB e Tesouro.</p>
+            </div>
+            <div class="db-card" onclick="openModule(4)" style="cursor:pointer">
+              <div class="dc-title">₿ Módulo 4</div>
+              <p style="font-size:13px;color:var(--muted)">Corretoras & Criptomoedas — como começar.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SUPABASE ──
+const SUPA_URL =  + SUPABASE_URL + ;
+const SUPA_KEY =  + SUPABASE_KEY + ;
+const _supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── WAVE ──
+const canvas = document.getElementById('waveCanvas');
+const ctx = canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize(); window.addEventListener('resize',resize);
+const waves=[
+  {amp:.18,freq:.0012,speed:.0004,phase:0,alpha:.15,width:2.5,r:56,g:189,b:248},
+  {amp:.14,freq:.0018,speed:.0006,phase:2.1,alpha:.1,width:1.8,r:103,g:232,b:249},
+  {amp:.22,freq:.0009,speed:.0003,phase:4.3,alpha:.07,width:3.5,r:14,g:165,b:233},
+];
+let t=0;
+function drawWave(){
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#02040c');bg.addColorStop(.5,'#04091a');bg.addColorStop(1,'#02040c');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  waves.forEach(w=>{
+    ctx.beginPath();ctx.lineWidth=w.width;
+    const g=ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,`rgba(${w.r},${w.g},${w.b},0)`);
+    g.addColorStop(.5,`rgba(${w.r},${w.g},${w.b},${w.alpha*2})`);
+    g.addColorStop(1,`rgba(${w.r},${w.g},${w.b},0)`);
+    ctx.strokeStyle=g;
+    for(let x=0;x<=W;x+=2){
+      const y=H*.5+H*w.amp*Math.sin(x*w.freq+t*w.speed+w.phase);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  });
+  t++;requestAnimationFrame(drawWave);
+}
+drawWave();
+
+// ── NAVEGAÇÃO ──
+function goTo(page){
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.remove('active');
+    p.style.display='none';
+  });
+  const el=document.getElementById('page-'+page);
+  if(!el){ console.error('Página não encontrada:', page); return; }
+  el.classList.add('active');
+  if(el.classList.contains('auth-page')){
+    el.style.display='flex';
+  } else {
+    el.style.display='block';
+  }
+  window.scrollTo(0,0);
+}
+
+// ── MÓDULOS ──
+function openModule(num){
+  const modal=document.getElementById('modal-modules');
+  const iframe=document.getElementById('moduleIframe');
+  const files={1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides_1.html'};
+  iframe.src=files[num];
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModule(){
+  document.getElementById('modal-modules').classList.remove('open');
+  document.body.style.overflow='';
+  setTimeout(()=>{document.getElementById('moduleIframe').src='';},300);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModule();});
+
+// ── POPUP CURSO ──
+function showCoursePopup(){
+  if(sessionStorage.getItem('popupShown'))return;
+  setTimeout(()=>{document.getElementById('coursePopup').classList.add('open');},800);
+  sessionStorage.setItem('popupShown','1');
+}
+function closeCoursePopup(){document.getElementById('coursePopup').classList.remove('open');}
+
+// ── AUTH HELPERS ──
+function togglePass(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'mostrar':'ocultar';}
+function showError(id,msg){const b=document.getElementById(id);b.textContent='⚠ '+msg;b.classList.add('show');}
+function hideError(id){document.getElementById(id).classList.remove('show');}
+function isOver18(d){const b=new Date(d),c=new Date();c.setFullYear(c.getFullYear()-18);return b<=c;}
+function checkStrength(v){
+  const w=document.getElementById('strengthWrap'),l=document.getElementById('strengthLbl');
+  if(!v){w.style.display='none';return;}w.style.display='block';
+  let s=0;
+  if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  [1,2,3,4].forEach(i=>{const b=document.getElementById('sb'+i);b.className='strength-bar';if(i<=s)b.classList.add(s<=1?'weak':s<=2?'medium':'strong');});
+  l.textContent=['','Fraca','Razoável','Boa','Forte'][s]||'';
+}
+document.getElementById('regBirth').max=new Date().toISOString().split('T')[0];
+
+// ── LOGIN REAL (SUPABASE) ──
+async function handleLogin(){
+  hideError('loginError');
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  if(!email)return showError('loginError','Digite seu e-mail.');
+  if(!pass)return showError('loginError','Digite sua senha.');
+  const btn=document.getElementById('loginBtn');
+  btn.classList.add('loading');
+  try{
+    const {data,error}=await _supabase.auth.signInWithPassword({email,password:pass});
+    btn.classList.remove('loading');
+    if(error)return showError('loginError',error.message.includes('Invalid')?'Email ou senha incorretos.':error.message);
+    const name=data.user.email.split('@')[0];
+    document.getElementById('dbUserName').textContent=name.charAt(0).toUpperCase()+name.slice(1);
+    document.getElementById('dbAvatar').textContent=name.charAt(0).toUpperCase();
+    document.getElementById('loginSuccess').classList.add('show');
+    setTimeout(()=>{goTo('dashboard');showCoursePopup();},1600);
+  }catch(e){btn.classList.remove('loading');showError('loginError','Erro de conexão. Tente novamente.');}
+}
+
+// ── CADASTRO REAL (SUPABASE) ──
+async function handleRegister(){
+  hideError('registerError');
+  const first=document.getElementById('regFirst').value.trim();
+  const last=document.getElementById('regLast').value.trim();
+  const birth=document.getElementById('regBirth').value;
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  if(!first)return showError('registerError','Digite seu nome.');
+  if(!last)return showError('registerError','Digite seu sobrenome.');
+  if(!birth)return showError('registerError','Informe sua data de nascimento.');
+  if(!isOver18(birth))return showError('registerError','Você precisa ter pelo menos 18 anos.');
+  if(!email)return showError('registerError','E-mail inválido.');
+  if(!pass||pass.length<8)return showError('registerError','Senha deve ter pelo menos 8 caracteres.');
+  const btn=document.getElementById('registerBtn');
+  btn.classList.add('loading');
+  try{
+    const {data,error}=await _supabase.auth.signUp({email,password:pass,options:{data:{first_name:first,last_name:last,birth_date:birth}}});
+    btn.classList.remove('loading');
+    if(error)return showError('registerError',error.message.includes('already')?'Este email já está cadastrado.':error.message);
+    document.getElementById('dbUserName').textContent=first;
+    document.getElementById('dbAvatar').textContent=first.charAt(0).toUpperCase();
+    document.getElementById('registerSuccess').classList.add('show');
+    setTimeout(()=>{goTo('dashboard');showCoursePopup();},1800);
+  }catch(e){btn.classList.remove('loading');showError('registerError','Erro de conexão. Tente novamente.');}
+}
+
+async function authGoogle(){
+  const{error}=await _supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}});
+  if(error)alert('Erro: '+error.message);
+}
+
+// ── DASHBOARD NAV ──
+function dbNav(el,section){
+  if(typeof updateMsgCounter === 'function') updateMsgCounter();
+  
+  document.querySelectorAll('.db-nav-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  ['overview','chat','modules'].forEach(s=>{
+    const d=document.getElementById('db-'+s);
+    if(d)d.style.display=s===section?'block':'none';
+  });
+  const titles={overview:'Dashboard',chat:'Análise IA',modules:'Módulos'};
+  document.getElementById('dbPageTitle').textContent=titles[section]||'Dashboard';
+}
+
+// ── CHAT IA ──
+let chatHistory=[];
+function sendSugg(text){document.getElementById('dbChatInput').value=text;sendDbChat();}
+async function sendDbChat(){
+  const input=document.getElementById('dbChatInput');
+  const btn=document.getElementById('dbSendBtn');
+  const text=input.value.trim();
+  if(!text)return;
+  
+  // ═══ SISTEMA DE LIMITES POR PLANO ═══
+  const userPlan = localStorage.getItem('b3alpha_plan') || 'free';
+  const PLAN_LIMITS = {
+    'free':    { messages: 10,  name: 'Gratuito' },
+    'monthly': { messages: 100, name: 'Mensal' },
+    'annual':  { messages: 200, name: 'Anual' },
+    'trial':   { messages: 150, name: 'Teste 30 dias' },
+    'pro':     { messages: 9999, name: 'PRO' }
+  };
+  
+  // Resetar contador mensalmente
+  const now = new Date();
+  const currentMonth = now.getFullYear() + '-' + (now.getMonth()+1);
+  const lastMonth = localStorage.getItem('b3alpha_msg_month');
+  if(lastMonth !== currentMonth){
+    localStorage.setItem('b3alpha_msg_count', '0');
+    localStorage.setItem('b3alpha_msg_month', currentMonth);
+  }
+  
+  let msgCount = parseInt(localStorage.getItem('b3alpha_msg_count') || '0');
+  const limit = PLAN_LIMITS[userPlan];
+  
+  // Verificar se atingiu o limite
+  if(msgCount >= limit.messages){
+    addMsg('ai', `⚠️ Você atingiu o limite de <strong>${limit.messages} mensagens/mês</strong> do plano <strong>${limit.name}</strong>.<br><br>📈 Faça upgrade para continuar conversando:<br>• <strong>Plano Mensal</strong> — 100 msgs/mês<br>• <strong>Plano Anual</strong> — 200 msgs/mês<br>• <strong>Plano PRO</strong> — mensagens ilimitadas<br><br><a href="https://pay.hotmart.com/E105279724U?off=5tqdpmwm" target="_blank" style="color:var(--blue);font-weight:700;">Fazer upgrade →</a>`);
+    return;
+  }
+  
+  // Aviso quando faltam 5 mensagens
+  if(limit.messages - msgCount === 5){
+    addMsg('ai', `📊 <strong>Aviso:</strong> Você tem apenas <strong>5 mensagens</strong> restantes no plano ${limit.name} este mês. Considere fazer upgrade para não ficar sem acesso!`);
+  }
+  
+  document.querySelector('.chat-suggestions')&&(document.querySelector('.chat-suggestions').style.display='none');
+  input.value='';input.disabled=true;btn.disabled=true;
+  addMsg('user',text);
+  chatHistory.push({role:'user',content:text});
+  const tid=addTyping();
+  
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1500,
+        system:`Você é a B3 Alpha IA — assistente especialista em investimentos brasileiros.
+
+IDENTIDADE
+- Tom: direto, amigável, didático
+- Idioma: sempre português brasileiro
+- Especialidade: mercado financeiro brasileiro
+
+REGRAS ABSOLUTAS
+1. NUNCA prometa retorno garantido
+2. SEMPRE mencione riscos
+3. NUNCA invente dados — se não souber, diga
+4. NUNCA responda sobre assuntos fora de finanças
+5. Personalize para o contexto do cliente
+
+CONTEXTO MERCADO (Maio 2026)
+- Selic: 14,75% | CDI: 14,65% | IPCA: 4,8%
+- Ibovespa: ~128.000 | USD/BRL: R$5,74
+- Cenário: juros altos favorecem renda fixa
+
+CONHECIMENTO ESSENCIAL
+
+RENDA FIXA:
+- Poupança 6,17%/ano (NÃO vale a pena)
+- CDB 100%+ CDI com FGC até R$250k
+- Tesouro Selic (reserva), IPCA+ (longo prazo)
+- LCI/LCA isentos de IR
+- Tabela IR: 22,5% → 15% (acima 720 dias)
+
+AÇÕES:
+- ON (3, voto), PN (4, dividendos), Units (11)
+- Indicadores: P/L, P/VP, ROE, DY, EBITDA
+- Dividendos isentos de IR para PF
+- Isenção: vendas até R$20k/mês
+
+FIIs:
+- Dividendos mensais ISENTOS de IR
+- DY > 10% atrativo, P/VP < 1 desconto, Vacância < 5%
+- Ganho de capital: 20% IR
+
+CARTEIRAS MODELO:
+- Conservador: 40% T. Selic + 30% CDB + 20% LCI/LCA + 10% FIIs papel
+- Moderado: 20% Tesouro IPCA+ + 25% FIIs + 25% Ações + 20% CDB + 10% ETF
+- Arrojado: 10% RF + 30% Ações + 20% FIIs + 15% ETF + 10% BDR + 10% Cripto + 5% Opções
+
+RESERVA EMERGÊNCIA:
+- 3-6 meses (CLT) | 6-12 meses (autônomo)
+- Onde: Tesouro Selic ou CDB liquidez 100%+ CDI
+
+VIVER DE RENDA (FIIs ~11%/ano):
+- R$3k/mês → R$327k | R$5k/mês → R$545k | R$10k/mês → R$1,09M
+
+FORMATO PARA ANÁLISE DE ATIVO:
+📊 [TICKER] — [Nome]
+💼 O que é: descrição
+💰 Preço atual: R$X,XX
+📈 Indicadores: P/L, DY
+🔍 Análise: dados
+⚡ Visão: comprar/aguardar/cautela
+⚠️ Riscos: principais
+
+Responda de forma clara, objetiva, com riscos sempre mencionados.`,
+        messages:chatHistory.slice(-12)
+      })
+    });
+    const data=await res.json();
+    document.getElementById(tid)?.remove();
+    const reply=data.content?.[0]?.text||'Erro ao conectar.';
+    chatHistory.push({role:'assistant',content:reply});
+    addMsg('ai',reply.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'));
+    
+    // ═══ INCREMENTAR CONTADOR DE MENSAGENS ═══
+    msgCount++;
+    localStorage.setItem('b3alpha_msg_count', msgCount.toString());
+    updateMsgCounter();
+    
+  }catch(e){
+    document.getElementById(tid)?.remove();
+    addMsg('ai','⚠️ Erro de conexão. Tente novamente.');
+  }
+  input.disabled=false;btn.disabled=false;input.focus();
+}
+
+// ═══ ATUALIZAR CONTADOR VISUAL ═══
+function updateMsgCounter(){
+  const counter = document.getElementById('msgCounter');
+  if(!counter) return;
+  const userPlan = localStorage.getItem('b3alpha_plan') || 'free';
+  const PLAN_LIMITS = {
+    'free': 10, 'monthly': 100, 'annual': 200, 'trial': 150, 'pro': 9999
+  };
+  const limit = PLAN_LIMITS[userPlan];
+  const used = parseInt(localStorage.getItem('b3alpha_msg_count') || '0');
+  const remaining = Math.max(0, limit - used);
+  if(limit === 9999){
+    counter.textContent = '∞ mensagens';
+  } else {
+    counter.textContent = `${remaining}/${limit} mensagens este mês`;
+    if(remaining < 10) counter.style.color = 'var(--red)';
+    else if(remaining < 30) counter.style.color = 'var(--yellow)';
+  }
+}
+function addMsg(type,text){
+  const c=document.getElementById('dbChatMessages');
+  const d=document.createElement('div');
+  d.className='chat-msg '+type;
+  d.innerHTML=`<div class="chat-avatar">${type==='ai'?'⚡':'👤'}</div><div class="chat-bubble">${text}</div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function addTyping(){
+  const c=document.getElementById('dbChatMessages');
+  const id='t'+Date.now();
+  const d=document.createElement('div');
+  d.className='chat-msg ai';d.id=id;
+  d.innerHTML='<div class="chat-avatar">⚡</div><div class="typing-dot"><span></span><span></span><span></span></div>';
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+  return id;
+}
+
+// ── FAQ ──
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+
+// ── SCROLL PARA SEÇÃO ──
+function scrollTo(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+</script>
+</body>
+</html>
