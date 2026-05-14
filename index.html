@@ -2751,7 +2751,6 @@ async function completeOnboarding(){
     session.user.email.split('@')[0];
   var{error}=await _supabase.from('profiles').upsert({
     id:session.user.id,
-    full_name:fullName,
     risk_profile:_obData.risk,
     monthly_investment:monthly,
     main_goal:_obData.goal,
@@ -2762,7 +2761,6 @@ async function completeOnboarding(){
   btn.disabled=false;btn.textContent='Salvar meu perfil →';
   if(!error){
     _userProfile={
-      full_name:fullName,
       risk_profile:_obData.risk,
       monthly_investment:monthly,
       main_goal:_obData.goal,
