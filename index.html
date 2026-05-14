@@ -1186,6 +1186,98 @@ footer a:hover{color:var(--text)}
   .ia-empty-title { font-size:22px }
 }
 
+/* ══════════════════════════════════════════
+   DIAGNÓSTICO PRIVADO MODAL
+══════════════════════════════════════════ */
+.diag-modal { position:fixed; inset:0; z-index:950; display:none; align-items:center; justify-content:center; padding:20px }
+.diag-modal.open { display:flex }
+.diag-overlay { position:absolute; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(10px) }
+.diag-card {
+  position:relative; z-index:1; width:100%; max-width:660px; max-height:90vh;
+  overflow-y:auto; background:#FFFFFF; border-radius:24px;
+  box-shadow:0 32px 80px rgba(0,0,0,.2), 0 0 0 1px rgba(0,0,0,.06);
+}
+.diag-card::-webkit-scrollbar { width:3px }
+.diag-card::-webkit-scrollbar-thumb { background:rgba(0,0,0,.08); border-radius:99px }
+.diag-hdr { display:flex; align-items:flex-start; justify-content:space-between; padding:28px 28px 0 }
+.diag-hdr-left { display:flex; flex-direction:column; gap:4px }
+.diag-confidential {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:3px 10px; border-radius:20px;
+  background:rgba(255,106,0,.08); border:1px solid rgba(255,106,0,.2);
+  font-size:9.5px; font-weight:700; color:#FF6A00; letter-spacing:.9px;
+  width:fit-content;
+}
+.diag-title { font-size:22px; font-weight:700; color:#1A1A1A; letter-spacing:-.5px; font-family:'Clash Display',sans-serif; margin-top:2px }
+.diag-subtitle { font-size:13px; color:#9E9E9E }
+.diag-close-btn {
+  width:32px; height:32px; border-radius:50%; flex-shrink:0;
+  background:#F5F5F5; border:none; cursor:pointer;
+  font-size:14px; color:#6B6B6B;
+  display:flex; align-items:center; justify-content:center; transition:background .15s;
+}
+.diag-close-btn:hover { background:#EBEBEB; color:#1A1A1A }
+.diag-profile-grid { display:flex; flex-wrap:wrap; gap:8px; padding:20px 28px 0 }
+.diag-chip {
+  padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;
+  border:1px solid; display:flex; align-items:center; gap:5px;
+}
+.diag-chip.perfil-conservador { background:rgba(34,197,94,.07); border-color:rgba(34,197,94,.25); color:#15803d }
+.diag-chip.perfil-moderado { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.25); color:#1d4ed8 }
+.diag-chip.perfil-arrojado { background:rgba(255,106,0,.08); border-color:rgba(255,106,0,.25); color:#FF6A00 }
+.diag-chip.neutral { background:#F5F5F5; border-color:#EBEBEB; color:#555 }
+.diag-sep { height:1px; background:#F2F2F2; margin:20px 28px 0 }
+.diag-actions { display:flex; gap:10px; padding:20px 28px 0; align-items:center }
+.diag-gen-btn {
+  flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:14px 20px; border-radius:14px; background:#FF6A00; border:none; cursor:pointer;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:14px; font-weight:700; color:#fff;
+  box-shadow:0 4px 16px rgba(255,106,0,.3); transition:all .18s;
+}
+.diag-gen-btn:hover { background:#E55E00; transform:translateY(-1px); box-shadow:0 6px 22px rgba(255,106,0,.4) }
+.diag-gen-btn:disabled { background:#D5D5D5; box-shadow:none; transform:none; cursor:not-allowed }
+.diag-edit-btn {
+  padding:14px 18px; border-radius:14px; background:transparent;
+  border:1.5px solid #E5E5E5; cursor:pointer;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:13px; font-weight:600; color:#6B6B6B;
+  transition:all .18s; white-space:nowrap;
+}
+.diag-edit-btn:hover { border-color:#C0C0C0; color:#1A1A1A }
+.diag-credits-note { padding:8px 28px 0; font-size:11px; color:#C0C0C0; font-family:'DM Mono',monospace }
+.diag-loading {
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  padding:40px 28px; color:#8E8E8E; font-size:13px;
+}
+.diag-loading-label { font-size:13px; color:#9E9E9E; animation:diagPulse 1.6s ease-in-out infinite }
+@keyframes diagPulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+.diag-result { padding:24px 28px 32px; animation:iaMsgFade .3s ease }
+.diag-result-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #F2F2F2;
+}
+.diag-result-label { font-size:10px; font-weight:700; color:#FF6A00; letter-spacing:.8px }
+.diag-result-date { font-size:11px; color:#C0C0C0; font-family:'DM Mono',monospace }
+.diag-no-profile {
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:40px 28px; text-align:center;
+}
+.diag-no-profile-icon { font-size:36px }
+.diag-no-profile-text { font-size:14px; color:#6B6B6B; max-width:300px; line-height:1.6 }
+.diag-no-profile-cta {
+  padding:12px 24px; border-radius:14px; background:#FF6A00; border:none; cursor:pointer;
+  font-family:'Cabinet Grotesk',sans-serif; font-size:14px; font-weight:700; color:#fff;
+  box-shadow:0 4px 14px rgba(255,106,0,.3); margin-top:4px; transition:all .18s;
+}
+.diag-no-profile-cta:hover { background:#E55E00 }
+@media(max-width:660px){
+  .diag-card { border-radius:18px }
+  .diag-hdr,.diag-profile-grid,.diag-actions,.diag-result,.diag-loading,.diag-credits-note,.diag-no-profile { padding-left:18px; padding-right:18px }
+  .diag-sep { margin-left:18px; margin-right:18px }
+  .diag-title { font-size:19px }
+  .diag-actions { flex-direction:column }
+  .diag-gen-btn,.diag-edit-btn { width:100% }
+}
+
 </style>
 </head>
 <body>
@@ -1893,6 +1985,57 @@ footer a:hover{color:var(--text)}
     </div>
     <button class="bcm-btn" id="bcmBuyBtn" onclick="buyCredits()">Comprar agora →</button>
     <div id="bcmError" style="color:#f87171;font-size:13px;text-align:center;margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<!-- ══ DIAGNÓSTICO PRIVADO MODAL ══ -->
+<div class="diag-modal" id="diagModal">
+  <div class="diag-overlay" onclick="closeDiagModal()"></div>
+  <div class="diag-card">
+    <div class="diag-hdr">
+      <div class="diag-hdr-left">
+        <span class="diag-confidential">◈ RELATÓRIO PRIVADO</span>
+        <div class="diag-title">Diagnóstico de Carteira</div>
+        <div class="diag-subtitle" id="diagSubtitle">Análise personalizada gerada pela B3Alpha</div>
+      </div>
+      <button class="diag-close-btn" onclick="closeDiagModal()">✕</button>
+    </div>
+
+    <!-- Estado: sem perfil -->
+    <div class="diag-no-profile" id="diagNoProfile" style="display:none">
+      <div class="diag-no-profile-icon">◎</div>
+      <div class="diag-no-profile-text">Complete seu perfil de investidor para receber um diagnóstico personalizado da IA.</div>
+      <button class="diag-no-profile-cta" onclick="closeDiagModal();openOnboarding(false)">Configurar meu perfil →</button>
+    </div>
+
+    <!-- Estado: perfil ok -->
+    <div id="diagProfileBody">
+      <div class="diag-profile-grid" id="diagChips"></div>
+      <div class="diag-sep"></div>
+      <div class="diag-actions">
+        <button class="diag-gen-btn" id="diagGenBtn" onclick="generateDiagnostic()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Gerar Diagnóstico Completo
+        </button>
+        <button class="diag-edit-btn" onclick="closeDiagModal();openOnboarding(true)">Editar Perfil</button>
+      </div>
+      <div class="diag-credits-note" id="diagCreditsNote">⚡ Consome 10 créditos</div>
+
+      <!-- Loading -->
+      <div class="diag-loading" id="diagLoading" style="display:none">
+        <div class="ia-typing-dots"><span></span><span></span><span></span></div>
+        <div class="diag-loading-label">Analisando seu perfil e o mercado atual...</div>
+      </div>
+
+      <!-- Resultado -->
+      <div class="diag-result" id="diagResult" style="display:none">
+        <div class="diag-result-hdr">
+          <span class="diag-result-label">B3ALPHA — ANÁLISE IA</span>
+          <span class="diag-result-date" id="diagDate"></span>
+        </div>
+        <div class="ia-ai-text" id="diagContent"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2638,38 +2781,100 @@ async function completeOnboarding(){
 // Editar perfil: pré-preenche o onboarding com dados existentes
 function editProfile(){
   document.getElementById('dhUser')?.classList.remove('open');
-  if(_userProfile){
-    _obData={
-      risk:_userProfile.risk_profile||null,
-      goal:_userProfile.main_goal||null,
-      horizon:_userProfile.investment_horizon||null
-    };
-    // Pré-selecionar opções visuais
-    if(_obData.risk){
-      ['conservador','moderado','arrojado'].forEach(function(v){
-        document.getElementById('obRisk_'+v)?.classList.toggle('selected',v===_obData.risk);
-      });
-      document.getElementById('obNext1').disabled=false;
-    }
-    if(_obData.goal){
-      ['reserva','renda','aposentadoria','patrimonio'].forEach(function(id){
-        document.getElementById('obGoal_'+id)?.classList.remove('selected');
-      });
-      var goalEl=document.getElementById('obGoal_'+_obData.goal);
-      if(goalEl)goalEl.classList.add('selected');
-    }
-    if(_obData.horizon){
-      [2,5,10,20].forEach(function(v){
-        document.getElementById('obHorizon_'+v)?.classList.toggle('selected',v===_obData.horizon);
-      });
-    }
-    if(_userProfile.monthly_investment){
-      var monthlyEl=document.getElementById('obMonthly');
-      if(monthlyEl)monthlyEl.value=_userProfile.monthly_investment;
-    }
-    obCheckStep2();
+  openDiagModal();
+}
+
+function openDiagModal(){
+  var modal=document.getElementById('diagModal');
+  var noProfile=document.getElementById('diagNoProfile');
+  var profileBody=document.getElementById('diagProfileBody');
+  modal.classList.add('open');
+
+  if(!_userProfile||!_userProfile.risk_profile){
+    noProfile.style.display='flex';
+    profileBody.style.display='none';
+    return;
   }
-  openOnboarding(true);
+  noProfile.style.display='none';
+  profileBody.style.display='block';
+
+  // Chips de perfil
+  var goalMap={reserva:'Reserva de emergência',renda:'Renda passiva',aposentadoria:'Aposentadoria',patrimonio:'Crescimento patrimonial'};
+  var horizMap={2:'Curto prazo (2 anos)',5:'Médio prazo (5 anos)',10:'Longo prazo (10 anos)',20:'Muito longo prazo (20 anos)'};
+  var riskLabel={conservador:'🛡 Conservador',moderado:'⚖ Moderado',arrojado:'🚀 Arrojado'};
+  var chips=document.getElementById('diagChips');
+  chips.innerHTML='';
+  function addChip(text,cls){var c=document.createElement('div');c.className='diag-chip '+(cls||'neutral');c.textContent=text;chips.appendChild(c);}
+  addChip(riskLabel[_userProfile.risk_profile]||_userProfile.risk_profile,'perfil-'+_userProfile.risk_profile);
+  if(_userProfile.main_goal) addChip(goalMap[_userProfile.main_goal]||_userProfile.main_goal);
+  if(_userProfile.investment_horizon) addChip(horizMap[_userProfile.investment_horizon]||_userProfile.investment_horizon+' anos');
+  if(_userProfile.monthly_investment) addChip('Aporte: R$ '+Number(_userProfile.monthly_investment).toLocaleString('pt-BR'));
+
+  // Reset resultado anterior
+  document.getElementById('diagResult').style.display='none';
+  document.getElementById('diagLoading').style.display='none';
+  document.getElementById('diagGenBtn').disabled=false;
+  document.getElementById('diagCreditsNote').style.display='block';
+}
+
+function closeDiagModal(){
+  document.getElementById('diagModal').classList.remove('open');
+}
+
+async function generateDiagnostic(){
+  if(!_userProfile) return;
+  var btn=document.getElementById('diagGenBtn');
+  var loading=document.getElementById('diagLoading');
+  var result=document.getElementById('diagResult');
+  var content=document.getElementById('diagContent');
+  var note=document.getElementById('diagCreditsNote');
+
+  btn.disabled=true;
+  loading.style.display='flex';
+  result.style.display='none';
+  note.style.display='none';
+
+  var goalMap={reserva:'Reserva de emergência',renda:'Renda passiva',aposentadoria:'Aposentadoria',patrimonio:'Crescimento patrimonial'};
+  var perfil=(_userProfile.risk_profile||'não informado').toUpperCase();
+  var objetivo=goalMap[_userProfile.main_goal]||_userProfile.main_goal||'não informado';
+  var horizonte=_userProfile.investment_horizon?_userProfile.investment_horizon+' anos':'não informado';
+  var aporte=_userProfile.monthly_investment?'R$ '+Number(_userProfile.monthly_investment).toLocaleString('pt-BR'):'não informado';
+
+  var prompt='Gere um DIAGNÓSTICO PRIVADO E COMPLETO de carteira de investimentos para este cliente.\n\n'+
+    'PERFIL DO CLIENTE:\n'+
+    '- Perfil de risco: '+perfil+'\n'+
+    '- Objetivo principal: '+objetivo+'\n'+
+    '- Horizonte de investimento: '+horizonte+'\n'+
+    '- Aporte mensal disponível: '+aporte+'\n\n'+
+    'Gere um relatório estruturado com exatamente estas seções:\n\n'+
+    '## Seu Perfil de Investidor\n'+
+    'Descrição personalizada e honesta do tipo de investidor com base nos dados acima.\n\n'+
+    '## Alocação Recomendada\n'+
+    'Distribuição ideal em % por categoria com justificativa clara baseada no cenário atual (Selic 14,75%).\n\n'+
+    '## Ativos Específicos Sugeridos\n'+
+    'Lista dos melhores ativos para este perfil agora. Seja específico com nomes reais (ex: PETR4, MXRF11, Tesouro IPCA+ 2029).\n\n'+
+    '## Estratégia para os Próximos 12 Meses\n'+
+    'Plano de ação concreto e personalizado, passo a passo.\n\n'+
+    '## O Que Evitar\n'+
+    'Armadilhas e erros comuns para este perfil específico.\n\n'+
+    '## Próximo Passo Imediato\n'+
+    'Uma única ação concreta que este cliente pode tomar ainda hoje.\n\n'+
+    'Seja direto, profissional e específico. Este é um relatório privado e personalizado.';
+
+  try{
+    var reply=await callBlueprintIA(prompt,[]);
+    loading.style.display='none';
+    content.innerHTML=renderMarkdown(stripEmojis(reply));
+    document.getElementById('diagDate').textContent=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    result.style.display='block';
+    // Atualiza badge de créditos
+    loadCredits();
+  }catch(e){
+    loading.style.display='none';
+    content.innerHTML='<p style="color:#ef4444;font-size:14px">Erro ao gerar diagnóstico. Verifique seus créditos e tente novamente.</p>';
+    result.style.display='block';
+  }
+  btn.disabled=false;
 }
 
 // ── DROPDOWN ──
