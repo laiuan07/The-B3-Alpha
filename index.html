@@ -2141,6 +2141,7 @@ footer a:hover{color:var(--text)}
       <button class="db-drawer-item" onclick="closeDrawer();dhNav('modules')"><span>◫</span>Revisar Módulos</button>
       <button class="db-drawer-item" onclick="closeDrawer();dhNav('plans')"><span>◉</span>Planos</button>
       <button class="db-drawer-item" onclick="closeDrawer();showBuyCreditsModal()"><span>⚡</span>Créditos</button>
+      <button class="db-drawer-item" onclick="closeDrawer();editProfile()"><span>◎</span>Meu Perfil</button>
       <button class="db-drawer-item" onclick="handleLogout()" style="color:#ef4444"><span>↩</span>Sair</button>
     </div>
   </div>
@@ -3066,8 +3067,8 @@ async function sendDbChat(){
   const btn=document.getElementById('dbSendBtn');
   const text=input.value.trim();
   if(!text)return;
-  // Verificar créditos locais antes de chamar (UX rápida)
-  if(userCredits<=0){showBuyCreditsModal();return;}
+  // Verificar créditos locais antes de chamar (UX rápida) — mínimo 10 por pergunta
+  if(userCredits<10){showBuyCreditsModal();return;}
   document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   input.value='';input.style.height='auto';input.disabled=true;btn.disabled=true;
   addMsg('user',text);
