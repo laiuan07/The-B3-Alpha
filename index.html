@@ -17,6 +17,8 @@
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- PDF Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <!-- Fontes -->
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1139,6 +1141,15 @@ footer a:hover{color:var(--text)}
 }
 .ia-fb-btn:hover { background:#F5F5F5; color:#6B6B6B }
 .ia-fb-btn.active { color:#FF6A00 }
+.ia-pdf-btn {
+  display:flex; align-items:center; gap:5px;
+  height:26px; padding:0 10px; border-radius:7px;
+  background:transparent; border:1.5px solid #E8E8E8;
+  font-size:11px; font-family:'DM Mono',monospace;
+  color:#BBBBBB; cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+.ia-pdf-btn:hover { border-color:#FF6A00; color:#FF6A00; background:#FFF5F0 }
+.ia-pdf-btn svg { width:12px; height:12px; flex-shrink:0 }
 
 /* Input — large Gemini-style pill */
 .ia-premium-input-wrap {
@@ -3384,7 +3395,8 @@ function addMsg(type,text){
     d.innerHTML=`<div class="ia-user-initials">V</div><div class="ia-user-bubble">${text}</div>`;
   } else {
     d.className='ia-msg-row ai';
-    d.innerHTML=`<div class="ia-ai-badge">IA</div><div class="ia-ai-content"><div class="ia-ai-text">${text}</div><div class="ia-fb-bar"><button class="ia-fb-btn" onclick="this.classList.toggle('active')" title="Gostei">👍</button><button class="ia-fb-btn" onclick="this.classList.toggle('active')" title="Não gostei">👎</button></div></div>`;
+    const msgId='msg'+Date.now()+Math.random().toString(36).slice(2);
+    d.innerHTML=`<div class="ia-ai-badge">IA</div><div class="ia-ai-content"><div class="ia-ai-text" id="${msgId}">${text}</div><div class="ia-fb-bar"><button class="ia-fb-btn" onclick="this.classList.toggle('active')" title="Gostei">👍</button><button class="ia-fb-btn" onclick="this.classList.toggle('active')" title="Não gostei">👎</button><button class="ia-pdf-btn" onclick="downloadAsPDF('${msgId}')" title="Baixar como PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>PDF</button></div></div>`;
   }
   c.appendChild(d);_scrollChat();
 }
@@ -3442,6 +3454,51 @@ async function extractAndSaveMemory(conversation){
       body:JSON.stringify({mode:'extract_memory',conversation,existingMemory})
     });
   }catch(e){console.warn('extractAndSaveMemory:',e);}
+}
+
+// ── PDF EXPORT ──
+function downloadAsPDF(msgId){
+  const el=document.getElementById(msgId);
+  if(!el)return;
+  const rawHtml=el.innerHTML;
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const timeStr=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='font-family:Georgia,serif;color:#1A1A1A;padding:0;margin:0;';
+  wrapper.innerHTML=`
+    <div style="background:#FF6A00;padding:28px 36px 22px;margin-bottom:0;">
+      <div style="font-family:Arial,sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">B3Alpha</div>
+      <div style="font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.75);margin-top:4px;letter-spacing:1px;text-transform:uppercase;">Inteligência Financeira</div>
+    </div>
+    <div style="padding:32px 36px 20px;">
+      <div style="font-family:Arial,sans-serif;font-size:11px;color:#999;margin-bottom:24px;border-bottom:1px solid #F0F0F0;padding-bottom:12px;">
+        Gerado em ${dateStr} às ${timeStr} &nbsp;·&nbsp; Documento confidencial
+      </div>
+      <div style="font-family:Arial,sans-serif;font-size:13.5px;line-height:1.7;color:#222;">
+        ${rawHtml}
+      </div>
+    </div>
+    <div style="padding:18px 36px;border-top:1px solid #F0F0F0;margin-top:20px;">
+      <div style="font-family:Arial,sans-serif;font-size:10px;color:#BBBBBB;line-height:1.5;">
+        Este documento foi gerado pela B3Alpha e tem caráter informativo. Não constitui recomendação de investimento. Todo investimento envolve riscos.
+      </div>
+    </div>`;
+
+  document.body.appendChild(wrapper);
+
+  const opt={
+    margin:[0,0,0,0],
+    filename:'B3Alpha-'+now.toISOString().slice(0,10)+'.pdf',
+    image:{type:'jpeg',quality:0.97},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+  };
+
+  html2pdf().set(opt).from(wrapper).save().then(function(){
+    document.body.removeChild(wrapper);
+  });
 }
 
 // ── EMOJI STRIPPER ──
