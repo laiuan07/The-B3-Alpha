@@ -3213,33 +3213,23 @@ async function callBlueprintIA(message,history){
   const {data:{session}}=await _supabase.auth.getSession();
   if(!session?.access_token) throw new Error('sessao_expirada');
 
-  // Inject user profile context
+  // Inject user profile context (minimal, natural)
   var profilePrefix='';
   if(_userProfile&&_userProfile.risk_profile){
-    var horizStr=_userProfile.investment_horizon?_userProfile.investment_horizon+' anos':'nao informado';
-    var monthlyStr=_userProfile.monthly_investment?'R$'+Number(_userProfile.monthly_investment).toLocaleString('pt-BR'):'nao informado';
-    var goalMap={reserva:'Reserva de emergência',renda:'Renda passiva',aposentadoria:'Aposentadoria',patrimonio:'Crescimento patrimonial'};
-    var goalStr=goalMap[_userProfile.main_goal]||_userProfile.main_goal||'nao informado';
-    var profileRules={
-      conservador:'INSTRUCAO DE COMPORTAMENTO: Este usuario e CONSERVADOR. Priorize sempre renda fixa (CDB, Tesouro Selic, LCI, LCA, Tesouro IPCA+). Evite sugerir acoes volateis, cripto ou day trade. Explique riscos com clareza. Tom: seguro, didatico, tranquilizador. Foco: preservacao de capital e crescimento previsivel.',
-      moderado:'INSTRUCAO DE COMPORTAMENTO: Este usuario e MODERADO. Equilibre renda fixa com renda variavel. Sugira FIIs, ETFs e acoes solidas (blue chips). Pode incluir pequena exposicao a cripto (max 5-10%). Tom: estrategico, educativo, encorajador. Foco: crescimento sustentavel com diversificacao inteligente.',
-      arrojado:'INSTRUCAO DE COMPORTAMENTO: Este usuario e ARROJADO. Foque em performance e oportunidades de alto retorno. Inclua acoes de crescimento, small caps, cripto, swing trade e ativos volateis. Tom: direto, rapido, focado em timing e oportunidade. Foco: maximizar retorno aceitando volatilidade.'
-    };
-    profilePrefix='[PERFIL DO USUARIO — LEIA ANTES DE RESPONDER]\n'+
-      'Perfil de investidor: '+_userProfile.risk_profile.toUpperCase()+'\n'+
-      'Aporte mensal disponivel: '+monthlyStr+'\n'+
-      'Objetivo principal: '+goalStr+'\n'+
-      'Horizonte de investimento: '+horizStr+'\n'+
-      (profileRules[_userProfile.risk_profile]||'')+'\n\n';
+    var horizStr=_userProfile.investment_horizon?_userProfile.investment_horizon+' anos':'não informado';
+    var monthlyStr=_userProfile.monthly_investment?'R$'+Number(_userProfile.monthly_investment).toLocaleString('pt-BR'):'não informado';
+    var goalMap={reserva:'reserva de emergência',renda:'renda passiva',aposentadoria:'aposentadoria',patrimonio:'crescimento patrimonial'};
+    var goalStr=goalMap[_userProfile.main_goal]||_userProfile.main_goal||'não informado';
+    profilePrefix='[Contexto do usuário: perfil '+_userProfile.risk_profile+', objetivo de '+goalStr+', aporte mensal '+monthlyStr+', horizonte '+horizStr+']\n\n';
   }
-  // Find relevant knowledge sections
+  // Find relevant knowledge sections (only when score >= 3)
   var relevant=_kbSearch(message,3);
   var enrichedMsg=message;
   if(relevant.length>0){
-    var ctx=relevant.map(function(s){return '['+s.t+']\n'+s.c;}).join('\n\n');
-    enrichedMsg=profilePrefix+'[BASE DE CONHECIMENTO — B3Alpha]\n'+ctx+'\n\n[PERGUNTA DO USUARIO]\n'+message;
+    var ctx=relevant.map(function(s){return s.c;}).join('\n\n');
+    enrichedMsg=profilePrefix+'[Referência técnica disponível]\n'+ctx+'\n\n'+message;
   } else if(profilePrefix){
-    enrichedMsg=profilePrefix+'[PERGUNTA DO USUARIO]\n'+message;
+    enrichedMsg=profilePrefix+message;
   }
 
   // AbortController: timeout de 30 segundos
