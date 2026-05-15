@@ -2772,7 +2772,7 @@ async function completeOnboarding(){
     var horizLabel=_obData.horizon<=2?'curto prazo (ate 2 anos)':_obData.horizon<=5?'medio prazo (2-5 anos)':_obData.horizon<=10?'longo prazo (5-10 anos)':'muito longo prazo (+10 anos)';
     addMsg('assistant','Perfil salvo! Agora sei que voce e um investidor '+riskLabel+' com objetivo de '+(_obData.goal||'').toLowerCase()+', aporte mensal de R$'+monthly.toLocaleString('pt-BR')+' e horizonte de '+horizLabel+'. Minhas respostas serao personalizadas para o seu perfil.');
   } else {
-    alert('Erro ao salvar perfil. Tente novamente.');
+    alert('Erro ao salvar perfil: '+(error.message||JSON.stringify(error)));
   }
 }
 
