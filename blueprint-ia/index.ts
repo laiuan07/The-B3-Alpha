@@ -107,10 +107,10 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
     }
 
     // ── MODE: chat (default) ──────────────────────────────────────
-    // Check and deduct credits BEFORE calling AI
+    // Check credits (required)
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("credit_balance, ai_memory")
+      .select("credit_balance")
       .eq("id", userId)
       .single();
 
@@ -122,7 +122,17 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
     }
 
     const currentBalance = profileData.credit_balance ?? 0;
-    const aiMemory: string = profileData.ai_memory ?? "";
+
+    // Load persistent memory (optional — works even if column doesn't exist yet)
+    let aiMemory = "";
+    try {
+      const { data: memData } = await supabase
+        .from("profiles")
+        .select("ai_memory")
+        .eq("id", userId)
+        .single();
+      aiMemory = (memData as any)?.ai_memory ?? "";
+    } catch (_) { /* column may not exist yet */ }
 
     if (currentBalance < CREDITS_PER_MESSAGE) {
       return new Response(JSON.stringify({ error: "creditos_insuficientes", credit_balance: currentBalance }), {
