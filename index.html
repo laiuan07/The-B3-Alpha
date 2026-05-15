@@ -3203,7 +3203,8 @@ function _kbSearch(query,topN){
     return {i:i,score:score};
   });
   scores.sort(function(a,b){return b.score-a.score;});
-  return scores.slice(0,topN).filter(function(s){return s.score>0;}).map(function(s){return _KB[s.i];});
+  // Only inject KB when the query has strong financial relevance (score >= 3)
+  return scores.slice(0,topN).filter(function(s){return s.score>=3;}).map(function(s){return _KB[s.i];});
 }
 
 // ── BLUEPRINT IA FETCH ──
