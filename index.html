@@ -2990,7 +2990,7 @@ async function buyCredits(){
   try{
     var{data:{session}}=await _supabase.auth.getSession();
     if(!session?.access_token)throw new Error('sessao_expirada');
-    var res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/create-checkout',{
+    var res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/create-checkout',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
       body:JSON.stringify({price_id:_selectedPack.priceId})
@@ -3026,7 +3026,7 @@ async function landingCheckout(type){
   const priceId=priceMap[type];
   if(!priceId)return;
   try{
-    const res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/create-checkout',{
+    const res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/create-checkout',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
       body:JSON.stringify({price_id:priceId,type:'subscription'})
@@ -3050,7 +3050,7 @@ async function subscribePlan(priceId, planName){
   try{
     var{data:{session}}=await _supabase.auth.getSession();
     if(!session?.access_token) throw new Error('Sessão expirada. Faça login novamente.');
-    var res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/create-checkout',{
+    var res=await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/create-checkout',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
       body:JSON.stringify({price_id:priceId, type:'subscription'})
