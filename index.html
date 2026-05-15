@@ -1741,7 +1741,7 @@ footer a:hover{color:var(--text)}
           <li>Acesso aos 4 módulos educativos</li>
           <li>Sem fidelidade · sem cartão salvo</li>
         </ul>
-        <a href="https://pay.hotmart.com/E105279724U?off=ur6adiwt" class="pc-btn outline">Começar experiência →</a>
+        <button class="pc-btn outline" onclick="landingCheckout('experience')">Começar experiência →</button>
       </div>
 
       <!-- B3ALPHA PRO (FEATURED) -->
@@ -1759,7 +1759,7 @@ footer a:hover{color:var(--text)}
           <li>Comparativo avançado de ativos</li>
           <li>Cancele quando quiser</li>
         </ul>
-        <a href="https://pay.hotmart.com/E105279724U?off=jve556ja" class="pc-btn primary">Assinar B3Alpha Pro →</a>
+        <button class="pc-btn primary" onclick="landingCheckout('monthly')">Assinar B3Alpha Pro →</button>
       </div>
 
       <!-- B3ALPHA ANNUAL -->
@@ -1778,7 +1778,7 @@ footer a:hover{color:var(--text)}
           <li>Prioridade em novas funcionalidades</li>
           <li>Melhor investimento da plataforma</li>
         </ul>
-        <a href="https://pay.hotmart.com/E105279724U?off=5tqdpmwm" class="pc-btn outline" style="border-color:rgba(52,211,153,.35);color:#34d399">Quero o Annual →</a>
+        <button class="pc-btn outline" style="border-color:rgba(52,211,153,.35);color:#34d399" onclick="landingCheckout('annual')">Quero o Annual →</button>
       </div>
 
     </div>
@@ -3005,6 +3005,40 @@ async function buyCredits(){
     errEl.style.display='block';
   }
 }
+// ── CHECKOUT DA LANDING PAGE ──
+async function landingCheckout(type){
+  // Se não estiver logado, manda para o registro primeiro
+  const{data:{session}}=await _supabase.auth.getSession();
+  if(!session){
+    goTo('register');
+    return;
+  }
+  if(type==='experience'){
+    // Plano gratuito/trial — ativa direto
+    goTo('dashboard');
+    return;
+  }
+  // Planos pagos — cria sessão Stripe e redireciona
+  const priceMap={
+    monthly:'price_1TRAg73lJp1Nui7cMG1f35H2',
+    annual:'price_1TRAgO3lJp1Nui7cOjp4JcR0'
+  };
+  const priceId=priceMap[type];
+  if(!priceId)return;
+  try{
+    const res=await fetch('https://cmkjbeatytndzyjkeunn.supabase.co/functions/v1/create-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({price_id:priceId,type:'subscription'})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Erro ao iniciar pagamento');
+    window.location.href=data.url;
+  }catch(e){
+    alert(e.message||'Erro ao conectar com o Stripe. Tente novamente.');
+  }
+}
+
 // ── PLANOS E ASSINATURAS ──
 async function subscribePlan(priceId, planName){
   var btnId=planName==='monthly'?'monthlyBtn':'annualBtn';
