@@ -1165,8 +1165,14 @@ footer a:hover{color:var(--text)}
   display:flex; align-items:center; justify-content:space-between;
   padding:6px 12px 13px;
 }
-.ia-input-tools-left { display:flex; align-items:center; gap:2px }
+.ia-input-tools-left { display:flex; align-items:center; gap:8px }
 .ia-credits-hint { font-size:11.5px; color:#C4C4C4; font-family:'DM Mono',monospace; white-space:nowrap }
+.ia-img-btn { width:30px; height:30px; border-radius:8px; background:none; border:1.5px solid #E0E0E0; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; color:#999 }
+.ia-img-btn:hover { border-color:#FF6A00; color:#FF6A00 }
+.ia-img-btn svg { width:15px; height:15px }
+.ia-img-preview { display:none; align-items:center; gap:8px; padding:8px 20px 4px; }
+.ia-img-preview img { height:56px; border-radius:8px; border:1.5px solid #E0E0E0; object-fit:cover }
+.ia-img-remove { background:rgba(0,0,0,.55); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-left:-22px; margin-top:-40px; align-self:flex-start; flex-shrink:0 }
 .ia-send-round {
   width:38px; height:38px; border-radius:50%;
   background:#FF6A00; border:none; cursor:pointer;
@@ -2126,6 +2132,10 @@ footer a:hover{color:var(--text)}
       <!-- Premium input -->
       <div class="ia-premium-input-wrap">
         <div class="ia-premium-input-box">
+          <div class="ia-img-preview" id="iaImgPreview">
+            <img id="iaImgThumb" src="" alt="imagem">
+            <button class="ia-img-remove" onclick="removeAttachedImage()" title="Remover">✕</button>
+          </div>
           <div class="ia-premium-input-top">
             <textarea id="dbChatInput"
               placeholder="Pergunte qualquer coisa sobre investimentos..."
@@ -2135,6 +2145,10 @@ footer a:hover{color:var(--text)}
           </div>
           <div class="ia-premium-input-bottom">
             <div class="ia-input-tools-left">
+              <button class="ia-img-btn" onclick="document.getElementById('iaImgFileInput').click()" title="Enviar gráfico para análise">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </button>
+              <input type="file" id="iaImgFileInput" accept="image/*" style="display:none" onchange="handleImageUpload(this)">
               <span class="ia-credits-hint"><span id="iaCreditsHint">50</span> créditos</span>
             </div>
             <button class="ia-send-round" id="dbSendBtn" onclick="sendDbChat()">
@@ -3208,7 +3222,7 @@ function _kbSearch(query,topN){
 }
 
 // ── BLUEPRINT IA FETCH ──
-async function callBlueprintIA(message,history){
+async function callBlueprintIA(message,history,imageData){
   // Sessão obrigatória — bloqueia sem token
   const {data:{session}}=await _supabase.auth.getSession();
   if(!session?.access_token) throw new Error('sessao_expirada');
@@ -3241,7 +3255,7 @@ async function callBlueprintIA(message,history){
       method:'POST',
       signal:controller.signal,
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
-      body:JSON.stringify({message:enrichedMsg,history,originalMessage:message})
+      body:JSON.stringify({message:enrichedMsg,history,originalMessage:message,imageData:imageData||null})
     });
     clearTimeout(timeout);
     const data=await res.json();
@@ -3268,22 +3282,58 @@ function sendSugg(text){
   document.getElementById('dbChatInput').value=text;
   sendDbChat();
 }
+// ── IMAGE ATTACH ──
+var _attachedImage=null; // {base64, mediaType, previewUrl}
+
+function handleImageUpload(input){
+  const file=input.files[0];
+  if(!file)return;
+  if(file.size>5*1024*1024){alert('Imagem muito grande. Use até 5MB.');return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const dataUrl=e.target.result;
+    const parts=dataUrl.split(',');
+    const meta=parts[0]; // e.g. "data:image/png;base64"
+    const base64=parts[1];
+    const mediaType=meta.split(':')[1].split(';')[0];
+    _attachedImage={base64,mediaType,previewUrl:dataUrl};
+    document.getElementById('iaImgThumb').src=dataUrl;
+    document.getElementById('iaImgPreview').style.display='flex';
+  };
+  reader.readAsDataURL(file);
+  input.value=''; // reset so same file can be re-selected
+}
+
+function removeAttachedImage(){
+  _attachedImage=null;
+  document.getElementById('iaImgPreview').style.display='none';
+  document.getElementById('iaImgThumb').src='';
+}
+
 async function sendDbChat(){
   const input=document.getElementById('dbChatInput');
   const btn=document.getElementById('dbSendBtn');
   const text=input.value.trim();
-  if(!text)return;
+  if(!text&&!_attachedImage)return;
   // Verificar créditos locais antes de chamar (UX rápida) — mínimo 10 por pergunta
   if(userCredits<10){showBuyCreditsModal();return;}
   document.querySelectorAll('.ia-suggs').forEach(s=>s.style.display='none');
   input.value='';input.style.height='auto';input.disabled=true;btn.disabled=true;
-  addMsg('user',text);
-  chatHistory.push({role:'user',content:text});
-  // Manter apenas as últimas 20 mensagens (10 pares) para não inflar o payload
+  // Snapshot da imagem antes de limpar
+  const imgSnapshot=_attachedImage;
+  removeAttachedImage();
+  // Mostrar mensagem do usuário (com preview de imagem se houver)
+  const displayText=text||(imgSnapshot?'[Gráfico enviado para análise]':'');
+  if(imgSnapshot){
+    addMsgWithImage('user',text||'Analise este gráfico.',imgSnapshot.previewUrl);
+  } else {
+    addMsg('user',text);
+  }
+  chatHistory.push({role:'user',content:text||'Analise este gráfico.'});
   if(chatHistory.length>20) chatHistory=chatHistory.slice(-20);
   const tid=addTyping();
   try{
-    const reply=await callBlueprintIA(text,chatHistory.slice(0,-1));
+    const reply=await callBlueprintIA(text||'Analise este gráfico.',chatHistory.slice(0,-1),imgSnapshot);
     document.getElementById(tid)?.remove();
     const cleanReply=stripEmojis(reply);
     chatHistory.push({role:'assistant',content:cleanReply});
@@ -3303,6 +3353,16 @@ async function sendDbChat(){
     }
   }
   input.disabled=false;btn.disabled=false;input.focus();
+}
+
+function addMsgWithImage(type,text,previewUrl){
+  const welcome=document.getElementById('dbWelcome');
+  if(welcome)welcome.style.display='none';
+  const c=document.getElementById('dbChatMessages');
+  const d=document.createElement('div');
+  d.className='ia-msg-row user';
+  d.innerHTML=`<div class="ia-user-initials">V</div><div class="ia-user-bubble">${text?`<div style="margin-bottom:6px">${text}</div>`''}<img src="${previewUrl}" style="max-width:220px;border-radius:8px;display:block"></div>`;
+  c.appendChild(d);_scrollChat();
 }
 function iaAutoResize(el){
   el.style.height='auto';

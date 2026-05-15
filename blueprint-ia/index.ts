@@ -82,18 +82,36 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    const { message, history = [] } = await req.json();
+    const { message, history = [], imageData } = await req.json();
 
-    if (!message) {
+    if (!message && !imageData) {
       return new Response(JSON.stringify({ error: "message obrigatório" }), {
         status: 400,
         headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
+    // Build user message content — multimodal when image is present
+    let userContent: unknown;
+    if (imageData?.base64 && imageData?.mediaType) {
+      userContent = [
+        {
+          type: "image",
+          source: {
+            type: "base64",
+            media_type: imageData.mediaType,
+            data: imageData.base64,
+          },
+        },
+        { type: "text", text: message || "Analise este gráfico." },
+      ];
+    } else {
+      userContent = message;
+    }
+
     const messages = [
       ...history.slice(-20),
-      { role: "user", content: message },
+      { role: "user", content: userContent },
     ];
 
     const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
