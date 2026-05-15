@@ -3416,11 +3416,32 @@ function newIaChat(){
     const t0=document.getElementById('iaHist1Text');
     if(t0){t0.textContent=firstUser.textContent.replace(/<[^>]+>/g,'').substring(0,28)+'…';document.getElementById('iaHist1').style.display='flex';}
   }
+  // Extract memories from this conversation silently before resetting
+  if(chatHistory.length>=4){
+    extractAndSaveMemory(chatHistory.slice());
+  }
   // Reset chat
   chatHistory=[];
   msgs.innerHTML='';
   const welcome=document.getElementById('dbWelcome');
   if(welcome)welcome.style.display='flex';
+}
+
+// ── MEMORY EXTRACTION ──
+// Fires silently after each conversation — no cost to the user
+async function extractAndSaveMemory(conversation){
+  try{
+    const{data:{session}}=await _supabase.auth.getSession();
+    if(!session?.access_token)return;
+    // Load current memory to avoid duplicates
+    const{data:prof}=await _supabase.from('profiles').select('ai_memory').eq('id',session.user.id).single();
+    const existingMemory=prof?.ai_memory||'';
+    await fetch('https://luljxtettmifukbprekj.supabase.co/functions/v1/blueprint-ia',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({mode:'extract_memory',conversation,existingMemory})
+    });
+  }catch(e){console.warn('extractAndSaveMemory:',e);}
 }
 
 // ── EMOJI STRIPPER ──

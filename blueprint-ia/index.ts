@@ -59,10 +59,58 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    const body = await req.json();
+    const { mode } = body;
+
+    // ── MODE: extract_memory ──────────────────────────────────────
+    // Called silently after a conversation to extract key user facts
+    if (mode === "extract_memory") {
+      const { conversation, existingMemory = "" } = body;
+      if (!conversation || conversation.length < 4) {
+        return new Response(JSON.stringify({ ok: true }), { headers: cors });
+      }
+      const extractPrompt = `Você vai analisar uma conversa entre um usuário e a IA financeira B3Alpha.
+
+Extraia APENAS fatos concretos e duradouros sobre o usuário que seriam úteis em conversas futuras — coisas que ele mencionou sobre si mesmo, seus investimentos, objetivos, medos, situação financeira ou conhecimento.
+
+Memória atual do usuário (já registrada):
+${existingMemory || "(nenhuma ainda)"}
+
+Conversa:
+${conversation.map((m: {role:string,content:string}) => `${m.role === "user" ? "Usuário" : "IA"}: ${m.content}`).join("\n")}
+
+Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ainda não estão na memória atual). Se não houver nada novo relevante, retorne exatamente: NENHUM`;
+
+      const extractRes = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 400,
+          messages: [{ role: "user", content: extractPrompt }],
+        }),
+      });
+
+      if (extractRes.ok) {
+        const extractData = await extractRes.json();
+        const newFacts = extractData.content?.[0]?.text ?? "";
+        if (newFacts && newFacts.trim() !== "NENHUM") {
+          const updatedMemory = [existingMemory, newFacts].filter(Boolean).join("\n").trim();
+          await supabase.from("profiles").update({ ai_memory: updatedMemory }).eq("id", userId);
+        }
+      }
+      return new Response(JSON.stringify({ ok: true }), { headers: cors });
+    }
+
+    // ── MODE: chat (default) ──────────────────────────────────────
     // Check and deduct credits BEFORE calling AI
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("credit_balance")
+      .select("credit_balance, ai_memory")
       .eq("id", userId)
       .single();
 
@@ -74,6 +122,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const currentBalance = profileData.credit_balance ?? 0;
+    const aiMemory: string = profileData.ai_memory ?? "";
 
     if (currentBalance < CREDITS_PER_MESSAGE) {
       return new Response(JSON.stringify({ error: "creditos_insuficientes", credit_balance: currentBalance }), {
@@ -82,7 +131,7 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    const { message, history = [], imageData } = await req.json();
+    const { message, history = [], imageData } = body;
 
     if (!message && !imageData) {
       return new Response(JSON.stringify({ error: "message obrigatório" }), {
@@ -90,6 +139,12 @@ Deno.serve(async (req: Request) => {
         headers: { ...cors, "Content-Type": "application/json" },
       });
     }
+
+    // Inject persistent memory into system prompt
+    const memoryBlock = aiMemory
+      ? `\n\n[O que você já sabe sobre este usuário de conversas anteriores]\n${aiMemory}`
+      : "";
+    const systemWithMemory = SYSTEM_PROMPT + memoryBlock;
 
     // Build user message content — multimodal when image is present
     let userContent: unknown;
@@ -124,7 +179,7 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 2048,
-        system: SYSTEM_PROMPT,
+        system: systemWithMemory,
         messages,
       }),
     });
@@ -150,7 +205,7 @@ Deno.serve(async (req: Request) => {
 
     // Save messages to history
     await supabase.from("chat_messages").insert([
-      { user_id: userId, role: "user", content: message },
+      { user_id: userId, role: "user", content: typeof message === "string" ? message : "[imagem]" },
       { user_id: userId, role: "assistant", content: reply },
     ]);
 
