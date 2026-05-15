@@ -3361,7 +3361,8 @@ function addMsgWithImage(type,text,previewUrl){
   const c=document.getElementById('dbChatMessages');
   const d=document.createElement('div');
   d.className='ia-msg-row user';
-  d.innerHTML=`<div class="ia-user-initials">V</div><div class="ia-user-bubble">${text?`<div style="margin-bottom:6px">${text}</div>`''}<img src="${previewUrl}" style="max-width:220px;border-radius:8px;display:block"></div>`;
+  var textPart=text?'<div style="margin-bottom:6px">'+text+'</div>':'';
+  d.innerHTML='<div class="ia-user-initials">V</div><div class="ia-user-bubble">'+textPart+'<img src="'+previewUrl+'" style="max-width:220px;border-radius:8px;display:block"></div>';
   c.appendChild(d);_scrollChat();
 }
 function iaAutoResize(el){
