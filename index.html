@@ -838,6 +838,38 @@ footer a:hover{color:var(--text)}
 .db-side-panel::-webkit-scrollbar { width:3px }
 .db-side-panel::-webkit-scrollbar-thumb { background:var(--d-border) }
 
+/* Conversations Panel */
+.db-convs-panel { padding:0; gap:0; }
+.db-convs-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 14px 12px; border-bottom:1px solid var(--d-border); flex-shrink:0; }
+.db-convs-title { font-family:'Cabinet Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--d-text); }
+.db-convs-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--d-text2); background:var(--d-surface2); border-radius:100px; padding:1px 7px; }
+.db-convs-new-btn { font-family:'Cabinet Grotesk',sans-serif; font-size:12px; font-weight:700; color:var(--d-accent); background:var(--d-accent-glow); border:1px solid rgba(99,102,241,.25); border-radius:8px; padding:5px 12px; cursor:pointer; transition:all .2s; }
+.db-convs-new-btn:hover { background:var(--d-accent); color:#fff; }
+.db-convs-list { flex:1; overflow-y:auto; padding:8px 8px; display:flex; flex-direction:column; gap:2px; }
+.db-convs-list::-webkit-scrollbar { width:3px }
+.db-convs-list::-webkit-scrollbar-thumb { background:var(--d-border); border-radius:2px; }
+.db-convs-empty { display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 20px; color:var(--d-muted); font-size:12px; text-align:center; line-height:1.5; }
+.db-conv-item { display:flex; align-items:center; gap:6px; padding:9px 10px; border-radius:10px; cursor:pointer; transition:background .15s; group:true; border:1px solid transparent; }
+.db-conv-item:hover { background:var(--d-surface); }
+.db-conv-item.active { background:var(--d-surface2); border-color:var(--d-border); }
+.db-conv-icon { flex-shrink:0; width:28px; height:28px; border-radius:8px; background:var(--d-surface2); display:flex; align-items:center; justify-content:center; }
+.db-conv-item.active .db-conv-icon { background:var(--d-accent-glow); }
+.db-conv-icon svg { width:13px; height:13px; stroke:var(--d-text2); }
+.db-conv-item.active .db-conv-icon svg { stroke:var(--d-accent); }
+.db-conv-info { flex:1; min-width:0; }
+.db-conv-title-text { font-family:'Cabinet Grotesk',sans-serif; font-size:12.5px; font-weight:600; color:var(--d-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; }
+.db-conv-date { font-size:10px; color:var(--d-muted); display:block; margin-top:1px; }
+.db-conv-actions { display:flex; gap:2px; opacity:0; transition:opacity .15s; flex-shrink:0; }
+.db-conv-item:hover .db-conv-actions { opacity:1; }
+.db-conv-item.active .db-conv-actions { opacity:1; }
+.db-conv-action-btn { background:none; border:none; cursor:pointer; padding:4px; border-radius:6px; color:var(--d-muted); display:flex; align-items:center; justify-content:center; transition:all .15s; }
+.db-conv-action-btn:hover { background:var(--d-surface); color:var(--d-text); }
+.db-conv-action-btn.del:hover { color:#ef4444; }
+.db-conv-rename-wrap { display:none; padding:4px 8px 6px; }
+.db-conv-rename-wrap.open { display:block; }
+.db-conv-rename-input { width:100%; background:var(--d-surface); border:1px solid var(--d-accent); border-radius:7px; padding:6px 10px; font-family:'Cabinet Grotesk',sans-serif; font-size:12px; color:var(--d-text); outline:none; box-sizing:border-box; }
+.db-conv-section-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.6px; color:var(--d-muted); padding:10px 10px 4px; text-transform:uppercase; }
+
 /* Cards */
 .db-card { background:var(--d-surface); border:1px solid var(--d-border); border-radius:14px; padding:16px; transition:border-color .2s }
 .db-card:hover { border-color:rgba(59,130,246,.25) }
@@ -2186,47 +2218,21 @@ footer a:hover{color:var(--text)}
       </div>
     </div>
 
-    <!-- RIGHT: Info Panel -->
-    <aside class="db-side-panel">
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">💼</span><span class="db-card-title">Carteira Sugerida</span><span class="db-card-badge">IA</span></div>
-        <div class="db-port-list">
-          <div class="db-port-item"><span class="db-port-ticker">PETR4</span><div class="db-port-bar"><div class="db-port-fill" style="width:25%"></div></div><span class="db-port-pct">25%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">MXRF11</span><div class="db-port-bar"><div class="db-port-fill" style="width:20%"></div></div><span class="db-port-pct">20%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">Tesouro</span><div class="db-port-bar"><div class="db-port-fill" style="width:30%;background:#22c55e"></div></div><span class="db-port-pct">30%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">BTC</span><div class="db-port-bar"><div class="db-port-fill" style="width:10%;background:#f59e0b"></div></div><span class="db-port-pct">10%</span></div>
-          <div class="db-port-item"><span class="db-port-ticker">CDB</span><div class="db-port-bar"><div class="db-port-fill" style="width:15%;background:#8b5cf6"></div></div><span class="db-port-pct">15%</span></div>
+    <!-- RIGHT: Conversations Panel -->
+    <aside class="db-side-panel db-convs-panel">
+      <div class="db-convs-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--d-text2)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="db-convs-title">Conversas</span>
+          <span class="db-convs-count" id="convsCount">0</span>
         </div>
-        <button class="db-card-action" onclick="sendSugg('Monte uma carteira diversificada para mim')">Personalizar com IA →</button>
+        <button class="db-convs-new-btn" onclick="newIaChat()">+ Nova</button>
       </div>
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">📡</span><span class="db-card-title">Radar de Oportunidades</span><span class="db-card-badge new">NOVO</span></div>
-        <div class="db-radar-list">
-          <div class="db-radar-item up" onclick="sendSugg('Analise a VALE3 — está em oportunidade de entrada?')"><span class="db-radar-ticker">VALE3</span><span class="db-radar-signal">Oportunidade de entrada</span><span class="db-radar-arrow">↑</span></div>
-          <div class="db-radar-item neutral" onclick="sendSugg('Analise o BBAS3 — vale esperar o suporte?')"><span class="db-radar-ticker">BBAS3</span><span class="db-radar-signal">Aguardar próximo suporte</span><span class="db-radar-arrow">→</span></div>
-          <div class="db-radar-item up" onclick="sendSugg('Analise o KNRI11 — o dividend yield está atrativo?')"><span class="db-radar-ticker">KNRI11</span><span class="db-radar-signal">DY atrativo 0,8%/mês</span><span class="db-radar-arrow">↑</span></div>
+      <div class="db-convs-list" id="dbConvsList">
+        <div class="db-convs-empty" id="convsEmpty">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--d-muted)" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Nenhuma conversa ainda.<br>Comece a conversar!</span>
         </div>
-        <button class="db-card-action" onclick="sendSugg('Quais as melhores oportunidades na B3 agora?')">Analisar com IA →</button>
-      </div>
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">📊</span><span class="db-card-title">Indicadores Econômicos</span></div>
-        <div class="db-indic-grid">
-          <div class="db-indic-item"><span class="db-indic-label">SELIC</span><span class="db-indic-val" id="indSelic">14,75%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">CDI</span><span class="db-indic-val" id="indCdi">14,65%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IPCA</span><span class="db-indic-val" id="indIpca">5,48%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IBOV</span><span class="db-indic-val up" id="indIbov">134.2k</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">Dólar</span><span class="db-indic-val" id="indDolar">R$5,68</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IGP-M</span><span class="db-indic-val" id="indIgpm">6,2%</span></div>
-        </div>
-      </div>
-      <div class="db-card">
-        <div class="db-card-hdr"><span class="db-card-icon">📰</span><span class="db-card-title">Notícias do Mercado</span></div>
-        <div class="db-news-list">
-          <div class="db-news-item" onclick="sendSugg('O que aconteceu com a Petrobras recentemente?')"><span class="db-news-src">Infomoney</span><span class="db-news-text">Petrobras anuncia dividendos acima do esperado</span></div>
-          <div class="db-news-item" onclick="sendSugg('Como o Fed impacta os investimentos no Brasil?')"><span class="db-news-src">Valor Econômico</span><span class="db-news-text">Fed mantém juros, Ibovespa reage positivamente</span></div>
-          <div class="db-news-item" onclick="sendSugg('O que é o Tesouro IPCA+ e vale investir agora?')"><span class="db-news-src">XP Investimentos</span><span class="db-news-text">Tesouro IPCA+ atinge maior rentabilidade em 2 anos</span></div>
-        </div>
-        <button class="db-card-action" onclick="sendSugg('Quais as principais notícias do mercado hoje?')">Ver análise da IA →</button>
       </div>
     </aside>
 
@@ -2495,6 +2501,7 @@ function populateUserUI(user,name){
   if(uname)uname.textContent=display;
   if(uavatar)uavatar.textContent=name.charAt(0).toUpperCase();
   loadCredits(user.id);
+  initConvs(user.id);
 }
 
 let _authHandled=false;
@@ -2688,8 +2695,197 @@ async function _loadIndicadores(){
 _buildTicker();
 _loadTickerBrapi();
 _loadIndicadores();
-setInterval(_loadTickerBrapi, 5*60*1000); // ticker atualiza a cada 5 min
-setInterval(_loadIndicadores, 5*60*1000); // indicadores atualizam a cada 5 min
+setInterval(_loadTickerBrapi, 5*60*1000);
+setInterval(_loadIndicadores, 5*60*1000);
+
+// ── CONVERSATIONS ──
+var _convs=[];
+var _activeConvId=null;
+var _currentUserId=null;
+
+function _convsKey(){ return 'b3alpha_convs_'+ (_currentUserId||'guest'); }
+
+function _saveConvsToStorage(){
+  try{ localStorage.setItem(_convsKey(), JSON.stringify(_convs)); }catch(e){}
+}
+
+function _loadConvsFromStorage(){
+  try{
+    var raw=localStorage.getItem(_convsKey());
+    _convs=raw?JSON.parse(raw):[];
+  }catch(e){ _convs=[]; }
+}
+
+function _genConvId(){
+  return Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+}
+
+function _convTitle(messages){
+  // Use first user message as title, trimmed
+  var first=messages.find(function(m){return m.role==='user';});
+  if(!first) return 'Nova conversa';
+  var t=first.content.replace(/<[^>]+>/g,'').trim();
+  return t.length>40 ? t.substring(0,40)+'…' : t;
+}
+
+function _relativeTime(ts){
+  var diff=Date.now()-ts;
+  var m=Math.floor(diff/60000);
+  if(m<1) return 'agora';
+  if(m<60) return 'há '+m+'min';
+  var h=Math.floor(m/60);
+  if(h<24) return 'há '+h+'h';
+  var d=Math.floor(h/24);
+  if(d===1) return 'ontem';
+  return 'há '+d+' dias';
+}
+
+function _renderConvsList(){
+  var list=document.getElementById('dbConvsList');
+  var empty=document.getElementById('convsEmpty');
+  var count=document.getElementById('convsCount');
+  if(!list) return;
+  if(count) count.textContent=_convs.length;
+
+  if(_convs.length===0){
+    list.innerHTML='';
+    if(empty){ empty.style.display='flex'; list.appendChild(empty); }
+    return;
+  }
+  if(empty) empty.style.display='none';
+
+  // Group by day
+  var today=new Date(); today.setHours(0,0,0,0);
+  var yesterday=new Date(today); yesterday.setDate(yesterday.getDate()-1);
+  var sections={today:[],yesterday:[],older:[]};
+  _convs.forEach(function(c){
+    var d=new Date(c.updatedAt); d.setHours(0,0,0,0);
+    if(d.getTime()===today.getTime()) sections.today.push(c);
+    else if(d.getTime()===yesterday.getTime()) sections.yesterday.push(c);
+    else sections.older.push(c);
+  });
+
+  var html='';
+  function renderSection(label, items){
+    if(!items.length) return;
+    html+='<div class="db-conv-section-label">'+label+'</div>';
+    items.forEach(function(c){
+      var isActive=c.id===_activeConvId;
+      html+=
+        '<div class="db-conv-item'+(isActive?' active':'')+'" id="conv-'+c.id+'" onclick="loadConv(\''+c.id+'\')" >'+
+          '<div class="db-conv-icon">'+
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'+
+          '</div>'+
+          '<div class="db-conv-info">'+
+            '<span class="db-conv-title-text" id="convtitle-'+c.id+'">'+_escHtml(c.title)+'</span>'+
+            '<span class="db-conv-date">'+_relativeTime(c.updatedAt)+'</span>'+
+          '</div>'+
+          '<div class="db-conv-actions" onclick="event.stopPropagation()">'+
+            '<button class="db-conv-action-btn" title="Renomear" onclick="startRenameConv(\''+c.id+'\')">'+
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'+
+            '</button>'+
+            '<button class="db-conv-action-btn del" title="Apagar" onclick="deleteConv(\''+c.id+'\')">'+
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'+
+            '</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="db-conv-rename-wrap" id="rename-'+c.id+'">'+
+          '<input class="db-conv-rename-input" type="text" placeholder="Nome da conversa..." '+
+            'onkeydown="if(event.key===\'Enter\')confirmRenameConv(\''+c.id+'\',this.value); if(event.key===\'Escape\')closeRenameConv(\''+c.id+'\');" '+
+            'onblur="confirmRenameConv(\''+c.id+'\',this.value)">'+
+        '</div>';
+    });
+  }
+  renderSection('Hoje', sections.today);
+  renderSection('Ontem', sections.yesterday);
+  renderSection('Anteriores', sections.older);
+  list.innerHTML=html;
+}
+
+function _escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _saveCurrentConv(){
+  if(!chatHistory||chatHistory.length===0) return;
+  if(_activeConvId){
+    var c=_convs.find(function(x){return x.id===_activeConvId;});
+    if(c){ c.messages=chatHistory.slice(); c.updatedAt=Date.now(); c.title=_convTitle(chatHistory); }
+  } else {
+    var newC={id:_genConvId(), title:_convTitle(chatHistory), messages:chatHistory.slice(), createdAt:Date.now(), updatedAt:Date.now()};
+    _convs.unshift(newC);
+    _activeConvId=newC.id;
+  }
+  _saveConvsToStorage();
+  _renderConvsList();
+}
+
+function loadConv(id){
+  // Save current first
+  _saveCurrentConv();
+  var c=_convs.find(function(x){return x.id===id;});
+  if(!c) return;
+  _activeConvId=c.id;
+  chatHistory=c.messages.slice();
+  // Render messages
+  var msgs=document.getElementById('dbChatMessages');
+  var welcome=document.getElementById('dbWelcome');
+  msgs.innerHTML='';
+  if(welcome) welcome.style.display='none';
+  chatHistory.forEach(function(m){
+    var type=m.role==='user'?'user':'ai';
+    var text=type==='ai'?renderMarkdown(stripEmojis(m.content)):m.content;
+    addMsg(type,text);
+  });
+  _renderConvsList();
+  // Scroll to bottom
+  var scroll=document.getElementById('iaMsgsScroll');
+  if(scroll) setTimeout(function(){scroll.scrollTop=scroll.scrollHeight;},100);
+}
+
+function startRenameConv(id){
+  var wrap=document.getElementById('rename-'+id);
+  if(!wrap) return;
+  wrap.classList.add('open');
+  var input=wrap.querySelector('input');
+  var c=_convs.find(function(x){return x.id===id;});
+  if(input&&c){ input.value=c.title; setTimeout(function(){input.focus();input.select();},50); }
+}
+
+function closeRenameConv(id){
+  var wrap=document.getElementById('rename-'+id);
+  if(wrap) wrap.classList.remove('open');
+}
+
+function confirmRenameConv(id, val){
+  var v=(val||'').trim();
+  if(v){
+    var c=_convs.find(function(x){return x.id===id;});
+    if(c){ c.title=v; _saveConvsToStorage(); }
+  }
+  closeRenameConv(id);
+  _renderConvsList();
+}
+
+function deleteConv(id){
+  _convs=_convs.filter(function(x){return x.id!==id;});
+  if(_activeConvId===id){
+    _activeConvId=null;
+    chatHistory=[];
+    var msgs=document.getElementById('dbChatMessages');
+    if(msgs) msgs.innerHTML='';
+    var welcome=document.getElementById('dbWelcome');
+    if(welcome) welcome.style.display='flex';
+  }
+  _saveConvsToStorage();
+  _renderConvsList();
+}
+
+function initConvs(userId){
+  _currentUserId=userId||null;
+  _loadConvsFromStorage();
+  _renderConvsList();
+}
 
 checkSession();
 
@@ -3447,6 +3643,7 @@ async function sendDbChat(){
     const cleanReply=stripEmojis(reply);
     chatHistory.push({role:'assistant',content:cleanReply});
     addMsg('ai',renderMarkdown(cleanReply));
+    _saveCurrentConv();
   }catch(e){
     document.getElementById(tid)?.remove();
     const msg=e.message||'';
@@ -3511,30 +3708,20 @@ function addTyping(){
 }
 
 function newIaChat(){
-  // Save first user message as history item
   const msgs=document.getElementById('dbChatMessages');
-  const firstUser=msgs.querySelector('.ia-msg.user .ia-bubble');
-  if(firstUser){
-    const histSlots=['iaHist1','iaHist2','iaHist3'];
-    const textSlots=['iaHist1Text','iaHist2Text','iaHist3Text'];
-    // Shift history down
-    for(let i=2;i>0;i--){
-      const prev=document.getElementById(textSlots[i-1]);
-      const curr=document.getElementById(textSlots[i]);
-      if(prev&&curr){curr.textContent=prev.textContent;document.getElementById(histSlots[i]).style.display=prev.textContent?'flex':'';}
-    }
-    const t0=document.getElementById('iaHist1Text');
-    if(t0){t0.textContent=firstUser.textContent.replace(/<[^>]+>/g,'').substring(0,28)+'…';document.getElementById('iaHist1').style.display='flex';}
-  }
-  // Extract memories from this conversation silently before resetting
+  // Save current conversation before resetting
+  _saveCurrentConv();
+  // Extract memories silently
   if(chatHistory.length>=4){
     extractAndSaveMemory(chatHistory.slice());
   }
-  // Reset chat
+  // Reset to blank
+  _activeConvId=null;
   chatHistory=[];
   msgs.innerHTML='';
   const welcome=document.getElementById('dbWelcome');
   if(welcome)welcome.style.display='flex';
+  _renderConvsList();
 }
 
 // ── MEMORY EXTRACTION ──
