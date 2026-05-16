@@ -2810,9 +2810,14 @@ function _saveCurrentConv(){
   if(!chatHistory||chatHistory.length===0) return;
   if(_activeConvId){
     var c=_convs.find(function(x){return x.id===_activeConvId;});
-    if(c){ c.messages=chatHistory.slice(); c.updatedAt=Date.now(); c.title=_convTitle(chatHistory); }
+    if(c){
+      c.messages=chatHistory.slice();
+      c.updatedAt=Date.now();
+      // Só atualiza o título se o usuário não renomeou manualmente
+      if(!c.renamed) c.title=_convTitle(chatHistory);
+    }
   } else {
-    var newC={id:_genConvId(), title:_convTitle(chatHistory), messages:chatHistory.slice(), createdAt:Date.now(), updatedAt:Date.now()};
+    var newC={id:_genConvId(), title:_convTitle(chatHistory), messages:chatHistory.slice(), createdAt:Date.now(), updatedAt:Date.now(), renamed:false};
     _convs.unshift(newC);
     _activeConvId=newC.id;
   }
@@ -2861,7 +2866,7 @@ function confirmRenameConv(id, val){
   var v=(val||'').trim();
   if(v){
     var c=_convs.find(function(x){return x.id===id;});
-    if(c){ c.title=v; _saveConvsToStorage(); }
+    if(c){ c.title=v; c.renamed=true; _saveConvsToStorage(); }
   }
   closeRenameConv(id);
   _renderConvsList();
