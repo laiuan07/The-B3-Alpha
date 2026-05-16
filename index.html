@@ -990,6 +990,78 @@ footer a:hover{color:var(--text)}
   .dh-plan-badge,.dh-hello { display:none }
 }
 
+/* ═══ MOBILE PREMIUM DESIGN (≤768px only) ═══ */
+.mob-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-top:1px solid #e5e7eb;padding:0 0 env(safe-area-inset-bottom,0px);box-shadow:0 -4px 20px rgba(0,0,0,.08)}
+.mob-nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;padding:10px 0 8px;background:none;border:none;cursor:pointer;color:#9ca3af;transition:color .2s;font-family:'Cabinet Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.mob-nav-item.active{color:#FF6A00}
+.mob-nav-item.active .mob-nav-icon{stroke:#FF6A00}
+.mob-nav-icon{width:22px;height:22px;stroke:#9ca3af;transition:stroke .2s;flex-shrink:0}
+.mob-nav-item.active .mob-nav-icon{stroke:#FF6A00}
+
+@media(max-width:768px){
+  /* Show bottom nav */
+  .mob-bottom-nav{display:flex}
+  /* Hide hamburger — bottom nav "Menu" replaces it */
+  .db-mob-menu-btn{display:none!important}
+  /* Bottom padding so last message isn't behind nav */
+  .ia-msgs-scroll{padding-bottom:80px}
+  .ia-premium-input-wrap{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 82px)!important}
+  /* Hide credits + plan from header on mobile — shown near input */
+  .dh-credits{display:none!important}
+  .dh-plan-badge{display:none!important}
+  /* Header: compact, white, clean */
+  .dh{background:#fff!important;border-bottom:1px solid #e5e7eb!important;box-shadow:none!important;padding:0 16px!important;height:56px!important;min-height:56px!important}
+  /* Ticker: hide canvas wave on mobile and show clean white ticker */
+  /* Chat panel: white background */
+  .db-chat-panel{background:#fff!important}
+  .ia-msgs-scroll{background:#fff!important}
+  .ia-chat-body{background:#fff!important}
+  /* Message bubbles: keep dark for AI, light for user */
+  .ia-ai-bubble{background:#f3f4f6!important;color:#111827!important;border:none!important}
+  .ia-ai-label{color:#6b7280!important}
+  /* Input area: light/white */
+  .ia-premium-input-wrap{background:#fff!important;border-top:1px solid #e5e7eb!important;box-shadow:none!important}
+  .ia-premium-input-box{background:#f9fafb!important;border:1.5px solid #e5e7eb!important;box-shadow:none!important}
+  .ia-premium-input-box:focus-within{border-color:#FF6A00!important;box-shadow:0 0 0 3px rgba(255,106,0,.1)!important}
+  #dbChatInput{background:transparent!important;color:#111827!important}
+  #dbChatInput::placeholder{color:#9ca3af!important}
+  /* Credits hint: pill below send btn on mobile */
+  .ia-credits-hint{background:#fff3eb;color:#FF6A00;border:1px solid #ffd6b3;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700}
+  /* Chips: hide on mobile (replaced by input placeholder) */
+  .ia-chips{display:none!important}
+  /* Welcome state: minimal on mobile */
+  .ia-empty-icon{background:#fff3eb!important;border:1px solid #ffd6b3!important}
+  .ia-empty-icon svg{stroke:#FF6A00!important}
+  .ia-empty-title{color:#111827!important}
+  .ia-empty-sub{color:#6b7280!important}
+  /* Ticker: white bg on mobile */
+  .db-ticker{background:#f9fafb!important;border-bottom:1px solid #e5e7eb!important}
+  .db-ticker-track span{color:#374151!important}
+  /* Strip (B3Alpha + Novo chat): light */
+  .ia-chat-strip{background:#fff!important;border-bottom:1px solid #e5e7eb!important}
+  .ia-chat-title{color:#111827!important}
+  .ia-new-btn{background:#f3f4f6!important;color:#374151!important;border:1px solid #e5e7eb!important}
+  .ia-new-btn:hover{background:#FF6A00!important;color:#fff!important;border-color:#FF6A00!important}
+  .db-online-dot{background:#22c55e!important;box-shadow:0 0 6px #22c55e!important}
+  /* Send button keep orange */
+  .ia-send-round{background:#FF6A00!important}
+  /* Image button on mobile */
+  .ia-img-btn{color:#9ca3af!important}
+  /* User bubble: orange on mobile too */
+  .ia-user-bubble{background:linear-gradient(135deg,#FF6A00,#ff8c00)!important}
+  /* Canvas wave: hide on mobile (white bg is enough) */
+  #waveCanvas{display:none!important}
+  /* Logo text visible */
+  .dh-logo-text{color:#111827!important}
+  .dh-logo svg rect{fill:#FF6A00!important}
+  /* Dropdown toggle: dark text on white header */
+  .dh-user{color:#111827}
+  .dh-avatar{background:#FF6A00!important}
+  /* User info text */
+  .dh-hello,.dh-username{color:#111827!important}
+  .dh-chevron{color:#9ca3af!important}
+}
+
 /* ══════════════════════════════════════════
    GEMINI-STYLE CHAT — B3ALPHA
 ══════════════════════════════════════════ */
@@ -2330,6 +2402,26 @@ footer a:hover{color:var(--text)}
     </div>
   </div>
 
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mob-bottom-nav" id="mobBottomNav">
+    <button class="mob-nav-item active" id="mobNavChat" onclick="mobNavTo('chat')">
+      <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Chat</span>
+    </button>
+    <button class="mob-nav-item" id="mobNavProfile" onclick="mobNavTo('profile')">
+      <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span>Perfil</span>
+    </button>
+    <button class="mob-nav-item" id="mobNavModules" onclick="mobNavTo('modules')">
+      <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Módulos</span>
+    </button>
+    <button class="mob-nav-item" id="mobNavMenu" onclick="openDrawer()">
+      <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <span>Menu</span>
+    </button>
+  </nav>
+
 </div>
 
 <script>
@@ -2941,6 +3033,21 @@ function openDrawer(){
 function closeDrawer(){
   document.getElementById('dbDrawer')?.classList.remove('open');
   document.getElementById('dbDrawerOverlay')?.classList.remove('open');
+}
+
+// ── MOBILE BOTTOM NAV ──
+function mobNavTo(section){
+  // Update active state
+  ['mobNavChat','mobNavProfile','mobNavModules'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.classList.remove('active');
+  });
+  var activeId={chat:'mobNavChat',profile:'mobNavProfile',modules:'mobNavModules'}[section];
+  if(activeId)document.getElementById(activeId)?.classList.add('active');
+  // Navigate
+  if(section==='chat'){dhNav('chat');}
+  else if(section==='profile'){closeDrawer();editProfile();}
+  else if(section==='modules'){dhNav('modules');}
 }
 
 // ── CREDITS SYSTEM ──
