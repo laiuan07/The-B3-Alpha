@@ -2788,11 +2788,6 @@ function _renderConvsList(){
               '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'+
             '</button>'+
           '</div>'+
-        '</div>'+
-        '<div class="db-conv-rename-wrap" id="rename-'+c.id+'">'+
-          '<input class="db-conv-rename-input" type="text" placeholder="Nome da conversa..." '+
-            'onkeydown="if(event.key===\'Enter\')confirmRenameConv(\''+c.id+'\',this.value); if(event.key===\'Escape\')closeRenameConv(\''+c.id+'\');" '+
-            'onblur="confirmRenameConv(\''+c.id+'\',this.value)">'+
         '</div>';
     });
   }
@@ -2849,27 +2844,16 @@ function loadConv(id){
 }
 
 function startRenameConv(id){
-  var wrap=document.getElementById('rename-'+id);
-  if(!wrap) return;
-  wrap.classList.add('open');
-  var input=wrap.querySelector('input');
   var c=_convs.find(function(x){return x.id===id;});
-  if(input&&c){ input.value=c.title; setTimeout(function(){input.focus();input.select();},50); }
-}
-
-function closeRenameConv(id){
-  var wrap=document.getElementById('rename-'+id);
-  if(wrap) wrap.classList.remove('open');
-}
-
-function confirmRenameConv(id, val){
-  var v=(val||'').trim();
-  if(v){
-    var c=_convs.find(function(x){return x.id===id;});
-    if(c){ c.title=v; c.renamed=true; _saveConvsToStorage(); }
+  if(!c) return;
+  var newName=window.prompt('Renomear conversa:', c.title);
+  if(newName===null) return; // cancelado
+  var v=newName.trim();
+  if(v && v!==c.title){
+    c.title=v;
+    _saveConvsToStorage();
+    _renderConvsList();
   }
-  closeRenameConv(id);
-  _renderConvsList();
 }
 
 function deleteConv(id){
@@ -2887,7 +2871,10 @@ function deleteConv(id){
 }
 
 function initConvs(userId){
-  _currentUserId=userId||null;
+  var uid=userId||null;
+  // Não recarrega se já inicializado para o mesmo usuário
+  if(_currentUserId===uid && _convs.length>=0 && uid!==null) return;
+  _currentUserId=uid;
   _loadConvsFromStorage();
   _renderConvsList();
 }
