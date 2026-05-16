@@ -2813,11 +2813,11 @@ function _saveCurrentConv(){
     if(c){
       c.messages=chatHistory.slice();
       c.updatedAt=Date.now();
-      // Só atualiza o título se o usuário não renomeou manualmente
-      if(!c.renamed) c.title=_convTitle(chatHistory);
+      // Título NUNCA é alterado aqui — só via rename manual
     }
   } else {
-    var newC={id:_genConvId(), title:_convTitle(chatHistory), messages:chatHistory.slice(), createdAt:Date.now(), updatedAt:Date.now(), renamed:false};
+    // Primeira vez: gera título da primeira mensagem
+    var newC={id:_genConvId(), title:_convTitle(chatHistory), messages:chatHistory.slice(), createdAt:Date.now(), updatedAt:Date.now()};
     _convs.unshift(newC);
     _activeConvId=newC.id;
   }
