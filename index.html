@@ -2211,12 +2211,12 @@ footer a:hover{color:var(--text)}
       <div class="db-card">
         <div class="db-card-hdr"><span class="db-card-icon">📊</span><span class="db-card-title">Indicadores Econômicos</span></div>
         <div class="db-indic-grid">
-          <div class="db-indic-item"><span class="db-indic-label">SELIC</span><span class="db-indic-val">14,75%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">CDI</span><span class="db-indic-val">14,65%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IPCA</span><span class="db-indic-val">5,48%</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IBOV</span><span class="db-indic-val up">134.2k</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">Dólar</span><span class="db-indic-val">R$5,68</span></div>
-          <div class="db-indic-item"><span class="db-indic-label">IGP-M</span><span class="db-indic-val">6,2%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">SELIC</span><span class="db-indic-val" id="indSelic">14,75%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">CDI</span><span class="db-indic-val" id="indCdi">14,65%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">IPCA</span><span class="db-indic-val" id="indIpca">5,48%</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">IBOV</span><span class="db-indic-val up" id="indIbov">134.2k</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">Dólar</span><span class="db-indic-val" id="indDolar">R$5,68</span></div>
+          <div class="db-indic-item"><span class="db-indic-label">IGP-M</span><span class="db-indic-val" id="indIgpm">6,2%</span></div>
         </div>
       </div>
       <div class="db-card">
@@ -2597,7 +2597,8 @@ _supabase.auth.onAuthStateChange((event,session)=>{
   if(event==='SIGNED_OUT') goTo('landing');
 });
 
-// ── TICKER B3 ──
+// ── TICKER B3 (Brapi) ──
+var _tkSymbols='PETR4,VALE3,ITUB4,BBDC4,ABEV3,WEGE3,BBAS3,MGLU3,RENT3,LREN3,SUZB3,RADL3';
 var _tkAssets=[
   {t:'PETR4',n:'Petrobras',p:38.42,v:1.25},
   {t:'VALE3',n:'Vale',p:62.18,v:-0.83},
@@ -2615,7 +2616,7 @@ var _tkAssets=[
 function _buildTicker(){
   var track=document.getElementById('dbTickerTrack');
   if(!track)return;
-  var items=[..._tkAssets,..._tkAssets]; // duplica para loop contínuo
+  var items=[..._tkAssets,..._tkAssets];
   track.innerHTML=items.map(function(a){
     var up=a.v>=0;
     var varStr=(up?'+':'')+a.v.toFixed(2)+'%';
@@ -2632,16 +2633,63 @@ function _buildTicker(){
     '</div>';
   }).join('');
 }
-function _tickerTick(){
-  _tkAssets.forEach(function(a){
-    var delta=(Math.random()-0.48)*a.p*0.004;
-    a.p=Math.max(0.01,parseFloat((a.p+delta).toFixed(2)));
-    a.v=parseFloat((a.v+(Math.random()-0.5)*0.08).toFixed(2));
-  });
-  _buildTicker();
+async function _loadTickerBrapi(){
+  try{
+    var res=await fetch('https://brapi.dev/api/quote/'+_tkSymbols+'?fundamental=false&dividends=false');
+    if(!res.ok)throw new Error('brapi '+res.status);
+    var data=await res.json();
+    if(data.results&&data.results.length){
+      _tkAssets=data.results.map(function(r){
+        return {
+          t:r.symbol,
+          n:(r.shortName||r.longName||r.symbol).replace(/ S\.?A\.?.*$/i,'').trim(),
+          p:r.regularMarketPrice||0,
+          v:r.regularMarketChangePercent||0
+        };
+      }).filter(function(a){return a.p>0});
+      _buildTicker();
+    }
+  }catch(e){
+    console.warn('Brapi indisponível, usando dados locais:',e.message);
+  }
+}
+async function _loadIndicadores(){
+  try{
+    // IBOV e Dólar em paralelo
+    var [ibovRes, dolarRes] = await Promise.all([
+      fetch('https://brapi.dev/api/quote/%5EBVSP?fundamental=false'),
+      fetch('https://brapi.dev/api/v2/currency?currency=USD-BRL')
+    ]);
+    if(ibovRes.ok){
+      var ibovData=await ibovRes.json();
+      var ibov=ibovData.results&&ibovData.results[0];
+      if(ibov&&ibov.regularMarketPrice){
+        var val=ibov.regularMarketPrice;
+        var display=val>=1000?(val/1000).toFixed(1)+'k':val.toFixed(0);
+        var el=document.getElementById('indIbov');
+        if(el){
+          el.textContent=display;
+          el.className='db-indic-val '+(ibov.regularMarketChangePercent>=0?'up':'down');
+        }
+      }
+    }
+    if(dolarRes.ok){
+      var dolarData=await dolarRes.json();
+      var pair=dolarData.currency&&dolarData.currency[0];
+      if(pair&&pair.bidPrice){
+        var elD=document.getElementById('indDolar');
+        if(elD)elD.textContent='R$'+parseFloat(pair.bidPrice).toFixed(2).replace('.',',');
+      }
+    }
+  }catch(e){
+    console.warn('Indicadores: API indisponível',e.message);
+  }
 }
 _buildTicker();
-setInterval(_tickerTick,5000);
+_loadTickerBrapi();
+_loadIndicadores();
+setInterval(_loadTickerBrapi, 5*60*1000); // ticker atualiza a cada 5 min
+setInterval(_loadIndicadores, 5*60*1000); // indicadores atualizam a cada 5 min
 
 checkSession();
 
