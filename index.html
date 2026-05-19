@@ -257,7 +257,7 @@ footer a:hover{color:var(--text)}
 .app-section-sub{font-size:14px;color:var(--muted);line-height:1.7}
 
 /* ═══ HOME HERO ═══ */
-.app-home-section{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#03060f;min-height:100vh;margin-top:0;padding-top:73px}
+.app-home-section{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:transparent;min-height:100vh;margin-top:0;padding-top:73px}
 .app-home-bg{position:absolute;inset:0;pointer-events:none}
 .app-home-fog{position:absolute;inset:0;background:radial-gradient(ellipse 90% 50% at 20% 75%,rgba(56,189,248,.06) 0%,transparent 100%),radial-gradient(ellipse 90% 50% at 80% 75%,rgba(103,232,249,.05) 0%,transparent 100%),radial-gradient(ellipse 60% 60% at 50% 100%,rgba(56,189,248,.1) 0%,transparent 70%)}
 .app-home-glow{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse at center bottom,rgba(56,189,248,.2) 0%,rgba(14,165,233,.08) 40%,transparent 70%)}
@@ -2661,7 +2661,7 @@ async function _loadIndicadores(){
     _active=true;
     p=Array(Math.ceil(w/state.size)).fill(0);
     mx.clearRect(0,0,w,h);
-    mc.style.opacity='0.5';
+    mc.style.opacity='0.13';
     requestAnimationFrame(draw);
   };
   window._matrixHide=function(){
