@@ -693,12 +693,12 @@ footer a:hover{color:var(--text)}
   --d-accent-glow:rgba(37,99,235,.1); --d-positive:#16a34a;
   --d-user-bubble:#dbeafe;
 }
-#page-dashboard.active { display:flex !important; flex-direction:column; height:100vh; overflow:hidden; background:var(--d-bg) }
+#page-dashboard.active { display:flex !important; flex-direction:column; height:100vh; overflow:hidden; background:transparent }
 
 /* ── HEADER ── */
 .dh {
   height:60px; flex-shrink:0;
-  background:var(--d-surface); border-bottom:1px solid var(--d-border);
+  background:rgba(10,15,30,0.85); border-bottom:1px solid rgba(255,255,255,.07); backdrop-filter:blur(8px);
   display:flex; align-items:center; gap:16px; padding:0 20px;
   position:relative; z-index:200;
 }
@@ -833,7 +833,7 @@ footer a:hover{color:var(--text)}
 .db-side-panel {
   width:310px; flex-shrink:0; overflow-y:auto;
   padding:14px; display:flex; flex-direction:column; gap:10px;
-  background:var(--d-bg);
+  background:rgba(7,13,26,0.75); backdrop-filter:blur(4px);
 }
 .db-side-panel::-webkit-scrollbar { width:3px }
 .db-side-panel::-webkit-scrollbar-thumb { background:var(--d-border) }
@@ -1026,8 +1026,8 @@ footer a:hover{color:var(--text)}
    CHAT DARK MODE — B3ALPHA
 ══════════════════════════════════════════ */
 
-/* Panel: dark background */
-.db-chat-panel { background:#212121 !important; border-right:1px solid #2a2a2a !important; }
+/* Panel: dark semi-transparent background */
+.db-chat-panel { background:rgba(18,18,18,0.82) !important; border-right:1px solid rgba(255,255,255,.06) !important; backdrop-filter:blur(2px); }
 
 /* Ticker — dark */
 .db-chat-panel .db-ticker { background:#212121; border-bottom:1px solid #2a2a2a; height:42px; }
@@ -1050,7 +1050,7 @@ footer a:hover{color:var(--text)}
 .ia-chat-strip {
   display:flex; align-items:center; justify-content:space-between;
   padding:0 24px; height:48px; flex-shrink:0;
-  background:#212121; border-bottom:1px solid #2a2a2a;
+  background:rgba(18,18,18,0.7); border-bottom:1px solid rgba(255,255,255,.06);
 }
 .ia-chat-title { font-size:15px; font-weight:700; color:#ececec; letter-spacing:-.3px; font-family:'Clash Display',sans-serif; }
 .ia-new-btn {
@@ -1061,7 +1061,7 @@ footer a:hover{color:var(--text)}
 .ia-new-btn:hover { border-color:#555; color:#ececec; background:#2f2f2f; }
 
 /* Scroll area */
-.ia-msgs-scroll { flex:1; overflow-y:auto; scroll-behavior:smooth; background:#212121; }
+.ia-msgs-scroll { flex:1; overflow-y:auto; scroll-behavior:smooth; background:transparent; }
 .ia-msgs-scroll::-webkit-scrollbar { width:3px }
 .ia-msgs-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); border-radius:99px }
 .ia-chat-body { max-width:720px; margin:0 auto; padding:36px 28px 20px; display:flex; flex-direction:column; gap:22px; }
@@ -1136,7 +1136,7 @@ footer a:hover{color:var(--text)}
 .ia-pdf-btn svg { width:12px; height:12px; flex-shrink:0 }
 
 /* Input */
-.ia-premium-input-wrap { flex-shrink:0; padding:12px 24px 22px; background:linear-gradient(to top,#212121 82%,rgba(33,33,33,0)); }
+.ia-premium-input-wrap { flex-shrink:0; padding:12px 24px 22px; background:linear-gradient(to top,rgba(18,18,18,0.9) 82%,transparent); }
 .ia-premium-input-box { max-width:720px; margin:0 auto; background:#2f2f2f; border:1.5px solid #3a3a3a; border-radius:28px; transition:border-color .2s, box-shadow .2s; }
 .ia-premium-input-box:focus-within { border-color:#555; box-shadow:0 4px 24px rgba(0,0,0,.4); }
 .ia-premium-input-top { padding:16px 20px 8px }
@@ -2021,7 +2021,7 @@ footer a:hover{color:var(--text)}
 <div id="page-dashboard" class="page" data-theme="dark">
 
   <!-- Matrix Rain Canvas -->
-  <canvas id="matrixCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.06"></canvas>
+  <canvas id="matrixCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.18"></canvas>
 
   <!-- HEADER -->
   <header class="dh">
