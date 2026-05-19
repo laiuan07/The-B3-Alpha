@@ -54,6 +54,7 @@ html,body{height:100%;font-family:'Cabinet Grotesk',sans-serif;background:var(--
 
 /* ── CANVAS ── */
 #waveCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.4}
+#matrixCanvas{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s}
 
 /* ── PAGES ── */
 .page{display:none;position:relative;z-index:1}
@@ -1261,6 +1262,7 @@ footer a:hover{color:var(--text)}
 <body>
 
 <canvas id="waveCanvas"></canvas>
+<canvas id="matrixCanvas"></canvas>
 
 <!-- ══ LOGIN REQUIRED MODAL ══ -->
 <div class="login-required-modal" id="loginRequiredModal">
@@ -2020,9 +2022,6 @@ footer a:hover{color:var(--text)}
 <!-- ══ APP PÓS-LOGIN ══ -->
 <div id="page-dashboard" class="page" data-theme="dark">
 
-  <!-- Matrix Rain Canvas -->
-  <canvas id="matrixCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.18"></canvas>
-
   <!-- HEADER -->
   <header class="dh">
     <div class="dh-left">
@@ -2320,6 +2319,9 @@ function _doGoTo(page){
   if(!el)return;
   el.classList.add('active');
   window.scrollTo(0,0);
+  // Matrix rain: mostrar só no dashboard
+  if(page==='dashboard') window._matrixShow&&window._matrixShow();
+  else window._matrixHide&&window._matrixHide();
 }
 
 // ── LOGIN REQUIRED MODAL ──
@@ -2617,34 +2619,56 @@ async function _loadIndicadores(){
   var mc=document.getElementById('matrixCanvas');
   if(!mc)return;
   var mx=mc.getContext('2d');
-  var chars='PETR4VALE3ITUB4BBDC4WEGE3ABEV3BBAS3RENT3SELIC CDI IPCA IBOV B3 FII CDB LCI BTC ETH 01 ↑ ↓ R$ % ';
-  var cols,drops,fontSize=13;
-  function initMatrix(){
-    mc.width=window.innerWidth;
-    mc.height=window.innerHeight;
-    cols=Math.floor(mc.width/fontSize);
-    drops=[];
-    for(var i=0;i<cols;i++) drops[i]=Math.random()*-100;
-  }
-  initMatrix();
-  window.addEventListener('resize',initMatrix);
-  function drawMatrix(){
-    // Só roda se o dashboard estiver visível
-    if(!document.getElementById('page-dashboard').classList.contains('active'))return;
-    mx.fillStyle='rgba(10,10,10,0.05)';
-    mx.fillRect(0,0,mc.width,mc.height);
-    mx.font=fontSize+'px "DM Mono",monospace';
-    for(var i=0;i<drops.length;i++){
-      // Cor: maioria verde B3, alguns laranja acento
-      if(Math.random()>0.97) mx.fillStyle='#FF6A00';
-      else mx.fillStyle='#00ff88';
-      var ch=chars[Math.floor(Math.random()*chars.length)];
-      mx.fillText(ch,i*fontSize,drops[i]*fontSize);
-      if(drops[i]*fontSize>mc.height&&Math.random()>0.975) drops[i]=0;
-      drops[i]+=0.4;
+
+  var state={
+    fps:28,
+    color:'#00ff88',
+    accent:'#FF6A00',
+    charset:'PETR4VALE3ITUB4BBDC4WEGE3ABEV3BBAS3RENT3SELIC CDI IPCA IBOV B3 FII CDB LCI 01 ↑ ↓ R$ %',
+    size:14
+  };
+
+  var w,h,p;
+
+  var resize=function(){
+    w=mc.width=window.innerWidth;
+    h=mc.height=window.innerHeight;
+    p=Array(Math.ceil(w/state.size)).fill(0);
+  };
+  resize();
+  window.addEventListener('resize',resize);
+
+  var _active=false;
+  var _raf=null;
+
+  function draw(){
+    if(!_active){_raf=null;return;}
+    mx.fillStyle='rgba(3,6,15,0.12)';
+    mx.fillRect(0,0,w,h);
+    mx.font=state.size+'px "DM Mono",monospace';
+    for(var i=0;i<p.length;i++){
+      mx.fillStyle=Math.random()>0.96?state.accent:state.color;
+      var ch=state.charset[Math.floor(Math.random()*state.charset.length)];
+      mx.fillText(ch,i*state.size,p[i]*state.size);
+      if(p[i]*state.size>h&&Math.random()>0.975) p[i]=0;
+      else p[i]++;
     }
+    _raf=setTimeout(function(){requestAnimationFrame(draw);},1000/state.fps);
   }
-  setInterval(drawMatrix,50);
+
+  window._matrixShow=function(){
+    if(_active)return;
+    _active=true;
+    p=Array(Math.ceil(w/state.size)).fill(0);
+    mx.clearRect(0,0,w,h);
+    mc.style.opacity='0.35';
+    requestAnimationFrame(draw);
+  };
+  window._matrixHide=function(){
+    _active=false;
+    if(_raf){clearTimeout(_raf);_raf=null;}
+    mc.style.opacity='0';
+  };
 })();
 
 _buildTicker();
