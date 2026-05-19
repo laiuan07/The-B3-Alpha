@@ -533,6 +533,17 @@ footer a:hover{color:var(--text)}
 
 /* ══ SOCIAL PROOF ══ */
 .social-proof{position:relative;z-index:1;padding:40px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(6,12,26,0.8)}
+/* ── DEPOIMENTOS ── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.testi-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px;transition:border-color .2s}
+.testi-card:hover{border-color:rgba(56,189,248,0.2)}
+.testi-stars{color:#fbbf24;font-size:15px;letter-spacing:2px}
+.testi-quote{font-size:15px;line-height:1.65;color:var(--text);flex:1}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Clash Display',sans-serif;font-weight:700;font-size:17px;color:#fff;flex-shrink:0}
+.testi-name{font-weight:700;font-size:14px}
+.testi-role{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr}}
 .sp-inner{display:flex;align-items:center;justify-content:center;gap:0;max-width:900px;margin:0 auto;flex-wrap:wrap}
 .sp-stat{text-align:center;padding:0 40px}
 .sp-num{font-family:'Clash Display',sans-serif;font-size:36px;font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -1420,6 +1431,51 @@ footer a:hover{color:var(--text)}
       <div class="sp-stat"><div class="sp-num">14,75%</div><div class="sp-label">Selic hoje — renda fixa em alta</div></div>
       <div class="sp-divider"></div>
       <div class="sp-stat"><div class="sp-num">24h</div><div class="sp-label">IA disponível todo dia</div></div>
+    </div>
+  </section>
+
+  <!-- ══ DEPOIMENTOS ══ -->
+  <section class="section" id="depoimentos">
+    <div class="section-label">Depoimentos</div>
+    <h2 class="section-title">Quem já usa <em>B3Alpha</em></h2>
+    <div class="testi-grid">
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Juro, nunca vi uma inteligência mudar minha vida financeira assim. Muito bom mesmo."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">B</div>
+          <div>
+            <div class="testi-name">Beatriz Alves</div>
+            <div class="testi-role">Investidora iniciante · São Paulo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Superou todas as minhas expectativas. Análise clara, rápida e com dados reais da B3."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8)">D</div>
+          <div>
+            <div class="testi-name">Daniel Sandro</div>
+            <div class="testi-role">Trader · Belo Horizonte</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Aprendi a investir. FINALMENTE!! Sempre tive medo e a B3Alpha me deu segurança de verdade."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#34d399)">M</div>
+          <div>
+            <div class="testi-name">Manuel Cantoneiras</div>
+            <div class="testi-role">Autônomo · Curitiba</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
