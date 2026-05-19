@@ -1348,11 +1348,11 @@ footer a:hover{color:var(--text)}
       <span style="font-family:'Clash Display',sans-serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,#FF6A00,#ffaa44);-webkit-background-clip:text;-webkit-text-fill-color:transparent">B3Alpha</span>
     </div>
     <ul class="nav-links">
-      <li><a href="#beneficios-features" onclick="event.preventDefault();scrollTo('beneficios-features')">Benefícios</a></li>
+      <li><a href="#beneficios-features" onclick="event.preventDefault();scrollToSection('beneficios-features')">Benefícios</a></li>
       <li><a href="#" onclick="event.preventDefault();openModulosModal()">Módulos</a></li>
-      <li><a href="#como-funciona" onclick="event.preventDefault();scrollTo('como-funciona')">Como funciona</a></li>
-      <li><a href="#planos" onclick="event.preventDefault();scrollTo('planos')">Planos</a></li>
-      <li><a href="#faq" onclick="event.preventDefault();scrollTo('faq')">FAQ</a></li>
+      <li><a href="#como-funciona" onclick="event.preventDefault();scrollToSection('como-funciona')">Como funciona</a></li>
+      <li><a href="#planos" onclick="event.preventDefault();scrollToSection('planos')">Planos</a></li>
+      <li><a href="#faq" onclick="event.preventDefault();scrollToSection('faq')">FAQ</a></li>
     </ul>
     <div class="nav-actions">
       <button class="nav-login" onclick="goTo('login')">Entrar</button>
@@ -1704,7 +1704,7 @@ footer a:hover{color:var(--text)}
         <div class="cta-banner-title">Comece hoje — planos a partir de R$23,90/mês</div>
         <div class="cta-banner-sub">Menos que um almoço. Vale cada centavo.</div>
       </div>
-      <button class="btn-primary" onclick="scrollTo('planos')">Ver planos →</button>
+      <button class="btn-primary" onclick="scrollToSection('planos')">Ver planos →</button>
     </div>
   </section>
 
@@ -3893,7 +3893,7 @@ function toggleFaq(btn){
 }
 
 // ── SCROLL PARA SEÇÃO ──
-function scrollTo(id){
+function scrollToSection(id){
   const el = document.getElementById(id);
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
