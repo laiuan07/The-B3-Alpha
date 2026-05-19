@@ -520,8 +520,26 @@ footer a:hover{color:var(--text)}
 .popup-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .popup-close:hover{background:rgba(248,113,113,0.1);color:var(--red)}
 
+/* ── HAMBURGER & MOBILE MENU ── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.mob-overlay{position:fixed;inset:0;z-index:149;background:rgba(0,0,0,0);pointer-events:none;transition:background .3s}
+.mob-overlay.open{background:rgba(0,0,0,0.6);pointer-events:all}
+.mob-drawer{position:fixed;top:0;right:0;z-index:150;width:min(320px,85vw);height:100vh;background:#080e1c;border-left:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:24px}
+.mob-drawer.open{transform:translateX(0)}
+.mob-drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px}
+.mob-close{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:var(--muted);width:34px;height:34px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mob-nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.mob-link{font-family:'Cabinet Grotesk',sans-serif;font-size:18px;font-weight:600;color:var(--muted);text-decoration:none;padding:12px 8px;border-radius:10px;transition:all .2s;display:block}
+.mob-link:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.mob-drawer-footer{display:flex;flex-direction:column;gap:10px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06)}
+.mob-btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--text);padding:13px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+.mob-btn-primary{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;border:none;padding:14px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 0 20px rgba(56,189,248,0.2)}
+
 @media(max-width:900px){
   nav{padding:15px 22px}.nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .nav-login{display:none}
   .modules-bar{padding:0}.mbar-name{font-size:11px}.mbar-num{width:20px;height:20px;font-size:9px}
   .hero{padding:160px 22px 60px}.pricing-grid{grid-template-columns:1fr}
   .db-sidebar{display:none}.stat-grid{grid-template-columns:1fr 1fr}.db-grid{grid-template-columns:1fr}
@@ -1366,10 +1384,36 @@ footer a:hover{color:var(--text)}
       <li><a href="#faq" onclick="event.preventDefault();scrollToSection('faq')">FAQ</a></li>
     </ul>
     <div class="nav-actions">
+      <button class="nav-hamburger" id="navHamburger" onclick="openMobileMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
       <button class="nav-login" onclick="goTo('login')">Entrar</button>
       <button class="nav-cta" onclick="goTo('register')">Começar agora</button>
     </div>
   </nav>
+
+  <!-- MENU MOBILE -->
+  <div class="mob-overlay" id="mobOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mob-drawer" id="mobDrawer">
+    <div class="mob-drawer-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="18" fill="#FF6A00"/><text x="50" y="71" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="56" fill="#FFFFFF" text-anchor="middle" letter-spacing="-2">B3</text></svg>
+        <span style="font-family:'Clash Display',sans-serif;font-size:15px;font-weight:700;background:linear-gradient(135deg,#FF6A00,#ffaa44);-webkit-background-clip:text;-webkit-text-fill-color:transparent">B3Alpha</span>
+      </div>
+      <button class="mob-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <nav class="mob-nav">
+      <a class="mob-link" href="#" onclick="closeMobileMenu();scrollToSection('beneficios-features')">Benefícios</a>
+      <a class="mob-link" href="#" onclick="closeMobileMenu();openModulosModal()">Módulos</a>
+      <a class="mob-link" href="#" onclick="closeMobileMenu();scrollToSection('como-funciona')">Como funciona</a>
+      <a class="mob-link" href="#" onclick="closeMobileMenu();scrollToSection('planos')">Planos</a>
+      <a class="mob-link" href="#" onclick="closeMobileMenu();scrollToSection('faq')">FAQ</a>
+    </nav>
+    <div class="mob-drawer-footer">
+      <button class="mob-btn-secondary" onclick="closeMobileMenu();goTo('login')">Entrar</button>
+      <button class="mob-btn-primary" onclick="closeMobileMenu();goTo('register')">Começar agora →</button>
+    </div>
+  </div>
 
   <!-- BARRA MÓDULOS -->
   <div class="modules-bar">
@@ -3949,6 +3993,17 @@ function toggleFaq(btn){
 }
 
 // ── SCROLL PARA SEÇÃO ──
+function openMobileMenu(){
+  document.getElementById('mobDrawer').classList.add('open');
+  document.getElementById('mobOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMobileMenu(){
+  document.getElementById('mobDrawer').classList.remove('open');
+  document.getElementById('mobOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 function scrollToSection(id){
   const el = document.getElementById(id);
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -3962,7 +4017,9 @@ function closeModulosModal(){
   document.getElementById('modulosModal').classList.remove('open');
   document.body.style.overflow='';
 }
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModulosModal();});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){ closeModulosModal(); closeMobileMenu(); }
+});
 
 </script>
 </body>
