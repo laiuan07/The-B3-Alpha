@@ -2020,6 +2020,9 @@ footer a:hover{color:var(--text)}
 <!-- ══ APP PÓS-LOGIN ══ -->
 <div id="page-dashboard" class="page" data-theme="dark">
 
+  <!-- Matrix Rain Canvas -->
+  <canvas id="matrixCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.06"></canvas>
+
   <!-- HEADER -->
   <header class="dh">
     <div class="dh-left">
@@ -2609,6 +2612,41 @@ async function _loadIndicadores(){
     console.warn('Indicadores: API indisponível',e.message);
   }
 }
+// ── MATRIX RAIN ──
+(function(){
+  var mc=document.getElementById('matrixCanvas');
+  if(!mc)return;
+  var mx=mc.getContext('2d');
+  var chars='PETR4VALE3ITUB4BBDC4WEGE3ABEV3BBAS3RENT3SELIC CDI IPCA IBOV B3 FII CDB LCI BTC ETH 01 ↑ ↓ R$ % ';
+  var cols,drops,fontSize=13;
+  function initMatrix(){
+    mc.width=window.innerWidth;
+    mc.height=window.innerHeight;
+    cols=Math.floor(mc.width/fontSize);
+    drops=[];
+    for(var i=0;i<cols;i++) drops[i]=Math.random()*-100;
+  }
+  initMatrix();
+  window.addEventListener('resize',initMatrix);
+  function drawMatrix(){
+    // Só roda se o dashboard estiver visível
+    if(!document.getElementById('page-dashboard').classList.contains('active'))return;
+    mx.fillStyle='rgba(10,10,10,0.05)';
+    mx.fillRect(0,0,mc.width,mc.height);
+    mx.font=fontSize+'px "DM Mono",monospace';
+    for(var i=0;i<drops.length;i++){
+      // Cor: maioria verde B3, alguns laranja acento
+      if(Math.random()>0.97) mx.fillStyle='#FF6A00';
+      else mx.fillStyle='#00ff88';
+      var ch=chars[Math.floor(Math.random()*chars.length)];
+      mx.fillText(ch,i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize>mc.height&&Math.random()>0.975) drops[i]=0;
+      drops[i]+=0.4;
+    }
+  }
+  setInterval(drawMatrix,50);
+})();
+
 _buildTicker();
 _loadTickerBrapi();
 _loadIndicadores();
