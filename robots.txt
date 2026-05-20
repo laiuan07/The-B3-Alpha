@@ -1,5 +1,5 @@
-# robots.txt — The B3 Blueprint
-# https://theb3blueprint.best
+# robots.txt — B3Alpha
+# https://b3alpha.com
 
 User-agent: *
 Allow: /
