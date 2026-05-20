@@ -52,6 +52,22 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--text)}
 
+/* ── PÁGINAS LEGAIS ── */
+.legal-wrap{max-width:760px;margin:0 auto;padding:60px 32px 100px}
+.legal-back{background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted);padding:8px 16px;border-radius:100px;font-size:13px;cursor:pointer;margin-bottom:40px;transition:all .2s}
+.legal-back:hover{color:var(--text);border-color:rgba(255,255,255,0.25)}
+.legal-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:12px}
+.legal-title{font-family:'Clash Display',sans-serif;font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-1.5px;margin-bottom:10px}
+.legal-meta{font-size:13px;color:var(--muted);margin-bottom:52px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.legal-body h2{font-family:'Clash Display',sans-serif;font-size:18px;font-weight:600;color:var(--text);margin:36px 0 10px;letter-spacing:-.3px}
+.legal-body p{font-size:15px;color:rgba(232,244,255,0.7);line-height:1.75;margin-bottom:12px}
+.legal-body ul{padding-left:20px;margin-bottom:12px;display:flex;flex-direction:column;gap:6px}
+.legal-body ul li{font-size:15px;color:rgba(232,244,255,0.7);line-height:1.65}
+.legal-body a{color:var(--blue);text-decoration:none}
+.legal-body a:hover{text-decoration:underline}
+.legal-body strong{color:var(--text)}
+#page-termos.active,#page-privacidade.active{display:block;min-height:100vh;padding-top:70px}
+
 /* ── MODAL MÓDULOS ── */
 .mmod-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
 .mmod-overlay.open{opacity:1;pointer-events:all}
@@ -1922,7 +1938,7 @@ footer a:hover{color:var(--text)}
   <!-- FOOTER -->
   <footer>
     <span>© 2026 B3Alpha · Todos os direitos reservados</span>
-    <div style="display:flex;gap:20px"><a href="#">Termos</a><a href="#">Privacidade</a><a href="#">Contato</a></div>
+    <div style="display:flex;gap:20px"><a href="#" onclick="event.preventDefault();goTo('termos')">Termos</a><a href="#" onclick="event.preventDefault();goTo('privacidade')">Privacidade</a><a href="mailto:contato@b3alpha.com">Contato</a></div>
   </footer>
 
 </div>
@@ -1976,6 +1992,120 @@ footer a:hover{color:var(--text)}
     <div class="mmod-footer">
       <div class="mmod-footer-text">📚 Todos os módulos são <strong>100% gratuitos</strong> — basta criar uma conta.</div>
       <button class="btn-primary" onclick="closeModulosModal();goTo('register')">Criar conta grátis →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TERMOS DE USO ══ -->
+<div id="page-termos" class="page">
+  <div class="legal-wrap">
+    <button class="legal-back" onclick="goTo('landing')">← Voltar</button>
+    <div class="legal-header">
+      <div class="legal-label">DOCUMENTO LEGAL</div>
+      <h1 class="legal-title">Termos de Uso</h1>
+      <p class="legal-meta">Última atualização: 20 de maio de 2026 · B3Alpha Tecnologia Ltda.</p>
+    </div>
+    <div class="legal-body">
+      <h2>1. Aceitação dos Termos</h2>
+      <p>Ao acessar ou utilizar a plataforma B3Alpha, você concorda com estes Termos de Uso. Se não concordar com qualquer parte, não utilize o serviço.</p>
+
+      <h2>2. Descrição do Serviço</h2>
+      <p>A B3Alpha é uma plataforma de inteligência artificial especializada no mercado financeiro brasileiro. Oferece análises, informações e orientações sobre ações, FIIs, renda fixa e criptomoedas com base em dados públicos e modelos de linguagem.</p>
+
+      <h2>3. Natureza Informativa — Não é Consultoria Financeira</h2>
+      <p>Todo o conteúdo gerado pela IA da B3Alpha tem <strong>caráter exclusivamente informativo e educacional</strong>. Não constitui consultoria de investimentos, recomendação de compra ou venda de ativos, nem assessoria financeira regulamentada.</p>
+      <p>Investimentos envolvem riscos, incluindo perda do capital investido. Decisões financeiras são de responsabilidade exclusiva do usuário. Consulte um assessor de investimentos certificado (AAI) para orientação personalizada.</p>
+
+      <h2>4. Elegibilidade</h2>
+      <p>O serviço é destinado a pessoas físicas com 18 anos ou mais, residentes no Brasil, com plena capacidade civil para celebrar contratos.</p>
+
+      <h2>5. Conta de Usuário</h2>
+      <p>Você é responsável por manter a confidencialidade de suas credenciais de acesso e por todas as atividades realizadas em sua conta. Notifique imediatamente a B3Alpha em caso de uso não autorizado.</p>
+
+      <h2>6. Planos e Pagamentos</h2>
+      <p>Os planos pagos são cobrados antecipadamente conforme o ciclo escolhido (mensal ou anual). Cancelamentos entram em vigor ao final do período vigente. Reembolsos são analisados caso a caso dentro de 7 dias corridos após a contratação, conforme o Código de Defesa do Consumidor (art. 49, Lei 8.078/90).</p>
+
+      <h2>7. Propriedade Intelectual</h2>
+      <p>Todo o conteúdo da plataforma — marca, logotipo, textos, código-fonte e design — é de propriedade da B3Alpha e protegido por leis de propriedade intelectual. É vedada a reprodução sem autorização prévia e expressa.</p>
+
+      <h2>8. Limitação de Responsabilidade</h2>
+      <p>A B3Alpha não se responsabiliza por perdas financeiras decorrentes de decisões tomadas com base nas informações fornecidas pela plataforma, por indisponibilidade temporária do serviço ou por falhas em APIs de dados de terceiros.</p>
+
+      <h2>9. Modificações</h2>
+      <p>Estes termos podem ser atualizados a qualquer momento. Notificaremos os usuários por e-mail ou aviso na plataforma. O uso continuado após as alterações implica aceitação dos novos termos.</p>
+
+      <h2>10. Foro e Lei Aplicável</h2>
+      <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da Comarca de São Paulo/SP para dirimir quaisquer controvérsias.</p>
+
+      <h2>11. Contato</h2>
+      <p>Dúvidas sobre estes termos: <a href="mailto:contato@b3alpha.com">contato@b3alpha.com</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POLÍTICA DE PRIVACIDADE ══ -->
+<div id="page-privacidade" class="page">
+  <div class="legal-wrap">
+    <button class="legal-back" onclick="goTo('landing')">← Voltar</button>
+    <div class="legal-header">
+      <div class="legal-label">DOCUMENTO LEGAL · LGPD</div>
+      <h1 class="legal-title">Política de Privacidade</h1>
+      <p class="legal-meta">Última atualização: 20 de maio de 2026 · B3Alpha Tecnologia Ltda.</p>
+    </div>
+    <div class="legal-body">
+      <h2>1. Quem somos</h2>
+      <p>A B3Alpha Tecnologia Ltda. é a controladora dos dados pessoais coletados nesta plataforma, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).</p>
+
+      <h2>2. Dados que coletamos</h2>
+      <p>Coletamos os seguintes dados pessoais:</p>
+      <ul>
+        <li><strong>Cadastro:</strong> nome, e-mail e senha (armazenada em hash seguro)</li>
+        <li><strong>Autenticação social:</strong> nome e e-mail fornecidos pelo Google OAuth, caso opte por esse método</li>
+        <li><strong>Uso da plataforma:</strong> histórico de conversas com a IA, preferências e configurações</li>
+        <li><strong>Pagamentos:</strong> dados de transação processados pelo Stripe (não armazenamos dados de cartão)</li>
+        <li><strong>Técnicos:</strong> endereço IP, tipo de dispositivo, navegador e dados de acesso para fins de segurança</li>
+      </ul>
+
+      <h2>3. Como usamos seus dados</h2>
+      <ul>
+        <li>Prestar e melhorar o serviço da plataforma</li>
+        <li>Autenticar e proteger sua conta</li>
+        <li>Processar pagamentos e emitir cobranças</li>
+        <li>Enviar comunicações sobre o serviço (sem spam)</li>
+        <li>Cumprir obrigações legais e regulatórias</li>
+        <li>Analisar uso agregado e anônimo para melhorar a plataforma</li>
+      </ul>
+
+      <h2>4. Base legal (LGPD, art. 7º)</h2>
+      <p>O tratamento dos dados se baseia em: <strong>execução de contrato</strong> (prestação do serviço), <strong>legítimo interesse</strong> (segurança e melhoria da plataforma) e <strong>consentimento</strong> (comunicações opcionais).</p>
+
+      <h2>5. Compartilhamento de dados</h2>
+      <p>Seus dados são compartilhados apenas com:</p>
+      <ul>
+        <li><strong>Supabase:</strong> infraestrutura de banco de dados e autenticação</li>
+        <li><strong>Stripe:</strong> processamento seguro de pagamentos</li>
+        <li><strong>Google:</strong> autenticação OAuth (apenas se você optar por isso)</li>
+        <li><strong>Anthropic (Claude API):</strong> processamento das perguntas enviadas à IA</li>
+      </ul>
+      <p>Não vendemos, alugamos nem comercializamos seus dados pessoais com terceiros.</p>
+
+      <h2>6. Seus direitos (LGPD, art. 18)</h2>
+      <p>Você tem direito a: confirmar o tratamento de dados, acessar seus dados, corrigir dados incorretos, solicitar anonimização ou exclusão, revogar consentimento e portabilidade dos dados. Para exercer esses direitos: <a href="mailto:contato@b3alpha.com">contato@b3alpha.com</a></p>
+
+      <h2>7. Retenção de dados</h2>
+      <p>Seus dados são mantidos enquanto sua conta estiver ativa. Após o cancelamento, os dados são anonimizados ou excluídos em até 90 dias, salvo obrigações legais de retenção.</p>
+
+      <h2>8. Segurança</h2>
+      <p>Utilizamos criptografia em trânsito (HTTPS/TLS), autenticação segura via Supabase e controles de acesso restritos. Nenhum sistema é 100% seguro — em caso de incidente, notificaremos os afetados conforme a LGPD.</p>
+
+      <h2>9. Cookies</h2>
+      <p>Utilizamos cookies essenciais para autenticação e cookies analíticos do Google Analytics (gtag.js) para entender o uso da plataforma. Você pode desativar cookies analíticos nas configurações do seu navegador.</p>
+
+      <h2>10. Encarregado de Dados (DPO)</h2>
+      <p>Responsável pela proteção de dados: <a href="mailto:contato@b3alpha.com">contato@b3alpha.com</a></p>
+
+      <h2>11. Alterações desta Política</h2>
+      <p>Atualizações serão comunicadas por e-mail ou aviso na plataforma com antecedência mínima de 15 dias para mudanças relevantes.</p>
     </div>
   </div>
 </div>
