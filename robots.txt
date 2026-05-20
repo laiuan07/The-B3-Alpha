@@ -17,4 +17,4 @@ Disallow: /*.json$
 Disallow: /*.xml$ 
 
 # Sitemap
-Sitemap: https://theb3blueprint.best/sitemap.xml
+Sitemap: https://b3alpha.com
