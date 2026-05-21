@@ -503,6 +503,11 @@ footer a:hover{color:var(--text)}
 .module-modal.open{display:flex}
 .modal-bg{position:absolute;inset:0;background:rgba(2,4,12,0.92);backdrop-filter:blur(16px)}
 .modal-frame{position:relative;z-index:1;width:95vw;height:92vh;border-radius:20px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 40px 120px rgba(0,0,0,0.8)}
+/* Onboarding progress bar */
+.onb-bar-wrap{position:absolute;top:0;left:0;right:0;z-index:10;padding:12px 20px;background:rgba(3,6,15,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.onb-steps{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.onb-track{flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden}
+.onb-fill{height:100%;background:linear-gradient(90deg,#0369a1,#38bdf8);border-radius:4px;transition:width .4s ease}
 .modal-close{position:absolute;top:16px;right:16px;z-index:10;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border2);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .modal-close:hover{background:rgba(248,113,113,0.15);color:var(--red)}
 .module-next-btn{position:absolute;bottom:28px;right:28px;z-index:20;height:52px;min-width:52px;border-radius:100px;background:linear-gradient(135deg,#0369a1,#38bdf8);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 24px rgba(56,189,248,0.45);transition:all .3s;padding:0 20px}
@@ -1357,7 +1362,11 @@ footer a:hover{color:var(--text)}
 <div class="module-modal" id="modal-modules">
   <div class="modal-bg" onclick="closeModule()"></div>
   <div class="modal-frame">
-    <button class="modal-close" onclick="closeModule()">✕</button>
+    <div class="onb-bar-wrap" id="onbBarWrap" style="display:none">
+      <div class="onb-steps" id="onbSteps">Módulo 1 de 4</div>
+      <div class="onb-track"><div class="onb-fill" id="onbFill" style="width:25%"></div></div>
+    </div>
+    <button class="modal-close" id="modalCloseBtn" onclick="closeModule()">✕</button>
     <iframe class="modal-iframe" id="moduleIframe" src="" title="Módulo"></iframe>
     <button class="module-next-btn arrow-only" id="moduleNextBtn" onclick="nextModule()" title="Próximo módulo">→</button>
   </div>
@@ -2647,9 +2656,11 @@ function closeLoginRequiredModal(){
 
 // ── MÓDULOS ──
 let currentModuleNum=0;
+let _isOnboarding=false;
 const moduleFiles={1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides_1.html'};
 
-function openModule(num){
+function openModule(num, onboarding){
+  _isOnboarding=!!onboarding;
   currentModuleNum=num;
   const modal=document.getElementById('modal-modules');
   const iframe=document.getElementById('moduleIframe');
@@ -2657,13 +2668,30 @@ function openModule(num){
   modal.classList.add('open');
   document.body.style.overflow='hidden';
   updateNextBtn();
+  _updateOnbUI();
+}
+
+function _updateOnbUI(){
+  const wrap=document.getElementById('onbBarWrap');
+  const steps=document.getElementById('onbSteps');
+  const fill=document.getElementById('onbFill');
+  const closeBtn=document.getElementById('modalCloseBtn');
+  if(_isOnboarding){
+    wrap.style.display='flex';
+    steps.textContent='Módulo '+currentModuleNum+' de 4';
+    fill.style.width=(currentModuleNum/4*100)+'%';
+    closeBtn.title='Pular onboarding';
+  } else {
+    wrap.style.display='none';
+    closeBtn.title='Fechar';
+  }
 }
 
 function updateNextBtn(){
   const btn=document.getElementById('moduleNextBtn');
   if(!btn)return;
   if(currentModuleNum>=4){
-    btn.innerHTML='<span class="mnb-label">Ir para IA ⚡</span>';
+    btn.innerHTML='<span class="mnb-label">'+(_isOnboarding?'Começar a usar ⚡':'Ir para IA ⚡')+'</span>';
     btn.classList.remove('arrow-only');
     btn.title='Abrir B3Alpha';
   } else {
@@ -2677,7 +2705,7 @@ function nextModule(){
   const iframe=document.getElementById('moduleIframe');
   if(currentModuleNum>=4){
     closeModule();
-    appNav('ia');
+    dhNav('chat');
     return;
   }
   iframe.style.opacity='0';
@@ -2686,10 +2714,12 @@ function nextModule(){
     iframe.src=moduleFiles[currentModuleNum];
     iframe.onload=()=>{iframe.style.opacity='1';iframe.onload=null;};
     updateNextBtn();
+    _updateOnbUI();
   },300);
 }
 
 function closeModule(){
+  _isOnboarding=false;
   document.getElementById('modal-modules').classList.remove('open');
   document.body.style.overflow='';
   setTimeout(()=>{document.getElementById('moduleIframe').src='';},300);
@@ -2780,7 +2810,7 @@ async function handleRegister(){
     loadUserProfile(data.user.id);
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
-    setTimeout(()=>{_authHandled=false;goTo('dashboard');dhNav('chat');},1800);
+    setTimeout(()=>{_authHandled=false;goTo('dashboard');dhNav('chat');openModule(1,true);},1800);
   }catch(e){btn.classList.remove('loading');showError('registerError','Erro de conexão. Tente novamente.');}
 }
 
