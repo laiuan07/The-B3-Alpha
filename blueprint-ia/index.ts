@@ -21,7 +21,20 @@ Selic (14,75% a.a.), CDI (~14,65%), IPCA (~4,8%), Ibovespa (~128.000 pontos), c�
 
 Você domina: Tesouro Direto, CDB, LCI/LCA, CRI/CRA, debêntures, poupança, ações (análise técnica e fundamentalista), FIIs (tijolo, papel, híbridos), ETFs (BOVA11, IVVB11, SMAL11), BDRs, opções, criptomoedas (Bitcoin, Ethereum, tributação no Brasil), corretoras brasileiras, planejamento de carteira por perfil, IR sobre investimentos, reserva de emergência, aposentadoria (PGBL/VGBL), renda passiva e juros compostos.
 
-**Quando o usuário tem perfil informado** (conservador, moderado ou arrojado), leve isso em conta naturalmente — sem anunciar que está fazendo isso. Um conservador não quer ouvir sobre day trade. Um arrojado não precisa de explicações básicas sobre o que é um CDB.
+**Skill: Observador de Carteira**
+Quando o cliente tem dados de patrimônio registrados, você age como uma observadora ativa da carteira — não um chatbot genérico:
+- Conhece cada classe de ativo e os valores reais do cliente
+- Conecta CADA resposta com a situação financeira concreta do cliente
+- Identifica oportunidades: falta de diversificação, concentração excessiva, ausência de reserva
+- Acompanha progresso em relação às metas declaradas
+- Tom: cuidado e observação — como uma sócia que se importa, não um fiscal que cobra
+
+Bom tom: "Vi que você tem R$ 25k em FIIs — está bem alinhado com o objetivo de renda passiva. Quer analisar a alocação por tipo (papel vs tijolo)?"
+Mau tom: "Você aportou pouco." (julgamento)
+
+**Quando o usuário tem perfil informado** (conservador, moderado ou arrojado), leve isso em conta naturalmente — sem anunciar que está fazendo isso.
+
+**Quando há dados de carteira na seção "CARTEIRA E SITUAÇÃO FINANCEIRA"**, use esses dados para PERSONALIZAR completamente a resposta. Mencione valores reais, faça cálculos com os números concretos, conecte a pergunta com a situação real do cliente. NUNCA invente valores ou ativos que o cliente não informou.
 
 **Limites:**
 - Nunca invente dados, preços ou estatísticas — se não souber, diga claramente
@@ -35,6 +48,68 @@ const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// Build patrimônio context block from DB row
+function buildPatrimonioContext(p: Record<string, unknown>): string {
+  const hasData = p.renda_mensal || p.renda_fixa || p.acoes || p.fiis || p.reserva;
+  if (!hasData) return "";
+
+  const fmt = (v: unknown) =>
+    v ? `R$ ${Number(v).toLocaleString("pt-BR", { maximumFractionDigits: 0 })}` : null;
+
+  const lines: string[] = ["\n\n## CARTEIRA E SITUAÇÃO FINANCEIRA DO CLIENTE"];
+  if (p.idade) lines.push(`- Idade: ${p.idade} anos`);
+  if (p.perfil) lines.push(`- Perfil: ${p.perfil}`);
+  if (p.objetivo) {
+    const objMap: Record<string, string> = {
+      reserva: "Construir reserva de emergência",
+      aposentadoria: "Aposentadoria antecipada",
+      imovel: "Comprar imóvel",
+      renda: "Viver de renda passiva",
+      crescimento: "Crescimento patrimonial",
+      liberdade: "Liberdade financeira completa",
+    };
+    lines.push(`- Objetivo: ${objMap[p.objetivo as string] ?? p.objetivo}`);
+  }
+  if (p.prazo) {
+    const prazoMap: Record<string, string> = {
+      curto: "até 2 anos",
+      medio: "3 a 5 anos",
+      longo: "5 a 10 anos",
+      muitolongo: "mais de 10 anos",
+    };
+    lines.push(`- Prazo: ${prazoMap[p.prazo as string] ?? p.prazo}`);
+  }
+  if (p.renda_mensal) lines.push(`- Renda mensal: ${fmt(p.renda_mensal)}`);
+  if (p.gastos_mensais) lines.push(`- Gastos mensais: ${fmt(p.gastos_mensais)}`);
+  if (p.sobra_mensal) lines.push(`- Sobra mensal: ${fmt(p.sobra_mensal)}`);
+
+  lines.push("\n**Patrimônio atual:**");
+  if (p.reserva) lines.push(`- Reserva de emergência: ${fmt(p.reserva)}`);
+  if (p.renda_fixa) lines.push(`- Renda Fixa (CDB/Tesouro/LCI): ${fmt(p.renda_fixa)}`);
+  if (p.acoes) lines.push(`- Ações: ${fmt(p.acoes)}`);
+  if (p.fiis) lines.push(`- FIIs: ${fmt(p.fiis)}`);
+  if (p.cripto) lines.push(`- Criptomoedas: ${fmt(p.cripto)}`);
+  if (p.imoveis) lines.push(`- Imóveis: ${fmt(p.imoveis)}`);
+
+  const dividas = p.dividas as Array<{ tipo: string; valor: number }> | null;
+  if (dividas && dividas.length > 0) {
+    lines.push("\n**Dívidas:**");
+    const divNomes: Record<string, string> = {
+      cartao: "Cartão de crédito",
+      finimovel: "Financiamento imóvel",
+      emprestimos: "Empréstimos",
+    };
+    dividas.forEach((d) => lines.push(`- ${divNomes[d.tipo] ?? d.tipo}: ${fmt(d.valor)}`));
+  }
+
+  lines.push(
+    "\nUse esses dados para PERSONALIZAR completamente cada resposta. " +
+    "Conecte tudo com a situação real do cliente. " +
+    "NUNCA invente valores ou ativos além dos informados acima."
+  );
+  return lines.join("\n");
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -63,7 +138,6 @@ Deno.serve(async (req: Request) => {
     const { mode } = body;
 
     // ── MODE: extract_memory ──────────────────────────────────────
-    // Called silently after a conversation to extract key user facts
     if (mode === "extract_memory") {
       const { conversation, existingMemory = "" } = body;
       if (!conversation || conversation.length < 4) {
@@ -107,7 +181,6 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
     }
 
     // ── MODE: chat (default) ──────────────────────────────────────
-    // Check credits (required)
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
       .select("credit_balance")
@@ -123,7 +196,14 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
 
     const currentBalance = profileData.credit_balance ?? 0;
 
-    // Load persistent memory (optional — works even if column doesn't exist yet)
+    if (currentBalance < CREDITS_PER_MESSAGE) {
+      return new Response(JSON.stringify({ error: "creditos_insuficientes", credit_balance: currentBalance }), {
+        status: 402,
+        headers: { ...cors, "Content-Type": "application/json" },
+      });
+    }
+
+    // Load persistent AI memory
     let aiMemory = "";
     try {
       const { data: memData } = await supabase
@@ -134,12 +214,18 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       aiMemory = (memData as any)?.ai_memory ?? "";
     } catch (_) { /* column may not exist yet */ }
 
-    if (currentBalance < CREDITS_PER_MESSAGE) {
-      return new Response(JSON.stringify({ error: "creditos_insuficientes", credit_balance: currentBalance }), {
-        status: 402,
-        headers: { ...cors, "Content-Type": "application/json" },
-      });
-    }
+    // Load patrimônio for dynamic system prompt enrichment
+    let patrimonioCtx = "";
+    try {
+      const { data: patData } = await supabase
+        .from("patrimonio")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
+      if (patData) {
+        patrimonioCtx = buildPatrimonioContext(patData as Record<string, unknown>);
+      }
+    } catch (_) { /* table may not exist yet — silently skip */ }
 
     const { message, history = [], imageData } = body;
 
@@ -150,15 +236,15 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       });
     }
 
-    // Inject persistent memory into system prompt
+    // Build full system prompt: base + patrimônio context + memory
     const memoryBlock = aiMemory
       ? `\n\n[O que você já sabe sobre este usuário de conversas anteriores]\n${aiMemory}`
       : "";
-    const systemWithMemory = SYSTEM_PROMPT + memoryBlock;
+    const systemWithContext = SYSTEM_PROMPT + patrimonioCtx + memoryBlock;
 
     // Build user message content — multimodal when image is present
     let userContent: unknown;
-    if (imageData?.base64 && imageData?.mediaType) {
+    if (imageData?.base64 && imageData?.mediaType && (imageData.mediaType as string).startsWith("image/")) {
       userContent = [
         {
           type: "image",
@@ -189,7 +275,7 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 2048,
-        system: systemWithMemory,
+        system: systemWithContext,
         messages,
       }),
     });
@@ -206,7 +292,7 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
     const data = await anthropicRes.json();
     const reply = data.content?.[0]?.text ?? "Sem resposta.";
 
-    // Deduct credits after successful AI response
+    // Deduct credits after successful response
     const newBalance = currentBalance - CREDITS_PER_MESSAGE;
     await supabase
       .from("profiles")
@@ -215,7 +301,7 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
 
     // Save messages to history
     await supabase.from("chat_messages").insert([
-      { user_id: userId, role: "user", content: typeof message === "string" ? message : "[imagem]" },
+      { user_id: userId, role: "user", content: typeof message === "string" ? message : "[imagem/arquivo]" },
       { user_id: userId, role: "assistant", content: reply },
     ]);
 
