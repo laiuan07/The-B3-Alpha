@@ -128,12 +128,36 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mbar-name{font-family:'Clash Display',sans-serif;font-size:13px;font-weight:600;color:var(--text);white-space:nowrap}
 
 /* ── HERO ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:180px 40px 80px}
+.hero{min-height:100vh;display:flex;flex-direction:row;align-items:center;justify-content:center;padding:120px 60px 60px;gap:64px}
+.hero-content{flex:1;max-width:560px;text-align:left}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--blue);border:1px solid rgba(56,189,248,0.25);background:rgba(56,189,248,0.07);padding:6px 14px;border-radius:100px;margin-bottom:28px;letter-spacing:1.5px;text-transform:uppercase}
-.hero h1{font-family:'Clash Display',sans-serif;font-size:clamp(42px,6.5vw,82px);font-weight:700;line-height:1.05;letter-spacing:-2.5px;margin-bottom:20px}
+.hero h1{font-family:'Clash Display',sans-serif;font-size:clamp(36px,5.5vw,72px);font-weight:700;line-height:1.05;letter-spacing:-2.5px;margin-bottom:20px}
 .hero h1 em{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:normal}
-.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--muted);max-width:500px;line-height:1.75;margin-bottom:36px;font-weight:500}
-.hero-btns{display:flex;gap:12px;justify-content:center;margin-bottom:24px}
+.hero-sub{font-size:clamp(14px,1.5vw,17px);color:var(--muted);max-width:480px;line-height:1.75;margin-bottom:36px;font-weight:500}
+.hero-btns{display:flex;gap:12px;justify-content:flex-start;margin-bottom:24px}
+/* ── iPhone mockup ── */
+.hero-phone-wrap{flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.iphone{width:258px;height:530px;background:#fff;border-radius:46px;border:8px solid #e0e0e8;box-shadow:0 0 0 1px #ccc,0 32px 80px rgba(0,0,0,0.45),0 0 60px rgba(56,189,248,0.08);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.iphone-di{width:90px;height:26px;background:#1a1a1a;border-radius:0 0 18px 18px;margin:0 auto;flex-shrink:0;position:relative;z-index:2}
+.iphone-screen{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.iph-header{background:#f8f8fc;border-bottom:1px solid #eee;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.iph-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF6A00,#ffaa44);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#fff;flex-shrink:0}
+.iph-name{font-size:12px;font-weight:700;color:#111;font-family:'Cabinet Grotesk',sans-serif}
+.iph-status{font-size:10px;color:#22c55e;font-family:'Cabinet Grotesk',sans-serif}
+.iph-msgs{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:8px;overflow:hidden;background:#f0f2f8}
+.iph-msg{max-width:82%;padding:8px 11px;border-radius:16px;font-size:11px;line-height:1.45;font-family:'Cabinet Grotesk',sans-serif;opacity:0;animation:msgIn .4s ease forwards}
+.iph-msg.user{align-self:flex-end;background:#0369a1;color:#fff;border-bottom-right-radius:4px}
+.iph-msg.ai{align-self:flex-start;background:#fff;color:#111;border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.iph-msg strong{display:block;font-size:10px;color:#FF6A00;margin-bottom:2px;font-weight:700}
+.iph-typing{align-self:flex-start;background:#fff;padding:8px 12px;border-radius:16px;border-bottom-left-radius:4px;display:flex;gap:4px;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.08);opacity:0}
+.iph-typing span{width:5px;height:5px;border-radius:50%;background:#aaa;animation:typingDot 1.2s infinite}
+.iph-typing span:nth-child(2){animation-delay:.2s}
+.iph-typing span:nth-child(3){animation-delay:.4s}
+.iph-input-row{background:#f8f8fc;border-top:1px solid #eee;padding:8px 10px;display:flex;gap:6px;align-items:center;flex-shrink:0}
+.iph-input{flex:1;background:#ebebf0;border:none;border-radius:20px;padding:7px 12px;font-size:11px;color:#333;font-family:'Cabinet Grotesk',sans-serif;outline:none}
+.iph-send{width:28px;height:28px;border-radius:50%;background:#0369a1;border:none;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
 .btn-primary{background:linear-gradient(135deg,#0369a1,var(--blue));color:#fff;border:none;padding:16px 32px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:all .3s;box-shadow:0 0 30px rgba(56,189,248,0.25)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(56,189,248,0.4)}
 .btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--text);padding:16px 32px;border-radius:100px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s}
@@ -1452,24 +1476,51 @@ footer a:hover{color:var(--text)}
 
   <!-- ══ HERO ══ -->
   <section class="hero">
-    <div class="hero-badge">⚡ IA treinada exclusivamente para o mercado brasileiro</div>
-    <h1>Invista com <em>inteligência.</em><br>Pare de adivinhar.</h1>
-    <p class="hero-sub">A B3Alpha analisa ações, FIIs, Selic e criptos em tempo real — e te diz o que fazer, com dados reais, sem enrolação.</p>
-    <div class="hero-checks">
-      <span class="hero-check">✦ Dados ao vivo da B3</span>
-      <span class="hero-check">✦ Sem contratos longos</span>
-      <span class="hero-check">✦ 4 módulos gratuitos</span>
-      <span class="hero-check">✦ Cancele quando quiser</span>
+    <!-- Texto esquerdo -->
+    <div class="hero-content">
+      <div class="hero-badge">⚡ IA treinada exclusivamente para o mercado brasileiro</div>
+      <h1>Invista com <em>inteligência.</em><br>Pare de adivinhar.</h1>
+      <p class="hero-sub">A B3Alpha analisa ações, FIIs, Selic e criptos em tempo real — e te diz o que fazer, com dados reais, sem enrolação.</p>
+      <div class="hero-checks">
+        <span class="hero-check">✦ Dados ao vivo da B3</span>
+        <span class="hero-check">✦ Sem contratos longos</span>
+        <span class="hero-check">✦ 4 módulos gratuitos</span>
+        <span class="hero-check">✦ Cancele quando quiser</span>
+      </div>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="goTo('register')">Quero meu acesso agora →</button>
+        <button class="btn-secondary" onclick="goTo('login')">Já tenho conta</button>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px">Sem cartão de crédito para começar · Cancele quando quiser</p>
     </div>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="goTo('register')">Quero meu acesso agora →</button>
-      <button class="btn-secondary" onclick="goTo('login')">Já tenho conta</button>
-    </div>
-    <p style="font-size:12px;color:var(--muted);margin-top:12px">Sem cartão de crédito para começar · Cancele quando quiser</p>
 
-    <!-- Ticker -->
-    <div class="ticker-wrap" style="width:100%;max-width:900px;border-radius:12px;border:1px solid var(--border);margin-top:32px">
-      <div class="ticker-track" id="tickerTrack">
+    <!-- iPhone mockup direita -->
+    <div class="hero-phone-wrap">
+      <div class="iphone">
+        <div class="iphone-di"></div>
+        <div class="iphone-screen">
+          <div class="iph-header">
+            <div class="iph-avatar">B3</div>
+            <div>
+              <div class="iph-name">B3Alpha IA</div>
+              <div class="iph-status">● online agora</div>
+            </div>
+          </div>
+          <div class="iph-msgs" id="iphMsgs"></div>
+          <div class="iph-input-row">
+            <input class="iph-input" placeholder="Pergunte sobre ações, FIIs..." readonly>
+            <button class="iph-send">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- TICKER BAR -->
+  <div style="padding:0 40px 0">
+    <div class="ticker-wrap" style="border-radius:12px;border:1px solid var(--border)">
+      <div class="ticker-track" id="tickerTrack2">
         <div class="ticker-item"><span class="ti-sym">IBOV</span><span class="ti-price">128.4k</span><span class="ti-change up">▲ +1.24%</span></div>
         <div class="ticker-item"><span class="ti-sym">PETR4</span><span class="ti-price">R$38,20</span><span class="ti-change up">▲ +0.87%</span></div>
         <div class="ticker-item"><span class="ti-sym">VALE3</span><span class="ti-price">R$61,45</span><span class="ti-change up">▲ +1.12%</span></div>
@@ -1482,13 +1533,10 @@ footer a:hover{color:var(--text)}
         <div class="ticker-item"><span class="ti-sym">PETR4</span><span class="ti-price">R$38,20</span><span class="ti-change up">▲ +0.87%</span></div>
         <div class="ticker-item"><span class="ti-sym">VALE3</span><span class="ti-price">R$61,45</span><span class="ti-change up">▲ +1.12%</span></div>
         <div class="ticker-item"><span class="ti-sym">SELIC</span><span class="ti-price">14.75%</span><span class="ti-change dn">▼ -0.25%</span></div>
-        <div class="ticker-item"><span class="ti-sym">HGLG11</span><span class="ti-price">R$162,50</span><span class="ti-change up">▲ +0.31%</span></div>
-        <div class="ticker-item"><span class="ti-sym">ITUB4</span><span class="ti-price">R$33,80</span><span class="ti-change dn">▼ -0.32%</span></div>
-        <div class="ticker-item"><span class="ti-sym">WEGE3</span><span class="ti-price">R$52,10</span><span class="ti-change up">▲ +1.80%</span></div>
         <div class="ticker-item"><span class="ti-sym">BTC</span><span class="ti-price">$84.2k</span><span class="ti-change up">▲ +2.10%</span></div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- ══ SOCIAL PROOF ══ -->
   <section class="social-proof">
@@ -4153,6 +4201,99 @@ function toggleFaq(btn){
 }
 
 // ── SCROLL PARA SEÇÃO ──
+// ── DEMO IPHONE CHAT ──
+(function(){
+  var msgs=[
+    {type:'user', text:'PETR4 vale a pena comprar agora?'},
+    {type:'ai', title:'B3Alpha', text:'PETR4 → R$38,20 ▲0.87%\nDY: 8.2% aa · P/L: 5.2x\n⚠️ Petróleo em queda. Aguardar suporte em R$36 antes de entrar.'},
+    {type:'user', text:'E o Tesouro Selic vale?'},
+    {type:'ai', title:'B3Alpha', text:'Tesouro Selic 2029\nRentabilidade: Selic +0.08%\n~14,7% ao ano ✅\nIdeal para reserva. Liquidez diária.'},
+    {type:'user', text:'Qual FII tem melhor DY agora?'},
+    {type:'ai', title:'B3Alpha', text:'Top DY do momento:\n🏆 MCCI11 — 13.2% aa\n🥈 HGLG11 — 11.8% aa\n🥉 XPML11 — 10.9% aa\nTodos com vacância abaixo de 8%.'},
+  ];
+  var container=document.getElementById('iphMsgs');
+  if(!container)return;
+  var idx=0;
+  var timers=[];
+
+  function clearAll(){timers.forEach(clearTimeout);timers=[];container.innerHTML='';idx=0;}
+
+  function addMsg(m,delay){
+    var t=setTimeout(function(){
+      var div=document.createElement('div');
+      div.className='iph-msg '+m.type;
+      var txt=m.text.replace(/\n/g,'<br>');
+      if(m.title) txt='<strong>'+m.title+'</strong>'+txt;
+      div.innerHTML=txt;
+      container.appendChild(div);
+      container.scrollTop=container.scrollHeight;
+    },delay);
+    timers.push(t);
+  }
+
+  function addTyping(showDelay, hideDelay){
+    var el=document.createElement('div');
+    el.className='iph-typing';
+    el.innerHTML='<span></span><span></span><span></span>';
+    var t1=setTimeout(function(){
+      container.appendChild(el);
+      el.style.opacity='1';
+      container.scrollTop=container.scrollHeight;
+    },showDelay);
+    var t2=setTimeout(function(){
+      if(el.parentNode)el.parentNode.removeChild(el);
+    },hideDelay);
+    timers.push(t1);timers.push(t2);
+  }
+
+  function runDemo(){
+    clearAll();
+    var t=0;
+    for(var i=0;i<msgs.length;i++){
+      var m=msgs[i];
+      if(m.type==='ai'){
+        addTyping(t,t+1200);
+        addMsg(m,t+1300);
+        t+=2400;
+      } else {
+        addMsg(m,t);
+        t+=1000;
+      }
+    }
+    var loop=setTimeout(runDemo,t+2500);
+    timers.push(loop);
+  }
+
+  // Inicia quando visível na tela
+  var started=false;
+  var observer=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting&&!started){started=true;runDemo();}
+  },{threshold:0.3});
+  observer.observe(container);
+})();
+
+// ── MOBILE RESPONSIVO HERO ──
+(function(){
+  function fixHero(){
+    var hero=document.querySelector('.hero');
+    var phone=document.querySelector('.hero-phone-wrap');
+    if(!hero||!phone)return;
+    if(window.innerWidth<=900){
+      hero.style.flexDirection='column';
+      hero.style.textAlign='center';
+      hero.style.padding='120px 24px 40px';
+      phone.style.display='none';
+    } else {
+      hero.style.flexDirection='row';
+      hero.style.textAlign='left';
+      hero.style.padding='120px 60px 60px';
+      phone.style.display='flex';
+    }
+  }
+  fixHero();
+  window.addEventListener('resize',fixHero);
+})();
+
 function openMobileMenu(){
   document.getElementById('mobDrawer').classList.add('open');
   document.getElementById('mobOverlay').classList.add('open');
