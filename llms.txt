@@ -1,0 +1,49 @@
+# The B3 Blueprint
+
+> Plataforma brasileira de análise de investimentos com IA. Dados em tempo real da B3, análise de ações e FIIs, renda fixa e criptomoedas.
+
+## O que é o The B3 Blueprint
+
+The B3 Blueprint é uma plataforma de inteligência artificial especializada no mercado financeiro brasileiro. Oferece análise de ações, fundos imobiliários (FIIs), renda fixa, criptomoedas e orientação sobre carteiras de investimento — tudo em tempo real, com dados da B3.
+
+## Funcionalidades
+
+- **Blueprint IA**: Assistente especializado em investimentos brasileiros disponível 24h
+- **Análise de ativos**: Ações, FIIs, ETFs, BDRs com dados em tempo real via Brapi
+- **Renda Fixa**: Selic, CDI, CDB, Tesouro Direto, LCI/LCA
+- **Criptomoedas**: Bitcoin, Ethereum e principais altcoins
+- **Mini Curso Gratuito**: 4 módulos educativos sobre investimentos
+- **Carteira de investimentos**: Orientação sobre diversificação e otimização
+
+## Módulos Educativos
+
+- [Módulo 1 — Investindo na B3](https://theb3blueprint.best/modulo1-slides.html)
+- [Módulo 2 — Fundos Imobiliários](https://theb3blueprint.best/modulo2-slides.html)
+- [Módulo 3 — Renda Fixa & Impostos](https://theb3blueprint.best/modulo3-slides.html)
+- [Módulo 4 — Corretoras & Criptomoedas](https://theb3blueprint.best/modulo4-slides_1.html)
+
+## Planos
+
+- **Mensal**: R$27,99/mês — acesso completo à IA e análises
+- **Anual**: R$23,90/mês (R$286,80/ano) — melhor custo-benefício
+- **Teste**: R$49,90 — 30 dias completos sem recorrência
+
+## Público-alvo
+
+- Investidores iniciantes que querem aprender a investir na B3
+- Investidores intermediários que buscam análises com dados reais
+- Qualquer pessoa interessada em renda fixa, FIIs, ações ou criptomoedas
+
+## Tecnologia
+
+- IA treinada com dados do mercado financeiro brasileiro
+- Integração em tempo real com a B3 via Brapi API
+- Autenticação segura via Supabase
+- Pagamentos via Hotmart
+
+## Links
+
+- [Site principal](https://theb3blueprint.best)
+- [Entrar](https://theb3blueprint.best/login.html)
+- [Criar conta](https://theb3blueprint.best/cadastro.html)
+- [Sitemap](https://theb3blueprint.best/sitemap.xml)
