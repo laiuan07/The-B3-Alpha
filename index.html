@@ -26,6 +26,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <style>
 :root{
   --bg:#020812;--bg2:#060d18;
@@ -799,6 +800,7 @@ footer a:hover{color:var(--gold)}
       <div class="pass-wrap"><input class="form-input" id="regPassword" type="password" placeholder="mín. 8 caracteres" oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter')handleRegister()"><button class="pass-toggle" onclick="togglePass('regPassword',this)">mostrar</button></div>
       <div class="strength-wrap" id="strengthWrap"><div class="strength-bars"><div class="strength-bar" id="sb1"></div><div class="strength-bar" id="sb2"></div><div class="strength-bar" id="sb3"></div><div class="strength-bar" id="sb4"></div></div><span class="strength-lbl" id="strengthLbl"></span></div>
     </div>
+    <div class="h-captcha" data-sitekey="e44e7394-27f8-4ae8-8392-5cf88d0af19c" data-theme="dark" id="hcaptchaWidget" style="margin-bottom:14px"></div>
     <button class="btn-submit" id="registerBtn" onclick="handleRegister()"><span class="btn-text">Criar minha conta →</span><div class="btn-loader"></div></button>
     <div class="auth-switch">Já tem conta? <a onclick="goTo('login')">Entrar →</a></div>
   </div>
@@ -1305,11 +1307,13 @@ async function handleRegister(){
   if(!isOver18(birth)) return showError('registerError','Você precisa ter pelo menos 18 anos.');
   if(!email||!_emailRe.test(email)) return showError('registerError','Digite um e-mail válido.');
   if(!pass||pass.length<8) return showError('registerError','Senha deve ter pelo menos 8 caracteres.');
+  const captchaToken = hcaptcha.getResponse();
+  if(!captchaToken) return showError('registerError','Por favor, confirme que você não é um robô.');
   const btn=document.getElementById('registerBtn'); btn.classList.add('loading');
   try{
-    const {data,error}=await _supabase.auth.signUp({email,password:pass,options:{data:{first_name:first,last_name:last,birth_date:birth}}});
+    const {data,error}=await _supabase.auth.signUp({email,password:pass,options:{captchaToken,data:{first_name:first,last_name:last,birth_date:birth}}});
     btn.classList.remove('loading');
-    if(error) return showError('registerError', error.message.includes('already')?'Este email já está cadastrado.':error.message);
+    if(error){ hcaptcha.reset(); return showError('registerError', error.message.includes('already')?'Este email já está cadastrado.':error.message); }
     populateUserUI(data.user,first);
     loadUserProfile(data.user.id);
     _authHandled=true;
