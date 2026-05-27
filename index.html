@@ -25,6 +25,7 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 <style>
 :root{
   --bg:#020812;--bg2:#060d18;
@@ -1533,16 +1534,24 @@ function appendMessage(role,html){
   c.scrollTop=c.scrollHeight;
   return msg;
 }
+/* ── Escape HTML para evitar XSS em qualquer string não confiável ── */
+function _esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;'); }
+
 function _md2html(t){
   if(!t) return '';
-  return t
+  /* 1. Escapa tudo primeiro */
+  let s = t
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    /* 2. Converte markdown seguro */
     .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g,'<em>$1</em>')
     .replace(/`([^`]+)`/g,'<code>$1</code>')
     .replace(/\n\n/g,'</p><p>')
     .replace(/\n/g,'<br>')
     .replace(/^/,'<p>').replace(/$/,'</p>');
+  /* 3. Passa pelo DOMPurify como camada extra (permite apenas tags seguras) */
+  if(window.DOMPurify) s = DOMPurify.sanitize(s, {ALLOWED_TAGS:['p','br','strong','em','code','ul','ol','li'],ALLOWED_ATTR:[]});
+  return s;
 }
 function handleImageUpload(event){
   const file=event.target.files[0];
@@ -1561,7 +1570,9 @@ function showImagePreview(){
   const preview=document.getElementById('dbImagePreview');
   if(!preview) return;
   preview.style.display='block';
-  preview.innerHTML=`<div class="image-preview"><img src="${pendingImage.data}" alt="Preview"><div class="image-preview-info"><div style="color:var(--text);font-size:12px">📎 ${pendingImage.name}</div><div>${pendingImage.size}</div></div><button class="image-preview-remove" onclick="removePendingImage()" title="Remover"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--mono)">Digite uma pergunta sobre essa imagem ou envie direto para análise</div>`;
+  const safeName = _esc(pendingImage.name);
+  const safeSize = _esc(pendingImage.size);
+  preview.innerHTML=`<div class="image-preview"><img src="${pendingImage.data}" alt="Preview"><div class="image-preview-info"><div style="color:var(--text);font-size:12px">📎 ${safeName}</div><div>${safeSize}</div></div><button class="image-preview-remove" onclick="removePendingImage()" title="Remover"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--mono)">Digite uma pergunta sobre essa imagem ou envie direto para análise</div>`;
 }
 function removePendingImage(){
   pendingImage=null;
