@@ -377,6 +377,15 @@ footer a:hover{color:var(--gold)}
 .module-modal.open{display:flex}
 .modal-bg{position:absolute;inset:0;background:rgba(2,4,12,0.92);backdrop-filter:blur(16px)}
 .modal-frame{position:relative;z-index:1;width:95vw;height:92vh;border-radius:20px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 40px 120px rgba(0,0,0,0.8)}
+/* Fullscreen flow mode — used after login */
+.module-modal.flow-mode .modal-bg{display:none}
+.module-modal.flow-mode .modal-frame{width:100vw;height:100vh;border-radius:0;border:none;box-shadow:none}
+.module-modal.flow-mode .modal-close{display:none}
+.module-flow-progress{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;background:rgba(2,8,18,.75);border:1px solid var(--border);border-radius:999px;padding:6px 18px;font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.08em;backdrop-filter:blur(12px)}
+.module-flow-dots{display:flex;gap:6px;margin-left:8px}
+.module-flow-dot{width:6px;height:6px;border-radius:50%;background:rgba(201,168,76,.25);transition:background .3s}
+.module-flow-dot.done{background:var(--gold)}
+.module-next-btn.flow-btn{min-width:auto;border-radius:100px;padding:0 24px;gap:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px}
 .modal-close{position:absolute;top:16px;right:16px;z-index:10;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .modal-close:hover{background:rgba(255,59,92,0.15);color:var(--red)}
 .modal-iframe{width:100%;height:100%;border:none;background:#000;transition:opacity .3s}
@@ -1048,6 +1057,16 @@ footer a:hover{color:var(--gold)}
   <div class="modal-bg" onclick="closeModule()"></div>
   <div class="modal-frame">
     <button class="modal-close" id="modalCloseBtn" onclick="closeModule()">✕</button>
+    <!-- Flow mode: progress indicator (hidden in normal mode) -->
+    <div class="module-flow-progress" id="moduleFlowProgress" style="display:none">
+      <span id="moduleFlowLabel">Módulo 1 de 4</span>
+      <div class="module-flow-dots">
+        <div class="module-flow-dot" id="flowDot1"></div>
+        <div class="module-flow-dot" id="flowDot2"></div>
+        <div class="module-flow-dot" id="flowDot3"></div>
+        <div class="module-flow-dot" id="flowDot4"></div>
+      </div>
+    </div>
     <iframe class="modal-iframe" id="moduleIframe" src=""></iframe>
     <button class="module-next-btn arrow-only" id="moduleNextBtn" onclick="nextModule()" title="Próximo módulo">→</button>
   </div>
@@ -1289,7 +1308,7 @@ async function handleLogin(){
     loadUserProfile(data.user.id);
     _authHandled=true;
     document.getElementById('loginSuccess').classList.add('show');
-    setTimeout(()=>{ _authHandled=false; goTo('dashboard'); dbNav('chat'); showCoursePopup(); resumePendingCheckout(); },1600);
+    setTimeout(()=>{ _authHandled=false; resumePendingCheckout(); openModuleFlow(1); },1600);
   }catch(e){ btn.classList.remove('loading'); showError('loginError','Erro de conexão. Tente novamente.'); }
 }
 
@@ -1318,7 +1337,7 @@ async function handleRegister(){
     loadUserProfile(data.user.id);
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
-    setTimeout(()=>{ _authHandled=false; goTo('dashboard'); dbNav('chat'); showCoursePopup(); resumePendingCheckout(); },1800);
+    setTimeout(()=>{ _authHandled=false; resumePendingCheckout(); openModuleFlow(1); },1800);
   }catch(e){ btn.classList.remove('loading'); showError('registerError','Erro de conexão. Tente novamente.'); }
 }
 
@@ -1739,19 +1758,78 @@ async function openModuleWithAuth(n){
   if(!session){ document.getElementById('loginRequiredModal').classList.add('open'); return; }
   openModule(n);
 }
+let _moduleFlowMode = false;
+
 function openModule(n,silent){
   _currentModule=n;
   const url=_MODULE_URLS[n]; if(!url) return;
   const iframe=document.getElementById('moduleIframe'); iframe.src=url;
   document.getElementById('modal-modules').classList.add('open');
 }
-function closeModule(){
-  document.getElementById('modal-modules').classList.remove('open');
-  document.getElementById('moduleIframe').src='';
+
+/* Flow mode: fullscreen sequential viewer after login */
+function openModuleFlow(n){
+  n = n || 1;
+  _moduleFlowMode = true;
+  _currentModule = n;
+  const modal = document.getElementById('modal-modules');
+  modal.classList.add('open','flow-mode');
+  document.getElementById('moduleIframe').src = _MODULE_URLS[n] || '';
+  document.getElementById('moduleFlowProgress').style.display = 'flex';
+  _updateFlowUI();
+  /* expand next button with label */
+  const btn = document.getElementById('moduleNextBtn');
+  btn.classList.remove('arrow-only');
+  btn.classList.add('flow-btn');
+  _updateFlowBtn();
 }
+
+function _updateFlowUI(){
+  document.getElementById('moduleFlowLabel').textContent = 'Módulo '+_currentModule+' de 4';
+  for(let i=1;i<=4;i++){
+    const dot = document.getElementById('flowDot'+i);
+    if(dot) dot.classList.toggle('done', i <= _currentModule);
+  }
+}
+
+function _updateFlowBtn(){
+  const btn = document.getElementById('moduleNextBtn');
+  if(_currentModule < 4){
+    btn.innerHTML = 'Próximo módulo →';
+    btn.title = 'Ir para Módulo '+(_currentModule+1);
+  } else {
+    btn.innerHTML = 'Acessar dashboard →';
+    btn.title = 'Ir para o dashboard B3Alpha';
+  }
+}
+
+function closeModule(){
+  _moduleFlowMode = false;
+  const modal = document.getElementById('modal-modules');
+  modal.classList.remove('open','flow-mode');
+  document.getElementById('moduleIframe').src='';
+  document.getElementById('moduleFlowProgress').style.display='none';
+  const btn = document.getElementById('moduleNextBtn');
+  btn.classList.add('arrow-only');
+  btn.classList.remove('flow-btn');
+  btn.innerHTML = '→';
+}
+
 function nextModule(){
-  if(_currentModule<4) openModule(_currentModule+1);
-  else closeModule();
+  if(_moduleFlowMode){
+    if(_currentModule < 4){
+      _currentModule++;
+      document.getElementById('moduleIframe').src = _MODULE_URLS[_currentModule] || '';
+      _updateFlowUI();
+      _updateFlowBtn();
+    } else {
+      /* All modules done — go to dashboard */
+      window.location.href = '/b3alpha-dashboard.html';
+    }
+  } else {
+    if(_currentModule<4) openModule(_currentModule+1);
+    else closeModule();
+  }
 }
 function closeLoginRequiredModal(){ document.getElementById('loginRequiredModal').classList.remove('open'); }
 
