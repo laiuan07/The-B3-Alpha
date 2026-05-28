@@ -1395,10 +1395,10 @@ _supabase.auth.onAuthStateChange((event,session)=>{
     const name=user.user_metadata?.first_name||user.user_metadata?.full_name||user.email.split('@')[0];
     populateUserUI(user,name);
     loadUserProfile(user.id);
-    if(!_authHandled&&!document.getElementById('page-dashboard').classList.contains('active')){
-      goTo('dashboard'); dbNav('chat');
+    if(!_authHandled){
+      handleStripeReturn();
+      window.location.href = '/b3alpha-dashboard';
     }
-    handleStripeReturn();
   }
   if(event==='SIGNED_OUT') _doGoTo('landing');
 });
@@ -1406,11 +1406,7 @@ _supabase.auth.onAuthStateChange((event,session)=>{
 async function checkSession(){
   const {data:{session}}=await _supabase.auth.getSession();
   if(session){
-    const user=session.user;
-    const name=user.user_metadata?.first_name||user.user_metadata?.full_name||user.email.split('@')[0];
-    populateUserUI(user,name);
-    loadUserProfile(user.id);
-    goTo('dashboard');
+    window.location.href = '/b3alpha-dashboard';
   }
 }
 
@@ -1508,7 +1504,7 @@ async function activateTrial(){
     const {data,error}=await _supabase.rpc('activate_trial');
     if(error) throw new Error(error.message);
     alert('Trial ativado por 30 dias!');
-    goTo('dashboard'); dbNav('chat');
+    window.location.href = '/b3alpha-dashboard';
   }catch(e){
     btn.textContent=originalText; btn.disabled=false;
     errEl.textContent=e.message; errEl.style.display='block';
