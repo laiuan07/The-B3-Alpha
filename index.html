@@ -199,16 +199,43 @@ footer a:hover{color:var(--gold)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes scrollTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* ════ HAMBURGER / MOBILE NAV ════ */
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:var(--text);font-size:19px;cursor:pointer;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+.nav-hamburger:hover{background:rgba(255,255,255,.1)}
+.mobile-nav-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start}
+.mobile-nav-overlay.open{display:flex}
+.mobile-nav-bg{position:absolute;inset:0;background:rgba(2,8,18,.75);backdrop-filter:blur(6px)}
+.mobile-nav-drawer{position:relative;z-index:1;width:72vw;max-width:300px;min-height:100vh;background:#080e1c;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;padding:24px 0 32px;animation:slideInLeft .22s ease both}
+@keyframes slideInLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.mnd-logo{display:flex;align-items:center;gap:9px;padding:0 20px 22px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:10px;font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mnd-links{display:flex;flex-direction:column;gap:2px;padding:0 10px;flex:1}
+.mnd-link{display:block;padding:13px 14px;border-radius:10px;color:var(--muted);font-size:14px;font-weight:600;text-decoration:none;border:none;background:none;cursor:pointer;text-align:left;width:100%;transition:all .18s}
+.mnd-link:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.mnd-sep{height:1px;background:rgba(255,255,255,.07);margin:10px 10px}
+.mnd-footer{padding:0 10px;display:flex;flex-direction:column;gap:8px}
+.mnd-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
 @media(max-width:900px){
   .site-nav{padding:14px 20px}.nav-links{display:none}.section{padding:60px 20px}
+  .nav-hamburger{display:flex}
+  .nav-actions .btn-ghost,.nav-actions .btn-primary{display:none}
   .testi-grid{grid-template-columns:1fr}.benefits-grid{grid-template-columns:1fr}
   .benefit-card.featured{grid-column:span 1}.audience-grid{grid-template-columns:1fr}
   .modules-grid{grid-template-columns:1fr 1fr}.steps-grid{flex-direction:column}
   .step-arrow{display:none}.features-grid{grid-template-columns:1fr 1fr}
   .pricing-grid{grid-template-columns:1fr}.sp-stat{padding:16px 24px}
   .cta-banner{flex-direction:column;align-items:flex-start}footer{flex-direction:column;gap:12px;text-align:center}
+  .hero-cta{flex-direction:column;align-items:center}.hero-cta .btn-ghost{order:2}
+  .section-title{font-size:clamp(1.6rem,5vw,2.4rem)}
 }
-@media(max-width:600px){.modules-grid{grid-template-columns:1fr}.features-grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .modules-grid{grid-template-columns:1fr}.features-grid{grid-template-columns:1fr}
+  .hero-screen{padding:0 18px}.hero-title{font-size:clamp(2.2rem,9vw,3.5rem)}
+  .sp-inner{flex-direction:column;gap:0}.sp-divider{width:80%;height:1px;background:var(--border)}
+  .audience-grid .aud-title{font-size:1.2rem}
+  .pricing-grid .pc-price{font-size:2.4rem}
+  .form-row{grid-template-columns:1fr}
+}
 
 /* ════ PÁGINAS / SPA ════ */
 .page{display:none}
@@ -482,8 +509,33 @@ footer a:hover{color:var(--gold)}
   <div class="nav-actions">
     <button class="btn-ghost" style="padding:9px 20px;font-size:13px" onclick="goTo('login')">Entrar</button>
     <button class="btn-primary" style="padding:10px 22px;font-size:13px" onclick="goTo('register')">Começar agora</button>
+    <button class="nav-hamburger" onclick="openMobileNav()" aria-label="Menu">☰</button>
   </div>
 </nav>
+
+<!-- ══ MOBILE NAV DRAWER ══ -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay">
+  <div class="mobile-nav-bg" onclick="closeMobileNav()"></div>
+  <div class="mobile-nav-drawer">
+    <button class="mnd-close" onclick="closeMobileNav()">✕</button>
+    <div class="mnd-logo">
+      <svg width="26" height="26" viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="-10" width="110" height="110" rx="18" fill="#C9A84C"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="#040A14"/></svg>
+      B3Alpha
+    </div>
+    <nav class="mnd-links">
+      <button class="mnd-link" onclick="closeMobileNav();scrollToSection('como-funciona')">Como funciona</button>
+      <button class="mnd-link" onclick="closeMobileNav();scrollToSection('modulos')">📚 Módulos gratuitos</button>
+      <button class="mnd-link" onclick="closeMobileNav();scrollToSection('depoimentos')">💬 Comentários</button>
+      <button class="mnd-link" onclick="closeMobileNav();scrollToSection('planos')">⭐ Planos</button>
+      <button class="mnd-link" onclick="closeMobileNav();scrollToSection('faq')">❓ FAQ</button>
+    </nav>
+    <div class="mnd-sep"></div>
+    <div class="mnd-footer">
+      <button class="btn-ghost" style="width:100%;padding:12px;font-size:14px" onclick="closeMobileNav();goTo('login')">Entrar</button>
+      <button class="btn-primary" style="width:100%;padding:13px;font-size:14px" onclick="closeMobileNav();goTo('register')">Começar agora →</button>
+    </div>
+  </div>
+</div>
 
 <!-- SOCIAL PROOF -->
 <div class="sp-band">
@@ -1215,6 +1267,16 @@ async function _loadTickerBrapi(){
 }
 _buildTicker(_tickerSeed);
 _loadTickerBrapi();
+
+/* ══ MOBILE NAV ══ */
+function openMobileNav(){
+  document.getElementById('mobileNavOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMobileNav(){
+  document.getElementById('mobileNavOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 /* ══ FAQ ══ */
 function toggleFaq(btn){

@@ -773,15 +773,77 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .toast.error   { background:#dc2626; color:#fff }
 .toast.info    { background:var(--surface); border:1px solid var(--border); color:var(--text) }
 
-/* Mobile */
+/* ════ MOBILE TOP BAR ════ */
+.db-mobile-top {
+  display: none;
+  align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border2);
+  position: sticky; top: 0; z-index: 20;
+  flex-shrink: 0;
+}
+.db-mob-hamburger {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border2);
+  color: var(--text); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s;
+}
+.db-mob-hamburger:hover { background: rgba(255,255,255,.1) }
+.db-mob-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 800;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.db-mob-credits {
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  color: var(--gold); background: rgba(201,168,76,.1);
+  border: 1px solid rgba(201,168,76,.2); border-radius: 100px;
+  padding: 5px 10px; cursor: pointer;
+}
+
+/* Overlay quando sidebar aberta no mobile */
+.db-sidebar-overlay {
+  display: none; position: fixed; inset: 0; z-index: 28;
+  background: rgba(2,8,18,.72); backdrop-filter: blur(4px);
+}
+.db-sidebar-overlay.open { display: block }
+
+/* ════ MOBILE ════ */
 @media(max-width:768px){
-  .db-sidebar { display:none }
-  .db-main { width:100vw }
-  .wc-cards-grid { grid-template-columns:1fr }
-  .wc-chips { display:none }
-  #dbWelcomeView { padding:0 16px }
-  .wc-input-wrap { max-width:100% }
-  .wc-cards-grid { max-width:100% }
+  .db-mobile-top { display: flex }
+
+  .db-sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0; z-index: 30;
+    transform: translateX(-100%);
+    transition: transform .26s cubic-bezier(.4,0,.2,1);
+    width: 280px; height: 100vh;
+  }
+  .db-sidebar.mob-open { transform: translateX(0) }
+
+  .db-main { width: 100vw; overflow: hidden }
+  .db-view { overflow-y: auto }
+
+  .wc-cards-grid { grid-template-columns: 1fr; max-width: 100% }
+  .wc-chips { display: none }
+  #dbWelcomeView { padding: 0 14px }
+  .wc-input-wrap { max-width: 100% }
+  .wc-greeting { font-size: clamp(1.2rem,5vw,1.5rem) }
+
+  .ia-msg-row { padding: 14px 16px }
+  .db-input-area { padding: 8px 12px 14px }
+
+  .db-overlay-inner { padding: 18px 14px 48px }
+  .pat-tab { padding: 8px 10px; font-size: 11px }
+
+  /* Patrimônio grid 1 col no mobile */
+  #dbPatrimonioOverlay [style*="grid-template-columns:repeat(4"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .db-overlay-hdr { margin-bottom: 16px }
 }
 
 /* ════ PATRIMÔNIO TABS ════ */
@@ -874,12 +936,25 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 </head>
 <body>
 
+<!-- ══ MOBILE TOP BAR ══ -->
+<div class="db-mobile-top">
+  <button class="db-mob-hamburger" onclick="toggleMobileSidebar()" aria-label="Menu">☰</button>
+  <div class="db-mob-logo">
+    <svg width="22" height="22" viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="-10" width="110" height="110" rx="18" fill="#C9A84C"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="#040A14"/></svg>
+    B3Alpha
+  </div>
+  <div class="db-mob-credits" onclick="showBuyCreditsModal()">⚡ <span id="headerCreditsNum">50</span></div>
+</div>
+
 <div class="db-layout">
+
+  <!-- Overlay mobile sidebar -->
+  <div class="db-sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
 
   <!-- ═══════════════════════════
        SIDEBAR
   ═══════════════════════════ -->
-  <aside class="db-sidebar">
+  <aside class="db-sidebar" id="dbSidebar">
 
     <!-- Logo -->
     <div class="db-sb-logo" onclick="switchView('welcome')" style="justify-content:center;padding:18px 0 16px">
@@ -1581,6 +1656,22 @@ async function loadUserProfile() {
 /* ══════════════════════════════════════
    VIEW SWITCHING
 ══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   MOBILE SIDEBAR
+══════════════════════════════════════ */
+function toggleMobileSidebar() {
+  const s = document.getElementById('dbSidebar');
+  const o = document.getElementById('sidebarOverlay');
+  const open = s.classList.toggle('mob-open');
+  o.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMobileSidebar() {
+  document.getElementById('dbSidebar').classList.remove('mob-open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 function switchView(v) {
   document.getElementById('dbWelcomeView').style.display = v==='welcome' ? 'flex' : 'none';
   document.getElementById('dbChatView').style.display    = v==='chat'    ? 'flex' : 'none';
@@ -2357,6 +2448,13 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModule(); cl
     showToast('Pagamento cancelado.', 'info');
     window.history.replaceState({}, '', window.location.pathname);
   }
+  /* Fechar sidebar mobile ao clicar em qualquer item de nav */
+  document.querySelectorAll('.db-sb-nav-item, .db-sb-new-chat, .db-sb-conv-item, .db-sb-logo').forEach(el => {
+    el.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeMobileSidebar();
+    });
+  });
+
 })();
 </script>
 </body>
