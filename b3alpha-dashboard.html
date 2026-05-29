@@ -34,7 +34,7 @@
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
-html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; }
+html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; }
 
 /* ════════════════════════════════════════
    LAYOUT RAIZ
@@ -82,7 +82,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 .db-sb-logo:hover { opacity: .8 }
 .db-sb-logo-text {
-  font-family:'Inter',sans-serif; font-size:15px; font-weight:800;
+  font-family:'IBM Plex Sans',sans-serif; font-size:15px; font-weight:800;
   background: linear-gradient(135deg,var(--gold),var(--gold2));
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   background-clip:text;
@@ -95,7 +95,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   border: 1px solid rgba(201,168,76,0.22);
   border-radius: 10px;
   color: var(--gold2);
-  font-family:'Inter',sans-serif; font-weight:700; font-size:13px;
+  font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13px;
   cursor: pointer; transition: all .2s; text-align:left;
   flex-shrink: 0;
 }
@@ -110,7 +110,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   display: flex; align-items: center; gap: 9px;
   padding: 9px 10px; border-radius: 8px;
   background: none; border: none;
-  color: var(--muted); font-family:'Inter',sans-serif;
+  color: var(--muted); font-family:'IBM Plex Sans',sans-serif;
   font-size: 13px; font-weight: 600;
   cursor: pointer; transition: all .15s; width: 100%; text-align:left;
 }
@@ -118,7 +118,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .db-sb-nav-item.active { background: rgba(201,168,76,0.1); color: var(--gold2); }
 .db-sb-nav-icon { font-size:14px; width:18px; text-align:center; flex-shrink:0 }
 .nav-badge {
-  margin-left: auto; font-family:'JetBrains Mono',monospace; font-size:10px;
+  margin-left: auto; font-family:'IBM Plex Mono',monospace; font-size:10px;
   color: var(--gold); background: rgba(201,168,76,0.1);
   padding: 2px 7px; border-radius:100px; flex-shrink:0;
 }
@@ -132,7 +132,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   flex: 1; display:flex; flex-direction:column; overflow:hidden;
 }
 .db-sb-convs-label {
-  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px;
+  font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1.5px;
   color: rgba(240,234,214,0.25); padding: 8px 16px 4px;
   text-transform:uppercase; flex-shrink:0;
 }
@@ -142,7 +142,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .db-sb-convs-list::-webkit-scrollbar { width:3px }
 .db-sb-convs-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:2px }
 .db-sb-conv-group-label {
-  font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(240,234,214,.25);
+  font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(240,234,214,.25);
   padding: 8px 8px 4px; letter-spacing:1px;
 }
 .db-sb-conv-item {
@@ -176,7 +176,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 .db-sb-user-info { flex:1; overflow:hidden }
 .db-sb-user-name { display:block; font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-.db-sb-user-plan { font-size:10px; color:var(--gold); font-family:'Space Mono',monospace }
+.db-sb-user-plan { font-size:10px; color:var(--gold); font-family:'IBM Plex Mono',monospace }
 
 /* Dropdown usuário */
 .dh-dropdown {
@@ -229,7 +229,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   animation: fadeUp .7s ease both;
 }
 .wc-greeting {
-  font-family:'Inter',sans-serif;
+  font-family:'IBM Plex Sans',sans-serif;
   font-size:clamp(1.3rem,2.2vw,1.8rem);
   font-weight:800; letter-spacing:-.04em; line-height:1.1;
   margin-bottom:10px;
@@ -270,7 +270,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 #wcChatInput {
   width:100%; background:transparent; border:none; outline:none;
-  font-family:'Inter',sans-serif; font-size:15px; color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif; font-size:15px; color:var(--text);
   resize:none; min-height:26px; max-height:120px; overflow-y:auto; line-height:1.5;
 }
 #wcChatInput::placeholder { color:rgba(240,234,214,.3) }
@@ -281,7 +281,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 .wc-model-badge {
   display:flex; align-items:center; gap:6px;
-  font-family:'JetBrains Mono',monospace; font-size:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
   color:var(--gold); background:rgba(201,168,76,.08);
   border:1px solid rgba(201,168,76,.18); border-radius:100px;
   padding:4px 12px; cursor:pointer; user-select:none;
@@ -345,19 +345,19 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .wc-card.credits  { --card-accent: rgba(0,255,157,.4) }
 .wc-card-icon { font-size:24px; margin-bottom:10px; display:block }
 .wc-card-tag {
-  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px;
+  font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1.5px;
   text-transform:uppercase; margin-bottom:6px;
 }
 .wc-card.modules  .wc-card-tag { color:var(--gold) }
 .wc-card.profile  .wc-card-tag { color:var(--cyan) }
 .wc-card.credits  .wc-card-tag { color:var(--green) }
 .wc-card-title {
-  font-family:'Inter',sans-serif; font-size:15px; font-weight:700;
+  font-family:'IBM Plex Sans',sans-serif; font-size:15px; font-weight:700;
   margin-bottom:5px; letter-spacing:-.02em;
 }
 .wc-card-sub { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:14px }
 .wc-card-cta {
-  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700;
   display:flex; align-items:center; gap:5px;
 }
 .wc-card.modules  .wc-card-cta { color:var(--gold) }
@@ -366,7 +366,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
 /* barra de créditos no card */
 .wc-credits-num {
-  font-family:'Inter',sans-serif; font-size:2rem; font-weight:800;
+  font-family:'IBM Plex Sans',sans-serif; font-size:2rem; font-weight:800;
   color:var(--green); letter-spacing:-.05em; line-height:1; margin-bottom:4px;
 }
 .wc-credits-bar-track {
@@ -386,7 +386,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   flex-shrink:0;
 }
 .wc-ticker-label {
-  flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:9px;
+  flex-shrink:0; font-family:'IBM Plex Mono',monospace; font-size:9px;
   letter-spacing:.1em; color:var(--gold); padding:0 14px;
   border-right:1px solid var(--border); height:100%;
   display:flex; align-items:center; background:rgba(201,168,76,.05);
@@ -395,7 +395,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .wc-ticker-scroll:hover { animation-play-state:paused }
 .wc-ticker-item {
   display:flex; align-items:center; gap:7px; padding:0 20px;
-  font-family:'JetBrains Mono',monospace; font-size:10px; white-space:nowrap;
+  font-family:'IBM Plex Mono',monospace; font-size:10px; white-space:nowrap;
   border-right:1px solid rgba(255,255,255,.04);
 }
 .wc-ticker-item .sym { color:rgba(255,255,255,.85); font-weight:700 }
@@ -420,11 +420,11 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 .db-chat-header-left { display:flex; align-items:center; gap:10px }
 .db-chat-title {
-  font-family:'Inter',sans-serif; font-size:15px; font-weight:800;
+  font-family:'IBM Plex Sans',sans-serif; font-size:15px; font-weight:800;
   color:var(--text);
 }
 .db-chat-badge {
-  font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
+  font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700;
   letter-spacing:1px; color:var(--green);
   background:rgba(0,255,157,.08); border:1px solid rgba(0,255,157,.25);
   padding:3px 9px; border-radius:100px;
@@ -464,7 +464,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   box-shadow:0 4px 20px rgba(201,168,76,.3);
 }
 .ia-empty-title {
-  font-family:'Inter',sans-serif; font-size:1.4rem; font-weight:800;
+  font-family:'IBM Plex Sans',sans-serif; font-size:1.4rem; font-weight:800;
   margin-bottom:8px; letter-spacing:-.03em;
 }
 .ia-empty-sub { font-size:13px; color:var(--muted); line-height:1.65; margin-bottom:20px }
@@ -569,7 +569,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   display: flex; align-items: center; gap: 5px;
   height: 24px; padding: 0 9px; border-radius: 6px;
   background: transparent; border: 1px solid rgba(255,255,255,.07);
-  font-size: 10px; font-family: 'JetBrains Mono',monospace;
+  font-size: 10px; font-family: 'IBM Plex Mono',monospace;
   color: rgba(240,234,214,.25); cursor: pointer; transition: all .15s;
 }
 .ia-pdf-btn:hover { border-color: rgba(201,168,76,.3); color: var(--gold) }
@@ -664,7 +664,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 #dbChatInput {
   width:100%; background:transparent; border:none; outline:none;
-  font-family:'Inter',sans-serif; font-size:14px; color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:var(--text);
   resize:none; min-height:24px; max-height:160px; overflow-y:auto; line-height:1.55;
 }
 #dbChatInput::placeholder { color:rgba(240,234,214,.3) }
@@ -676,7 +676,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   display:flex; align-items:center; gap:6px; padding:7px 13px;
   border-radius:9px; background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.09); color:var(--muted);
-  font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
+  font-family:'IBM Plex Sans',sans-serif; font-size:12px; font-weight:600;
   cursor:pointer; transition:all .18s; flex-shrink:0;
 }
 .db-input-btn svg { width:13px; height:13px; flex-shrink:0 }
@@ -711,7 +711,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   margin-bottom:24px; padding-bottom:16px;
   border-bottom:1px solid var(--border2);
 }
-.db-overlay-title { font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:800 }
+.db-overlay-title { font-family:'IBM Plex Sans',sans-serif; font-size:1.2rem; font-weight:800 }
 .db-overlay-close {
   width:32px; height:32px; border-radius:50%;
   background:rgba(255,255,255,.05); border:1px solid var(--border2);
@@ -733,7 +733,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .module-next-btn { position:absolute; bottom:28px; right:28px; z-index:20; height:48px; min-width:48px; border-radius:100px; background:linear-gradient(135deg,var(--gold),#A07830); border:none; color:#040A14; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 24px rgba(201,168,76,.4); transition:all .3s; padding:0 20px }
 .module-next-btn.arrow-only { min-width:48px; width:48px; border-radius:50%; padding:0 }
 .module-next-btn:hover { transform:scale(1.07); box-shadow:0 6px 32px rgba(201,168,76,.6) }
-.module-next-btn .mnb-label { font-family:'Inter',sans-serif; font-weight:800; font-size:13px; white-space:nowrap; color:#040A14 }
+.module-next-btn .mnb-label { font-family:'IBM Plex Sans',sans-serif; font-weight:800; font-size:13px; white-space:nowrap; color:#040A14 }
 
 /* ════════════════════════════════════════
    COMPRAR CRÉDITOS MODAL
@@ -745,15 +745,15 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .bcm-card::before { content:''; position:absolute; top:0; left:20%; right:20%; height:1px; background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent) }
 .bcm-close { position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.05); border:1px solid var(--border2); color:var(--muted); font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s }
 .bcm-close:hover { background:rgba(255,59,92,.1); color:var(--red) }
-.bcm-title { font-family:'Inter',sans-serif; font-size:20px; font-weight:800; margin-bottom:6px; text-align:center }
+.bcm-title { font-family:'IBM Plex Sans',sans-serif; font-size:20px; font-weight:800; margin-bottom:6px; text-align:center }
 .bcm-sub { font-size:13px; color:var(--muted); text-align:center; margin-bottom:22px; line-height:1.6 }
 .bcm-packs { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px }
 .bcm-pack { background:rgba(255,255,255,.03); border:2px solid var(--border2); border-radius:14px; padding:16px 10px; text-align:center; cursor:pointer; transition:all .2s }
 .bcm-pack:hover,.bcm-pack.selected { border-color:rgba(201,168,76,.5); background:rgba(201,168,76,.07) }
-.bcm-pack-credits { font-family:'Inter',sans-serif; font-size:24px; font-weight:800; color:var(--gold2) }
-.bcm-pack-label { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); margin:2px 0 }
+.bcm-pack-credits { font-family:'IBM Plex Sans',sans-serif; font-size:24px; font-weight:800; color:var(--gold2) }
+.bcm-pack-label { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); margin:2px 0 }
 .bcm-pack-price { font-size:13px; font-weight:700; color:var(--text) }
-.bcm-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--gold),#A07830); border:none; border-radius:12px; font-family:'Inter',sans-serif; font-weight:800; font-size:14px; color:#040A14; cursor:pointer; transition:all .3s; box-shadow:0 0 20px rgba(201,168,76,.2) }
+.bcm-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--gold),#A07830); border:none; border-radius:12px; font-family:'IBM Plex Sans',sans-serif; font-weight:800; font-size:14px; color:#040A14; cursor:pointer; transition:all .3s; box-shadow:0 0 20px rgba(201,168,76,.2) }
 .bcm-btn:hover { transform:translateY(-2px); box-shadow:0 0 36px rgba(201,168,76,.4) }
 .bcm-error { color:var(--red); font-size:12px; text-align:center; margin-top:10px; display:none }
 
@@ -787,7 +787,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 /* ════ PATRIMÔNIO TABS ════ */
 .pat-tab {
   padding:9px 16px; border:none; background:none;
-  color:var(--muted); font-family:'Inter',sans-serif;
+  color:var(--muted); font-family:'IBM Plex Sans',sans-serif;
   font-size:12px; font-weight:500; cursor:pointer;
   border-bottom:2px solid transparent; margin-bottom:-1px;
   transition:all .18s;
@@ -795,7 +795,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .pat-tab:hover { color:var(--text) }
 .pat-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
 .pat-section-label {
-  font-family:'JetBrains Mono',monospace; font-size:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
   color:var(--gold); letter-spacing:1.2px; text-transform:uppercase;
   margin-bottom:10px;
 }
@@ -806,7 +806,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .pat-input {
   width:100%; background:var(--surface); border:1px solid var(--border2);
   border-radius:8px; padding:9px 11px; color:var(--text);
-  font-family:'Inter',sans-serif; font-size:13px; outline:none;
+  font-family:'IBM Plex Sans',sans-serif; font-size:13px; outline:none;
   transition:border-color .18s;
 }
 .pat-input:focus { border-color:rgba(201,168,76,.35) }
@@ -821,14 +821,14 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .pat-add-btn {
   padding:7px 14px; background:rgba(201,168,76,.08);
   border:1px solid rgba(201,168,76,.22); border-radius:8px;
-  color:var(--gold2); font-family:'Inter',sans-serif;
+  color:var(--gold2); font-family:'IBM Plex Sans',sans-serif;
   font-size:12px; font-weight:600; cursor:pointer; transition:all .18s;
 }
 .pat-add-btn:hover { background:rgba(201,168,76,.15) }
 .pat-table { width:100%; border-collapse:collapse; font-size:12px }
 .pat-table th {
   text-align:left; padding:8px 12px;
-  font-family:'JetBrains Mono',monospace; font-size:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
   color:var(--muted); letter-spacing:.8px; text-transform:uppercase;
   border-bottom:1px solid var(--border2); font-weight:500;
 }
@@ -837,7 +837,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .pat-table tr:hover td { background:rgba(255,255,255,.025) }
 .pat-table input {
   background:transparent; border:none; outline:none;
-  color:var(--text); font-family:'Inter',sans-serif; font-size:12px; width:100%;
+  color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-size:12px; width:100%;
   border-bottom:1px solid transparent; padding:2px 0; transition:border-color .15s;
 }
 .pat-table input:focus { border-bottom-color:rgba(201,168,76,.4) }
@@ -857,11 +857,11 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   border:1px solid var(--border2); border-radius:10px; margin-bottom:8px;
 }
 .al-item-ticker {
-  font-family:'JetBrains Mono',monospace; font-size:12px;
+  font-family:'IBM Plex Mono',monospace; font-size:12px;
   font-weight:600; color:var(--gold2); min-width:56px;
 }
 .al-item-cond { font-size:12px; color:var(--muted); flex:1 }
-.al-item-price { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; color:var(--text) }
+.al-item-price { font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--text) }
 .al-item-email { font-size:11px; color:var(--muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .al-item-del { background:none; border:none; color:rgba(255,59,92,.4); cursor:pointer; font-size:13px; transition:color .15s; margin-left:auto }
 .al-item-del:hover { color:var(--red) }
@@ -1067,7 +1067,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           <span class="db-online-dot"></span>
         </div>
         <div class="db-chat-header-right">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold)">⚡ <span id="headerCreditsNum">50</span></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)">⚡ <span id="headerCreditsNum">50</span></span>
           <button class="db-header-btn" onclick="exportChatPDF()" title="Exportar PDF">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             PDF
@@ -1193,22 +1193,22 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           <div class="wc-card" style="--card-accent:rgba(201,168,76,.3)">
             <div class="wc-card-tag" style="color:var(--muted)">Pagamento único</div>
             <h3 class="wc-card-title">Experiência B3Alpha</h3>
-            <p style="font-size:2.2rem;font-family:'Inter',sans-serif;font-weight:800;margin:10px 0 4px">R$49<small style="font-size:1rem">,90</small></p>
+            <p style="font-size:2.2rem;font-family:'IBM Plex Sans',sans-serif;font-weight:800;margin:10px 0 4px">R$49<small style="font-size:1rem">,90</small></p>
             <p class="wc-card-sub">30 dias completos · Sem renovação automática</p>
             <button class="db-input-btn" style="width:100%;justify-content:center;margin-top:10px" id="trialBtn" onclick="activateTrial()">Começar experiência →</button>
           </div>
           <div class="wc-card" style="--card-accent:rgba(201,168,76,.5);border-color:rgba(201,168,76,.3);position:relative">
-            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;white-space:nowrap;font-weight:700">✦ Mais Popular</div>
+            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:4px 14px;border-radius:100px;white-space:nowrap;font-weight:700">✦ Mais Popular</div>
             <div class="wc-card-tag" style="color:var(--gold)">Mensal</div>
             <h3 class="wc-card-title">B3Alpha Pro</h3>
-            <p style="font-size:2.2rem;font-family:'Inter',sans-serif;font-weight:800;margin:10px 0 4px">R$29<small style="font-size:1rem">,90</small></p>
+            <p style="font-size:2.2rem;font-family:'IBM Plex Sans',sans-serif;font-weight:800;margin:10px 0 4px">R$29<small style="font-size:1rem">,90</small></p>
             <p class="wc-card-sub">Acesso contínuo · Cancele quando quiser</p>
             <button class="wc-send-btn" style="width:100%;border-radius:10px;height:40px;margin-top:10px" id="monthlyBtn" onclick="subscribePlan('price_1TRAg73lJp1Nui7cMG1f35H2','monthly')">Assinar Pro →</button>
           </div>
           <div class="wc-card" style="--card-accent:rgba(0,255,157,.3)">
             <div class="wc-card-tag" style="color:var(--green)">Anual · Melhor valor</div>
             <h3 class="wc-card-title">B3Alpha Annual</h3>
-            <p style="font-size:2.2rem;font-family:'Inter',sans-serif;font-weight:800;margin:10px 0 4px">R$23<small style="font-size:1rem">,90<small style="font-size:.65rem">/mês</small></small></p>
+            <p style="font-size:2.2rem;font-family:'IBM Plex Sans',sans-serif;font-weight:800;margin:10px 0 4px">R$23<small style="font-size:1rem">,90<small style="font-size:.65rem">/mês</small></small></p>
             <p class="wc-card-sub">R$286,80/ano · Economize R$71,80</p>
             <button class="db-input-btn" style="width:100%;justify-content:center;margin-top:10px;border-color:rgba(0,255,157,.3);color:var(--green)" id="annualBtn" onclick="subscribePlan('price_1TRAgO3lJp1Nui7cOjp4JcR0','annual')">Quero o Annual →</button>
           </div>
@@ -1227,19 +1227,19 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
         <!-- 4 cards resumo -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
           <div style="background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:14px 16px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Patrimônio Total</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Patrimônio Total</div>
             <div style="font-size:1.35rem;font-weight:800;color:var(--text)" id="patResumoTotal">R$ 0,00</div>
           </div>
           <div style="background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:14px 16px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Renda Mensal</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Renda Mensal</div>
             <div style="font-size:1.35rem;font-weight:800;color:var(--green)" id="patResumoEntradas">R$ 0,00</div>
           </div>
           <div style="background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:14px 16px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Gastos Mensais</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Gastos Mensais</div>
             <div style="font-size:1.35rem;font-weight:800;color:var(--red)" id="patResumoSaidas">R$ 0,00</div>
           </div>
           <div style="background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:14px 16px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Líquido Mensal</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Líquido Mensal</div>
             <div style="font-size:1.35rem;font-weight:800;color:var(--gold)" id="patResumoLiquido">R$ 0,00</div>
           </div>
         </div>
@@ -1363,7 +1363,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
         </div>
 
         <div style="margin-top:24px;display:flex;align-items:center;gap:12px">
-          <button onclick="saveProfileData()" id="saveProfileBtn" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;padding:13px 32px;border-radius:10px;font-family:'Inter',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.3)">Salvar meu perfil →</button>
+          <button onclick="saveProfileData()" id="saveProfileBtn" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;padding:13px 32px;border-radius:10px;font-family:'IBM Plex Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.3)">Salvar meu perfil →</button>
           <span id="saveProfileStatus" style="font-size:12px;color:var(--muted)"></span>
         </div>
       </div>
@@ -1377,18 +1377,18 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
         </div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:24px">Receba um email quando um ativo atingir o preço alvo.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:540px">
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'Space Mono',monospace">TICKER</label><input id="alTicker" placeholder="ex: VALE3" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none"></div>
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'Space Mono',monospace">CONDIÇÃO</label>
+          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">TICKER</label><input id="alTicker" placeholder="ex: VALE3" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none"></div>
+          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">CONDIÇÃO</label>
             <select id="alCondition" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none">
               <option value="price_equal">Atingir preço</option>
               <option value="price_above">Subir acima de</option>
               <option value="price_below">Cair abaixo de</option>
             </select>
           </div>
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'Space Mono',monospace">PREÇO ALVO (R$)</label><input id="alTarget" type="number" placeholder="ex: 78.00" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none"></div>
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'Space Mono',monospace">EMAIL</label><input id="alEmail" type="email" placeholder="seu@email.com" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none"></div>
+          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">PREÇO ALVO (R$)</label><input id="alTarget" type="number" placeholder="ex: 78.00" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none"></div>
+          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">EMAIL</label><input id="alEmail" type="email" placeholder="seu@email.com" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none"></div>
         </div>
-        <button onclick="createAlertaSimple()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;padding:12px 28px;border-radius:10px;font-family:'Inter',sans-serif;font-weight:800;font-size:14px;cursor:pointer;margin-top:16px">Criar alerta →</button>
+        <button onclick="createAlertaSimple()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;padding:12px 28px;border-radius:10px;font-family:'IBM Plex Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;margin-top:16px">Criar alerta →</button>
         <div id="alList" style="margin-top:24px"></div>
       </div>
     </div>
@@ -2041,9 +2041,9 @@ function renderAlertas() {
       <span class="al-item-cond">${a.condLabel}</span>
       ${a.cond !== 'dividend_announced' ? `<span class="al-item-price">R$ ${a.target.toFixed(2).replace('.',',')}</span>` : '<span class="al-item-price">—</span>'}
       <span class="al-item-email">📧 ${a.email}</span>
-      <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">${a.createdAt}</span>
+      <span style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace">${a.createdAt}</span>
       <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
-        <span style="font-size:10px;color:var(--green);background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);padding:2px 8px;border-radius:100px;font-family:'JetBrains Mono',monospace">● ativo</span>
+        <span style="font-size:10px;color:var(--green);background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);padding:2px 8px;border-radius:100px;font-family:'IBM Plex Mono',monospace">● ativo</span>
         <button class="al-item-del" onclick="cancelAlerta(${a.id})">✕</button>
       </div>
     </div>
