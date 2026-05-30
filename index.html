@@ -199,6 +199,190 @@ footer a:hover{color:var(--gold)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes scrollTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* ════ DEMO IA — IPHONE SECTION ════ */
+#demo-ia{
+  padding:120px 40px;
+  display:flex;align-items:center;justify-content:center;
+  gap:80px;max-width:1160px;margin:0 auto;
+  position:relative;
+}
+.demo-left{flex:1;min-width:0;max-width:500px}
+.demo-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  color:var(--gold2);text-transform:uppercase;margin-bottom:20px;
+}
+.demo-label .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.demo-h2{
+  font-family:'IBM Plex Sans',sans-serif;font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:20px;
+}
+.demo-h2 em{font-style:normal;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.demo-sub{font-size:16px;color:var(--muted);line-height:1.72;margin-bottom:36px;max-width:420px}
+.demo-features{display:flex;flex-direction:column;gap:14px;margin-bottom:40px}
+.demo-feat{
+  display:flex;align-items:center;gap:12px;
+  font-size:14px;color:rgba(240,234,214,.8);
+}
+.demo-feat .feat-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;
+}
+.demo-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:12px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
+  color:#040A14;font-weight:700;font-size:15px;
+  border:none;cursor:pointer;transition:all .2s;
+  text-decoration:none;
+}
+.demo-cta:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,.35)}
+
+/* iPhone mockup */
+.demo-right{flex-shrink:0;display:flex;align-items:center;justify-content:center;perspective:1200px}
+.iph-float{
+  transform:translateY(80px) scale(.92);opacity:0;
+  transition:transform 1.1s cubic-bezier(.22,1,.36,1),opacity 1.1s cubic-bezier(.22,1,.36,1);
+}
+.iph-float.phone-visible{
+  opacity:1;transform:translateY(0) scale(1);
+}
+.iph-float.phone-floating{
+  animation:iphFloat 6s ease-in-out infinite;
+}
+@keyframes iphFloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-8px) scale(1)}
+}
+.iph-body{
+  width:280px;height:570px;border-radius:48px;
+  background:linear-gradient(160deg,#1a1a2e 0%,#0d0d1a 60%,#1a1428 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(255,255,255,.12),
+    0 0 0 3px rgba(0,0,0,.6),
+    0 30px 80px rgba(0,0,0,.7),
+    0 0 60px rgba(201,168,76,.08),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+/* Power button */
+.iph-body::before{
+  content:'';position:absolute;right:-2px;top:120px;
+  width:3px;height:60px;background:#1a1a2e;border-radius:0 4px 4px 0;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.1);
+}
+/* Volume buttons */
+.iph-body::after{
+  content:'';position:absolute;left:-2px;top:100px;
+  width:3px;height:40px;background:#1a1a2e;border-radius:4px 0 0 4px;
+  box-shadow:0 70px 0 rgba(255,255,255,.06),inset 0 0 0 1.5px rgba(255,255,255,.1);
+}
+/* Dynamic Island */
+.iph-island{
+  width:110px;height:30px;background:#000;border-radius:0 0 18px 18px;
+  margin:0 auto 0;flex-shrink:0;
+  position:relative;z-index:2;
+}
+/* Glare overlay */
+.iph-glare{
+  position:absolute;inset:0;border-radius:48px;
+  background:linear-gradient(135deg,rgba(255,255,255,.07) 0%,transparent 50%,rgba(255,255,255,.02) 100%);
+  pointer-events:none;z-index:10;
+}
+.iph-screen{
+  flex:1;display:flex;flex-direction:column;
+  background:#0a0e1a;overflow:hidden;
+}
+
+/* Chat inside phone */
+.iph-chat-header{
+  display:flex;align-items:center;gap:9px;
+  padding:10px 16px 8px;
+  background:rgba(8,14,28,.95);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+.iph-chat-header svg{width:20px;height:20px;flex-shrink:0}
+.iph-header-info{flex:1;min-width:0}
+.iph-header-name{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;color:#F0EAD6;line-height:1.2}
+.iph-header-status{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--green);font-family:'IBM Plex Mono',monospace}
+.iph-header-status .dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.iph-msgs{
+  flex:1;overflow:hidden;
+  padding:10px 10px 6px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.iph-bubble{
+  max-width:82%;padding:8px 11px;border-radius:14px;
+  font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;line-height:1.5;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.iph-bubble.visible{opacity:1;transform:translateY(0)}
+.iph-bubble.user-b{
+  align-self:flex-end;
+  background:rgba(201,168,76,.18);
+  border:1px solid rgba(201,168,76,.3);
+  color:#F0EAD6;border-bottom-right-radius:4px;
+}
+.iph-bubble.ai-b{
+  align-self:flex-start;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.09);
+  color:rgba(240,234,214,.9);border-bottom-left-radius:4px;
+}
+.iph-typing{
+  align-self:flex-start;
+  display:flex;align-items:center;gap:4px;
+  padding:8px 12px;border-radius:14px;border-bottom-left-radius:4px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+  opacity:0;transform:translateY(12px);
+  transition:opacity .3s,transform .3s;
+}
+.iph-typing.visible{opacity:1;transform:translateY(0)}
+.iph-typing span{
+  width:5px;height:5px;border-radius:50%;background:rgba(240,234,214,.5);
+  animation:typingDot 1.2s infinite;
+}
+.iph-typing span:nth-child(2){animation-delay:.2s}
+.iph-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typingDot{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}}
+
+.iph-input-bar{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 10px 10px;
+  background:rgba(8,14,28,.95);
+  border-top:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+.iph-inp{
+  flex:1;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);border-radius:18px;
+  padding:7px 12px;font-size:10px;font-family:'IBM Plex Sans',sans-serif;
+  color:rgba(240,234,214,.5);pointer-events:none;
+}
+.iph-send{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;
+  border:none;pointer-events:none;
+}
+.iph-send svg{width:12px;height:12px}
+
+/* Section responsive */
+@media(max-width:960px){
+  #demo-ia{flex-direction:column;gap:56px;padding:80px 24px}
+  .demo-left{max-width:100%}
+}
+@media(max-width:600px){
+  .iph-body{width:240px;height:490px;border-radius:40px}
+  .iph-island{width:90px}
+  .iph-float.phone-floating{animation-name:iphFloatMob}
+  @keyframes iphFloatMob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+}
+
 /* ════ HAMBURGER / MOBILE NAV ════ */
 .nav-hamburger{display:none;width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:var(--text);font-size:19px;cursor:pointer;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
 .nav-hamburger:hover{background:rgba(255,255,255,.1)}
@@ -549,6 +733,64 @@ footer a:hover{color:var(--gold)}
     <div class="sp-stat"><div class="sp-num">24h</div><div class="sp-label">IA disponível todo dia</div></div>
   </div>
 </div>
+
+<!-- DEMO IA -->
+<section class="section" style="overflow:visible;padding:0">
+  <div id="demo-ia">
+    <!-- Left content -->
+    <div class="demo-left">
+      <div class="demo-label"><span class="dot"></span>Demo ao Vivo</div>
+      <h2 class="demo-h2">Veja a <em>B3Alpha</em><br>em ação</h2>
+      <p class="demo-sub">Converse com nossa IA especializada no mercado brasileiro. Análise de ações, FIIs, renda fixa e muito mais — em tempo real.</p>
+      <div class="demo-features">
+        <div class="demo-feat"><div class="feat-icon">📈</div>Cotações e análises em tempo real</div>
+        <div class="demo-feat"><div class="feat-icon">🏠</div>Fundos imobiliários com DY calculado</div>
+        <div class="demo-feat"><div class="feat-icon">💡</div>Recomendações personalizadas por perfil</div>
+        <div class="demo-feat"><div class="feat-icon">🔔</div>Alertas de preço automáticos por email</div>
+      </div>
+      <button class="demo-cta" onclick="showPage('register')">
+        Começar gratuitamente
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <!-- Right: iPhone mockup -->
+    <div class="demo-right">
+      <div class="iph-float" id="iphFloat">
+        <div class="iph-body">
+          <div class="iph-island"></div>
+          <div class="iph-glare"></div>
+          <div class="iph-screen">
+            <!-- Chat header -->
+            <div class="iph-chat-header">
+              <svg viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z
+                     M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84
+                     L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z
+                     M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z"
+                  fill="rgba(201,168,76,0.85)"/>
+              </svg>
+              <div class="iph-header-info">
+                <div class="iph-header-name">B3Alpha</div>
+                <div class="iph-header-status"><span class="dot"></span>Online</div>
+              </div>
+            </div>
+            <!-- Messages area -->
+            <div class="iph-msgs" id="iphMsgs"></div>
+            <!-- Input bar -->
+            <div class="iph-input-bar">
+              <div class="iph-inp">Pergunte sobre investimentos...</div>
+              <div class="iph-send">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#040A14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- DEPOIMENTOS -->
 <section class="section" id="depoimentos">
@@ -1917,6 +2159,125 @@ checkSession();
 _loadOverview();
 setInterval(_loadOverview,60000);
 setInterval(_loadTickerBrapi,90000);
+</script>
+
+<script>
+/* ── Demo IA iPhone animation ── */
+(function(){
+  const CHAT = [
+    { type:'user',  text:'Chat, me atualiza o preço da VALE3.' },
+    { type:'ai',    text:'VALE3 está sendo negociada a R$ 68,42. Variação do dia: <strong>+1,83%</strong> 📈<br>Volume financeiro acima da média dos últimos 30 dias.' },
+    { type:'user',  text:'Quais FIIs você recomenda para começar?' },
+    { type:'ai',    text:'Alguns FIIs sólidos para iniciantes:<br><strong>MXRF11 • HGLG11 • KNRI11 • XPLG11</strong><br>Posso detalhar o DY e risco de cada um.' },
+  ];
+
+  let _seq = null;
+  let _running = false;
+
+  function makeBubble(msg){
+    const el = document.createElement('div');
+    el.className = 'iph-bubble ' + (msg.type === 'user' ? 'user-b' : 'ai-b');
+    el.innerHTML = msg.text;
+    return el;
+  }
+
+  function makeTyping(){
+    const el = document.createElement('div');
+    el.className = 'iph-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    return el;
+  }
+
+  function clearChat(){
+    const c = document.getElementById('iphMsgs');
+    if(c) c.innerHTML = '';
+  }
+
+  function runChat(){
+    clearChat();
+    _running = true;
+    const c = document.getElementById('iphMsgs');
+    if(!c){ _running = false; return; }
+
+    const timers = [];
+    let t = 600;
+
+    CHAT.forEach((msg, i) => {
+      if(msg.type === 'ai'){
+        // show typing first
+        timers.push(setTimeout(() => {
+          if(!_running) return;
+          const typing = makeTyping();
+          c.appendChild(typing);
+          c.scrollTop = c.scrollHeight;
+          setTimeout(() => { if(typing.parentNode) typing.classList.add('visible'); }, 30);
+
+          timers.push(setTimeout(() => {
+            if(!_running) return;
+            if(typing.parentNode) typing.parentNode.removeChild(typing);
+            const bubble = makeBubble(msg);
+            c.appendChild(bubble);
+            c.scrollTop = c.scrollHeight;
+            setTimeout(() => { if(bubble.parentNode) bubble.classList.add('visible'); }, 30);
+            c.scrollTop = c.scrollHeight;
+          }, 1100));
+        }, t));
+        t += 1900;
+      } else {
+        timers.push(setTimeout(() => {
+          if(!_running) return;
+          const bubble = makeBubble(msg);
+          c.appendChild(bubble);
+          c.scrollTop = c.scrollHeight;
+          setTimeout(() => { if(bubble.parentNode) bubble.classList.add('visible'); }, 30);
+          c.scrollTop = c.scrollHeight;
+        }, t));
+        t += 800;
+      }
+    });
+
+    _seq = timers;
+  }
+
+  function stopChat(){
+    _running = false;
+    if(_seq){ _seq.forEach(id => clearTimeout(id)); _seq = null; }
+  }
+
+  function enterPhone(){
+    const ph = document.getElementById('iphFloat');
+    if(!ph) return;
+    ph.classList.remove('phone-floating');
+    ph.classList.add('phone-visible');
+    setTimeout(() => { ph.classList.add('phone-floating'); }, 1150);
+    setTimeout(() => { runChat(); }, 700);
+  }
+
+  function exitPhone(){
+    const ph = document.getElementById('iphFloat');
+    if(!ph) return;
+    stopChat();
+    ph.classList.remove('phone-visible','phone-floating');
+  }
+
+  const section = document.getElementById('demo-ia');
+  if(!section) return;
+
+  let _inside = false;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting && !_inside){
+        _inside = true;
+        enterPhone();
+      } else if(!e.isIntersecting && _inside){
+        _inside = false;
+        exitPhone();
+      }
+    });
+  }, { threshold: 0.35 });
+
+  obs.observe(section);
+})();
 </script>
 
 </body>
