@@ -242,67 +242,96 @@ footer a:hover{color:var(--gold)}
 /* iPhone 3D mockup */
 .demo-right{flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .iph-3d-scene{perspective:900px;perspective-origin:50% 45%}
-/* 3D phone container */
+/* 3D phone container — 20px de espessura */
 .iph-3d-phone{
   position:relative;width:280px;height:570px;
   transform-style:preserve-3d;
   opacity:0;
-  transform:rotateY(-25deg) rotateX(6deg) translateY(80px);
+  transform:rotateY(22deg) rotateX(6deg) translateY(80px);
   transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);
   will-change:transform,opacity;
 }
-.iph-3d-phone.phone-visible{opacity:1;transform:rotateY(-25deg) rotateX(6deg) translateY(0)}
+.iph-3d-phone.phone-visible{opacity:1;transform:rotateY(22deg) rotateX(6deg) translateY(0)}
 /* Back face */
 .iph-face-back{
   position:absolute;inset:0;border-radius:48px;
-  background:linear-gradient(160deg,#101018 0%,#07070f 60%,#0e0e18 100%);
-  transform:translateZ(-6px);backface-visibility:hidden;overflow:hidden;
-  box-shadow:inset 0 0 40px rgba(0,0,0,.5);
+  background:linear-gradient(160deg,#0e0e1c 0%,#07070d 60%,#0c0c1a 100%);
+  transform:translateZ(-10px);backface-visibility:hidden;overflow:hidden;
 }
 .iph-face-back::before{
-  content:'';position:absolute;top:26px;left:20px;width:68px;height:68px;border-radius:20px;
-  background:linear-gradient(135deg,#181826,#090914);
-  box-shadow:0 0 0 1.5px rgba(255,255,255,.07),inset 0 0 16px rgba(0,0,0,.6);
+  content:'';position:absolute;top:26px;right:20px;width:72px;height:72px;border-radius:22px;
+  background:linear-gradient(135deg,#16162a,#080812);
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.06),inset 0 0 16px rgba(0,0,0,.7);
 }
 .iph-face-back::after{
-  content:'';position:absolute;top:36px;left:28px;width:22px;height:22px;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,#1e1e32,#050510);
-  box-shadow:0 0 0 2px rgba(255,255,255,.1),0 0 0 4px rgba(0,0,0,.5),32px 0 0 rgba(255,255,255,.05),32px 0 0 1px rgba(0,0,0,.6);
+  content:'';position:absolute;top:38px;right:28px;width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#1c1c30,#040410);
+  box-shadow:0 0 0 2px rgba(255,255,255,.09),0 0 0 4px rgba(0,0,0,.5),30px 0 0 rgba(255,255,255,.04),30px 0 0 1px rgba(0,0,0,.6);
 }
-/* Side edges — 12px phone thickness */
-.iph-edge-right{
-  position:absolute;top:0;right:0;width:12px;height:570px;
-  background:linear-gradient(to left,#04040e,#14142a);
-  transform-origin:right center;transform:rotateY(90deg);
-  backface-visibility:hidden;border-radius:0 10px 10px 0;
-}
-.iph-edge-right::before{
-  content:'';position:absolute;top:108px;left:2px;width:4px;height:34px;
-  background:#1c1c30;border-radius:2px;
-  box-shadow:0 48px 0 #1c1c30,0 84px 0 #1c1c30;
-}
+/* Arestas — 20px de espessura */
+/* Aresta esquerda (VISÍVEL — volume buttons) */
 .iph-edge-left{
-  position:absolute;top:0;left:0;width:12px;height:570px;
-  background:linear-gradient(to right,#04040e,#14142a);
-  transform-origin:left center;transform:rotateY(-90deg);
-  backface-visibility:hidden;border-radius:10px 0 0 10px;
+  position:absolute;top:0;left:0;width:20px;height:570px;
+  background:linear-gradient(to right,
+    rgba(255,255,255,.05) 0%,
+    #1a1a2e 20%,
+    #141428 60%,
+    #0d0d1e 100%);
+  transform-origin:left center;transform:rotateY(90deg);
+  backface-visibility:hidden;border-radius:12px 0 0 12px;
 }
+/* Volume buttons na aresta esquerda */
+.iph-edge-left::before{
+  content:'';position:absolute;
+  top:108px;right:3px;
+  width:5px;height:38px;
+  background:linear-gradient(to bottom,#252540,#1a1a30);
+  border-radius:0 3px 3px 0;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.12),
+    0 56px 0 #1a1a30,
+    0 56px 0 1px rgba(255,255,255,.12),
+    0 98px 0 #1a1a30,
+    0 98px 0 1px rgba(255,255,255,.12);
+}
+/* Aresta direita */
+.iph-edge-right{
+  position:absolute;top:0;right:0;width:20px;height:570px;
+  background:linear-gradient(to left,
+    rgba(255,255,255,.03) 0%,
+    #141428 30%,
+    #0d0d1e 100%);
+  transform-origin:right center;transform:rotateY(-90deg);
+  backface-visibility:hidden;border-radius:0 12px 12px 0;
+}
+/* Botão power na aresta direita */
+.iph-edge-right::before{
+  content:'';position:absolute;
+  top:118px;left:3px;
+  width:5px;height:58px;
+  background:linear-gradient(to bottom,#252540,#1a1a30);
+  border-radius:3px 0 0 3px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1);
+}
+/* Aresta topo */
 .iph-edge-top{
-  position:absolute;top:0;left:0;width:280px;height:12px;
-  background:linear-gradient(to bottom,#04040e,#14142a);
+  position:absolute;top:0;left:0;width:280px;height:20px;
+  background:linear-gradient(to bottom,rgba(255,255,255,.04),#14142a);
   transform-origin:center top;transform:rotateX(90deg);
-  backface-visibility:hidden;border-radius:10px 10px 0 0;
+  backface-visibility:hidden;border-radius:12px 12px 0 0;
 }
+/* Aresta base */
 .iph-edge-bottom{
-  position:absolute;bottom:0;left:0;width:280px;height:12px;
-  background:linear-gradient(to top,#04040e,#14142a);
+  position:absolute;bottom:0;left:0;width:280px;height:20px;
+  background:linear-gradient(to top,rgba(255,255,255,.02),#14142a);
   transform-origin:center bottom;transform:rotateX(-90deg);
-  backface-visibility:hidden;border-radius:0 0 10px 10px;
+  backface-visibility:hidden;border-radius:0 0 12px 12px;
 }
+/* Porta USB-C na base */
 .iph-edge-bottom::before{
-  content:'';position:absolute;top:3px;left:50%;transform:translateX(-50%);
-  width:36px;height:5px;background:#09090f;border-radius:3px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.07);
+  content:'';position:absolute;top:4px;left:50%;transform:translateX(-50%);
+  width:34px;height:8px;background:#08080e;border-radius:4px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),inset 0 2px 4px rgba(0,0,0,.8);
 }
 /* Front face */
 .iph-body{
@@ -313,7 +342,7 @@ footer a:hover{color:var(--gold)}
     0 0 0 3px rgba(0,0,0,.5),
     0 40px 100px rgba(0,0,0,.85),
     0 0 80px rgba(201,168,76,.1);
-  transform:translateZ(6px);overflow:hidden;
+  transform:translateZ(10px);overflow:hidden;
   display:flex;flex-direction:column;backface-visibility:hidden;
 }
 .iph-body::before{
@@ -393,8 +422,8 @@ footer a:hover{color:var(--gold)}
   .demo-left{max-width:100%}
 }
 @media(max-width:600px){
-  .iph-3d-phone{width:240px;height:490px;transform:rotateY(-18deg) rotateX(4deg) translateY(80px)}
-  .iph-3d-phone.phone-visible{transform:rotateY(-18deg) rotateX(4deg) translateY(0)}
+  .iph-3d-phone{width:240px;height:490px;transform:rotateY(18deg) rotateX(4deg) translateY(80px)}
+  .iph-3d-phone.phone-visible{transform:rotateY(18deg) rotateX(4deg) translateY(0)}
   .iph-body{border-radius:40px}.iph-face-back{border-radius:40px}
   .iph-island{width:90px}
   .iph-edge-right,.iph-edge-left{height:490px}
@@ -2272,7 +2301,7 @@ setInterval(_loadTickerBrapi,90000);
   }
 
   /* ── 3D float + mouse-follow via RAF ── */
-  const _BASE_Y = -25, _BASE_X = 6;
+  const _BASE_Y = 22, _BASE_X = 6;
   let _tarRotY = _BASE_Y, _tarRotX = _BASE_X;
   let _curRotY = _BASE_Y, _curRotX = _BASE_X;
   let _floatT = 0, _rafId = null, _isMob = false;
