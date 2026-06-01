@@ -157,9 +157,21 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .db-sb-conv-item .conv-title { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .db-sb-conv-item .conv-del {
   display:none; background:none; border:none; color:var(--red);
-  cursor:pointer; font-size:11px; padding:2px 4px; opacity:.6;
+  cursor:pointer; font-size:11px; padding:2px 4px; opacity:.6; flex-shrink:0;
 }
-.db-sb-conv-item:hover .conv-del { display:block }
+.db-sb-conv-item .conv-rename {
+  display:none; background:none; border:none; color:var(--muted);
+  cursor:pointer; font-size:11px; padding:2px 4px; opacity:.55; flex-shrink:0;
+  line-height:1;
+}
+.db-sb-conv-item:hover .conv-del,
+.db-sb-conv-item:hover .conv-rename { display:block }
+.conv-title-input {
+  flex:1; background:rgba(201,168,76,0.08);
+  border:1px solid rgba(201,168,76,0.35); border-radius:4px;
+  color:var(--text); font-size:12px; font-family:'IBM Plex Sans',sans-serif;
+  padding:2px 6px; outline:none; min-width:0; width:100%;
+}
 
 .db-sb-user {
   display:flex; align-items:center; gap:9px;
@@ -1998,6 +2010,15 @@ function _convTitle(msgs) {
   if(!f) return 'Nova conversa';
   return f.content.replace(/<[^>]+>/g,'').slice(0,38) + (f.content.length>38?'…':'');
 }
+function _persistConvs() {
+  try { localStorage.setItem('b3alpha_convs', JSON.stringify(_convs.slice(0,60))); } catch(_) {}
+}
+function _loadConvs() {
+  try {
+    const saved = localStorage.getItem('b3alpha_convs');
+    if(saved) { _convs = JSON.parse(saved); _renderConvsList(); }
+  } catch(_) {}
+}
 function _saveCurrentConv() {
   if(!chatHistory.length) return;
   if(_activeConvId) {
@@ -2007,17 +2028,19 @@ function _saveCurrentConv() {
     const nc = {id:_genId(), title:_convTitle(chatHistory), messages:chatHistory.slice(), createdAt:Date.now(), updatedAt:Date.now()};
     _convs.unshift(nc); _activeConvId = nc.id;
   }
+  _persistConvs();
   _renderConvsList();
 }
 function _renderConvsList() {
   const list = document.getElementById('dbConvsList');
   if(!list) return;
-  if(!_convs.length) { list.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 10px;text-align:center">Nenhuma conversa ainda.</div>'; return; }
+  if(!_convs.length) { list.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:12px 10px;text-align:center">Nenhuma conversa ainda.<br>Comece a conversar!</div>'; return; }
   list.innerHTML = '';
   _convs.forEach(c => {
     const d = document.createElement('div');
     d.className = 'db-sb-conv-item' + (c.id===_activeConvId?' active':'');
-    d.innerHTML = `<span class="conv-dot"></span><span class="conv-title">${escHtml(c.title)}</span><button class="conv-del" onclick="event.stopPropagation();deleteConv('${c.id}')">✕</button>`;
+    d.dataset.convId = c.id;
+    d.innerHTML = `<span class="conv-dot"></span><span class="conv-title" ondblclick="event.stopPropagation();renameConv('${c.id}')">${escHtml(c.title)}</span><button class="conv-rename" title="Renomear" onclick="event.stopPropagation();renameConv('${c.id}')">✏</button><button class="conv-del" onclick="event.stopPropagation();deleteConv('${c.id}')">✕</button>`;
     d.onclick = () => loadConv(c.id);
     list.appendChild(d);
   });
@@ -2036,7 +2059,34 @@ function loadConv(id) {
 function deleteConv(id) {
   _convs = _convs.filter(x=>x.id!==id);
   if(_activeConvId===id) { _activeConvId=null; chatHistory=[]; document.getElementById('dbChatMessages').innerHTML=''; const w=document.getElementById('dbWelcome'); if(w)w.style.display='flex'; }
+  _persistConvs();
   _renderConvsList();
+}
+function renameConv(id) {
+  const item = document.querySelector(`[data-conv-id="${id}"]`);
+  if(!item) return;
+  const titleSpan = item.querySelector('.conv-title');
+  const c = _convs.find(x=>x.id===id);
+  if(!c || !titleSpan) return;
+  const input = document.createElement('input');
+  input.className = 'conv-title-input';
+  input.value = c.title;
+  input.maxLength = 60;
+  titleSpan.replaceWith(input);
+  input.focus(); input.select();
+  const save = () => {
+    const t = input.value.trim();
+    if(t) c.title = t;
+    _persistConvs();
+    _renderConvsList();
+  };
+  input.onblur = save;
+  input.onkeydown = e => {
+    if(e.key==='Enter')  { e.preventDefault(); input.blur(); }
+    if(e.key==='Escape') { input.value = c.title; input.blur(); }
+    e.stopPropagation();
+  };
+  input.onclick = e => e.stopPropagation();
 }
 
 /* ══════════════════════════════════════
@@ -2546,6 +2596,9 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModule(); cl
     if (saved !== null) { _fontIdx = parseInt(saved) || 2; }
   } catch(e) {}
   _applyFontSize();
+
+  /* Restaurar conversas salvas */
+  _loadConvs();
 
   /* Verificar sessão ativa */
   await checkSession();
