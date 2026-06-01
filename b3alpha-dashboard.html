@@ -672,6 +672,45 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   display:flex; align-items:center; gap:6px; margin-top:9px;
   padding-top:8px; border-top:1px solid rgba(255,255,255,.06);
 }
+/* ícone-only para os botões do input */
+.db-input-icon-btn {
+  display:flex; align-items:center; justify-content:center;
+  width:32px; height:32px; border-radius:8px;
+  background:transparent; border:1px solid transparent;
+  color:var(--muted); cursor:pointer; transition:all .18s; flex-shrink:0;
+}
+.db-input-icon-btn:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.1); color:var(--text) }
+.db-input-icon-btn.recording {
+  background:rgba(255,59,92,.12); border-color:rgba(255,59,92,.4); color:var(--red);
+  animation:pulse 1.2s infinite;
+}
+/* Configurações overlay */
+.cfg-section-label {
+  font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); padding:20px 4px 8px;
+}
+.cfg-section-label:first-child { padding-top:4px }
+.cfg-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; border-radius:12px;
+  background:var(--surface); border:1px solid var(--border2);
+  margin-bottom:6px; cursor:pointer; transition:all .15s;
+}
+.cfg-row:hover { background:var(--surface2); border-color:rgba(201,168,76,.25) }
+.cfg-row-nohover { cursor:default }
+.cfg-row-nohover:hover { background:var(--surface); border-color:var(--border2) }
+.cfg-row-danger:hover { border-color:rgba(255,59,92,.35); background:rgba(255,59,92,.06) }
+.cfg-row-icon {
+  width:34px; height:34px; border-radius:9px; flex-shrink:0;
+  background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.15);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+}
+.cfg-row-info { flex:1; min-width:0 }
+.cfg-row-title { font-size:13px; font-weight:600; color:var(--text); line-height:1.3 }
+.cfg-row-sub { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4 }
+.cfg-row-arrow { font-size:18px; color:var(--muted); flex-shrink:0 }
+/* mantido para compatibilidade */
 .db-input-btn {
   display:flex; align-items:center; gap:6px; padding:7px 13px;
   border-radius:9px; background:rgba(255,255,255,.05);
@@ -681,8 +720,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 }
 .db-input-btn svg { width:13px; height:13px; flex-shrink:0 }
 .db-input-btn:hover { background:rgba(255,255,255,.09); color:var(--text) }
-.db-input-btn.upload-btn:hover { border-color:rgba(201,168,76,.35); color:var(--gold2) }
-.db-input-btn.voice-btn:hover  { border-color:rgba(0,255,157,.35); color:var(--green) }
 .db-input-btn.voice-btn.recording {
   background:rgba(255,59,92,.12); border-color:rgba(255,59,92,.4); color:var(--red);
   animation:pulse 1.2s infinite;
@@ -969,30 +1006,9 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
     <!-- Nav -->
     <nav class="db-sb-nav">
-      <button class="db-sb-nav-item" id="navModules" onclick="openDbModule()">
-        <span class="db-sb-nav-icon">◫</span>
-        <span>Módulos</span>
-      </button>
-      <button class="db-sb-nav-item" id="navProfile" onclick="openProfileOverlay()">
-        <span class="db-sb-nav-icon">◎</span>
-        <span>Meu Perfil</span>
-      </button>
-      <button class="db-sb-nav-item" id="navPlans" onclick="openPlansOverlay()">
-        <span class="db-sb-nav-icon">◉</span>
-        <span>Planos</span>
-      </button>
-      <button class="db-sb-nav-item" id="navCredits" onclick="showBuyCreditsModal()">
-        <span class="db-sb-nav-icon">⚡</span>
-        <span>Créditos</span>
-        <span class="nav-badge" id="sideCreditsNum">50</span>
-      </button>
-      <button class="db-sb-nav-item" id="navAlertas" onclick="openAlertasOverlay()">
-        <span class="db-sb-nav-icon">🔔</span>
-        <span>Alertas de Preço</span>
-      </button>
-      <button class="db-sb-nav-item" id="navPatrimonio" onclick="openPatrimonioOverlay()">
-        <span class="db-sb-nav-icon">💼</span>
-        <span>Patrimônio</span>
+      <button class="db-sb-nav-item" onclick="openConfigOverlay()">
+        <span class="db-sb-nav-icon">⚙</span>
+        <span>Configurações</span>
       </button>
     </nav>
 
@@ -1006,18 +1022,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
       </div>
     </div>
 
-    <!-- Configurações de fonte -->
-    <div class="font-size-panel">
-      <span class="font-size-label">Tamanho do texto</span>
-      <div class="font-size-controls">
-        <button class="font-size-btn" onclick="adjustFontSize(-1)" title="Diminuir">−</button>
-        <div class="font-size-track" id="fontTrack" onclick="setFontSizeByClick(event)">
-          <div class="font-size-fill" id="fontFill" style="width:40%"></div>
-        </div>
-        <button class="font-size-btn" onclick="adjustFontSize(1)" title="Aumentar">+</button>
-        <span class="font-size-value" id="fontSizeVal">13px</span>
-      </div>
-    </div>
 
     <!-- User footer -->
     <div class="db-sb-user dh-user" id="dhUser" onclick="toggleDhDropdown(event)">
@@ -1030,10 +1034,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
       <!-- Dropdown -->
       <div class="dh-dropdown" id="dhDropdown">
-        <button class="dh-dd-item" onclick="openProfileOverlay()">◎ Meu Perfil</button>
-        <button class="dh-dd-item" onclick="openPatrimonioOverlay()">💼 Patrimônio</button>
-        <button class="dh-dd-item" onclick="openPlansOverlay()">◉ Planos</button>
-        <button class="dh-dd-item" onclick="showBuyCreditsModal()">⚡ Créditos</button>
+        <button class="dh-dd-item" onclick="openConfigOverlay()">⚙ Configurações</button>
         <div class="dh-dd-divider"></div>
         <button class="dh-dd-item logout" onclick="handleLogout()">↩ Sair</button>
       </div>
@@ -1143,11 +1144,9 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
         </div>
         <div class="db-chat-header-right">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)">⚡ <span id="headerCreditsNum">50</span></span>
-          <button class="db-header-btn" onclick="exportChatPDF()" title="Exportar PDF">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            PDF
+          <button class="db-header-btn" onclick="openConfigOverlay()" title="Configurações">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
-          <button class="db-header-btn" onclick="toggleDhDropdown(event)">⋮</button>
         </div>
       </div>
 
@@ -1186,24 +1185,22 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
             oninput="iaAutoResize(this)" rows="1"></textarea>
 
           <div class="db-input-actions">
-            <!-- Doc / PDF / Imagem -->
-            <label class="db-input-btn upload-btn" title="Enviar documento, imagem ou PDF">
+            <!-- Anexo -->
+            <label class="db-input-icon-btn" title="Anexar documento, imagem ou PDF">
               <input type="file" accept="image/*,.pdf,.csv" style="display:none" onchange="handleFileUpload(this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
               </svg>
-              Doc / PDF
             </label>
 
-            <!-- Voice -->
-            <button class="db-input-btn voice-btn" id="voiceBtn" onclick="toggleVoiceRecording()" title="Mensagem por voz">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <!-- Voz -->
+            <button class="db-input-icon-btn" id="voiceBtn" onclick="toggleVoiceRecording()" title="Mensagem por voz">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
                 <line x1="12" y1="19" x2="12" y2="23"/>
                 <line x1="8" y1="23" x2="16" y2="23"/>
               </svg>
-              Voz
             </button>
 
             <!-- Enviar -->
@@ -1212,6 +1209,98 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
                 <path d="M12 19V5M5 12l7-7 7 7"/>
               </svg>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAY: CONFIGURAÇÕES -->
+    <div class="db-overlay" id="dbConfigOverlay">
+      <div class="db-overlay-inner" style="max-width:540px">
+        <div class="db-overlay-hdr">
+          <div class="db-overlay-title">Configurações</div>
+          <button class="db-overlay-close" onclick="closeOverlays()">✕</button>
+        </div>
+
+        <!-- Conta -->
+        <div class="cfg-section-label">Conta</div>
+        <div class="cfg-row" onclick="closeOverlays();setTimeout(openProfileOverlay,80)">
+          <div class="cfg-row-icon">◎</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Meu Perfil & Patrimônio</div>
+            <div class="cfg-row-sub">Perfil de risco, carteira de ações, FIIs, cripto e renda fixa</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
+        <div class="cfg-row" onclick="closeOverlays();setTimeout(openPlansOverlay,80)">
+          <div class="cfg-row-icon">◉</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Planos</div>
+            <div class="cfg-row-sub">Veja e altere seu plano atual</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
+        <div class="cfg-row" onclick="closeOverlays();setTimeout(showBuyCreditsModal,80)">
+          <div class="cfg-row-icon">⚡</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Créditos</div>
+            <div class="cfg-row-sub"><span id="cfgCreditsNum">50</span> créditos disponíveis — compre mais</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
+
+        <!-- Ferramentas -->
+        <div class="cfg-section-label">Ferramentas IA</div>
+        <div class="cfg-row" onclick="closeOverlays();setTimeout(openDbModule,80)">
+          <div class="cfg-row-icon">◫</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Módulos</div>
+            <div class="cfg-row-sub">Acesse os módulos educacionais da B3Alpha</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
+        <div class="cfg-row" onclick="closeOverlays();setTimeout(openAlertasOverlay,80)">
+          <div class="cfg-row-icon">🔔</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Alertas de Preço</div>
+            <div class="cfg-row-sub">Configure alertas automáticos por email</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
+
+        <!-- Aparência -->
+        <div class="cfg-section-label">Aparência</div>
+        <div class="cfg-row cfg-row-nohover">
+          <div class="cfg-row-icon" style="font-size:13px;font-family:'IBM Plex Mono',monospace;font-weight:700">Aa</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Tamanho do texto</div>
+            <div style="margin-top:10px">
+              <div class="font-size-controls">
+                <button class="font-size-btn" onclick="adjustFontSize(-1)">−</button>
+                <div class="font-size-track" id="fontTrack" onclick="setFontSizeByClick(event)">
+                  <div class="font-size-fill" id="fontFill" style="width:40%"></div>
+                </div>
+                <button class="font-size-btn" onclick="adjustFontSize(1)">+</button>
+                <span class="font-size-value" id="fontSizeVal">13px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cfg-row" onclick="exportChatPDF()">
+          <div class="cfg-row-icon">📄</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Exportar conversa em PDF</div>
+            <div class="cfg-row-sub">Salva a conversa atual como arquivo PDF</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
+
+        <!-- Sessão -->
+        <div class="cfg-section-label">Sessão</div>
+        <div class="cfg-row cfg-row-danger" onclick="handleLogout()">
+          <div class="cfg-row-icon" style="background:rgba(255,59,92,.07);border-color:rgba(255,59,92,.2)">↩</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title" style="color:var(--red)">Sair da conta</div>
           </div>
         </div>
       </div>
@@ -2001,9 +2090,14 @@ async function toggleVoiceRecording() {
    OVERLAYS
 ══════════════════════════════════════ */
 function closeOverlays() {
-  ['dbModulesOverlay','dbPlansOverlay','dbPatrimonioOverlay','dbAlertasOverlay'].forEach(id=>{
+  ['dbConfigOverlay','dbModulesOverlay','dbPlansOverlay','dbPatrimonioOverlay','dbAlertasOverlay'].forEach(id=>{
     document.getElementById(id)?.classList.remove('open');
   });
+}
+function openConfigOverlay() {
+  closeOverlays();
+  document.getElementById('dbConfigOverlay')?.classList.add('open');
+  if(window.innerWidth<=768) closeMobileSidebar();
 }
 function openDbModule()      { closeOverlays(); document.getElementById('dbModulesOverlay')?.classList.add('open') }
 function openProfileOverlay(){ closeOverlays(); document.getElementById('dbPatrimonioOverlay')?.classList.add('open') }
@@ -2059,7 +2153,7 @@ async function buyCredits() {
 }
 function updateCreditsUI() {
   const n = userCredits;
-  ['creditsNum','wcCreditsNum','sideCreditsNum','headerCreditsNum','iaCreditsCount'].forEach(id=>{
+  ['creditsNum','wcCreditsNum','sideCreditsNum','headerCreditsNum','iaCreditsCount','cfgCreditsNum'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.textContent=n;
   });
   const bar = document.getElementById('wcCreditsBar');
