@@ -1805,17 +1805,35 @@ function getPatrimonioContext() {
    BLUEPRINT IA — edge function
 ══════════════════════════════════════ */
 async function callBlueprintIA(message, history, attachedFile) {
+  // Ensure we have a valid session before calling the edge function
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (!session) {
+    throw new Error('sessao_expirada');
+  }
+
   const body = {
     message,
     history: history.slice(-10),
     patrimonioContext: getPatrimonioContext(),
-    userId: _currentUser?.id || null
+    userId: session.user.id
   };
   if (attachedFile) {
-    body.image = { base64: attachedFile.base64, mediaType: attachedFile.mediaType };
+    body.imageData = { base64: attachedFile.base64, mediaType: attachedFile.mediaType };
   }
+
   const { data, error } = await _supabase.functions.invoke('blueprint-ia', { body });
-  if (error) throw new Error(error.message || 'Erro na IA');
+
+  if (error) {
+    // Try to extract the actual error code from the response body
+    let errCode = null;
+    try {
+      const errBody = await error.context?.json?.();
+      errCode = errBody?.error || null;
+    } catch(_) {}
+    throw new Error(errCode || error.message || 'Erro na IA');
+  }
+
+  if (data?.error) throw new Error(data.error);
   return data?.reply || data?.content || data?.message || 'Sem resposta da IA.';
 }
 
@@ -1865,7 +1883,18 @@ async function sendDbChat() {
     }
   } catch (e) {
     document.getElementById(tid)?.remove();
-    addMsg('ai', `Erro de conexão: ${escHtml(e.message)}. Tente novamente.`);
+    const code = e.message;
+    if (code === 'sessao_expirada') {
+      addMsg('ai', 'Sua sessão expirou. Redirecionando para o login...');
+      setTimeout(() => { window.location.href = '/'; }, 2000);
+    } else if (code === 'creditos_insuficientes') {
+      showBuyCreditsModal();
+    } else if (code === 'perfil_nao_encontrado') {
+      addMsg('ai', 'Perfil não encontrado. Tente fazer login novamente.');
+    } else {
+      addMsg('ai', `Erro ao processar sua mensagem. Tente novamente.`);
+      console.error('[B3Alpha] Erro IA:', code);
+    }
   }
   input.disabled = false; btn.disabled = false; _isThinking = false;
   input.focus();
