@@ -7,49 +7,125 @@ const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const CREDITS_PER_MESSAGE = 10;
 
-const SYSTEM_PROMPT = `Você é a B3Alpha — uma inteligência financeira especializada no mercado brasileiro, criada para ser o guia de investimentos que a maioria dos brasileiros nunca teve acesso.
+// ── AGENT TYPES ────────────────────────────────────────────────
+type AgentType = "carteira" | "mercado" | "planejamento" | "geral";
 
-Você tem conhecimento profundo e genuíno sobre renda fixa, renda variável, FIIs, criptomoedas, planejamento financeiro, impostos sobre investimentos e o funcionamento do mercado brasileiro. Não é um chatbot com respostas prontas — você pensa, analisa e conversa.
-
-**Como você se comunica:**
-Adapte-se à pessoa e ao momento. Se alguém manda uma mensagem curta e casual, responda de forma natural e direta — sem virar um relatório. Se alguém pede uma análise aprofundada, aprofunde. Você sabe quando ser técnico e quando ser simples. Não há um formato fixo: cada resposta deve parecer que foi pensada para aquela pergunta específica, não copiada de um template.
-
-Fale em português brasileiro natural — claro, direto, sem ser informal demais nem engessado demais. Como um especialista que também sabe explicar bem.
-
-**O que você sabe:**
-Selic (14,75% a.a.), CDI (~14,65%), IPCA (~4,8%), Ibovespa (~128.000 pontos), câmbio USD/BRL ~R$5,74. Cenário atual de juros altos favorece renda fixa — CDB, LCI/LCA, Tesouro IPCA+ estão atrativos. FIIs de papel se beneficiam; tijolo sofre mais.
-
-Você domina: Tesouro Direto, CDB, LCI/LCA, CRI/CRA, debêntures, poupança, ações (análise técnica e fundamentalista), FIIs (tijolo, papel, híbridos), ETFs (BOVA11, IVVB11, SMAL11), BDRs, opções, criptomoedas (Bitcoin, Ethereum, tributação no Brasil), corretoras brasileiras, planejamento de carteira por perfil, IR sobre investimentos, reserva de emergência, aposentadoria (PGBL/VGBL), renda passiva e juros compostos.
-
-**Skill: Observador de Carteira**
-Quando o cliente tem dados de patrimônio registrados, você age como uma observadora ativa da carteira — não um chatbot genérico:
-- Conhece cada classe de ativo e os valores reais do cliente
-- Conecta CADA resposta com a situação financeira concreta do cliente
-- Identifica oportunidades: falta de diversificação, concentração excessiva, ausência de reserva
-- Acompanha progresso em relação às metas declaradas
-- Tom: cuidado e observação — como uma sócia que se importa, não um fiscal que cobra
-
-Bom tom: "Vi que você tem R$ 25k em FIIs — está bem alinhado com o objetivo de renda passiva. Quer analisar a alocação por tipo (papel vs tijolo)?"
-Mau tom: "Você aportou pouco." (julgamento)
-
-**Quando o usuário tem perfil informado** (conservador, moderado ou arrojado), leve isso em conta naturalmente — sem anunciar que está fazendo isso.
-
-**Quando há dados de carteira na seção "CARTEIRA E SITUAÇÃO FINANCEIRA"**, use esses dados para PERSONALIZAR completamente a resposta. Mencione valores reais, faça cálculos com os números concretos, conecte a pergunta com a situação real do cliente. NUNCA invente valores ou ativos que o cliente não informou.
-
-**Limites:**
-- Nunca invente dados, preços ou estatísticas — se não souber, diga claramente
-- Nunca prometa retorno garantido — todo investimento tem risco
-- Se perguntarem sobre pirâmides ou esquemas: alerte com clareza
-- Se o tema estiver completamente fora de finanças, redirecione com naturalidade
-
-Você é inteligente o suficiente para saber quando uma pessoa quer conversar e quando quer uma análise. Aja de acordo.`;
-
+// ── CORS ───────────────────────────────────────────────────────
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Build patrimônio context block from DB row
+// ── BASE IDENTITY (shared by all agents) ──────────────────────
+const BASE_IDENTITY = `Você é a B3Alpha — uma inteligência financeira especializada no mercado brasileiro, criada para ser o guia de investimentos que a maioria dos brasileiros nunca teve acesso.
+
+Fale em português brasileiro natural — claro, direto, sem ser informal demais nem engessado demais. Adapte-se ao momento: resposta curta para pergunta casual, análise aprofundada quando pedido.
+
+**Limites:**
+- Nunca invente dados, preços ou estatísticas — se não souber, diga claramente
+- Nunca prometa retorno garantido — todo investimento tem risco
+- Se perguntarem sobre pirâmides ou esquemas: alerte com clareza
+- Se o tema estiver completamente fora de finanças, redirecione com naturalidade`;
+
+// ── SPECIALIZED SYSTEM PROMPTS ─────────────────────────────────
+const AGENT_PROMPTS: Record<AgentType, string> = {
+
+  carteira: `${BASE_IDENTITY}
+
+**Sua especialidade: Analista de Carteira**
+Você é o especialista na carteira pessoal do usuário. Quando o cliente tem dados registrados:
+- Conhece cada ativo, preço médio (PM), quantidade e valor total exato
+- Faz cálculos precisos: PM ponderado, variação percentual, stop loss ideal, rentabilidade atual
+- Identifica concentração excessiva em um setor ou ativo específico
+- Compara a carteira com o perfil de risco declarado (conservador/moderado/arrojado)
+- Sugere aportes com base na sobra mensal informada e nos objetivos declarados
+- Avalia necessidade de rebalanceamento e como fazer
+- Tom: como uma sócia que conhece bem a situação — cuidado genuíno, sem julgamento`,
+
+  mercado: `${BASE_IDENTITY}
+
+**Sua especialidade: Analista de Mercado**
+Você é o especialista em análise de mercado e ativos brasileiros. Você:
+- Analisa ações com fundamentos: P/L, P/VP, ROE, dívida/EBITDA, dividend yield, crescimento de receita
+- Analisa FIIs: P/VP, DY últimos 12 meses, vacância, tipo (papel/tijolo/híbrido), qualidade do portfólio
+- Domina o contexto macro atual: Selic 14,75% a.a., CDI ~14,65%, IPCA ~4,8%, Ibovespa ~128.000, USD/BRL ~R$5,74
+- Analisa gráficos quando o usuário envia imagem: suportes, resistências, tendência, médias móveis, volume, padrões
+- Cobre ETFs (BOVA11, IVVB11, SMAL11), BDRs, opções, criptomoedas (Bitcoin, Ethereum, tributação BR)
+- Cobre renda fixa: Tesouro Direto, CDB, LCI/LCA, CRI/CRA, debêntures — comparando com Selic/CDI atual
+- Quando o cliente tem carteira registrada, conecta a análise com os ativos que ele já possui`,
+
+  planejamento: `${BASE_IDENTITY}
+
+**Sua especialidade: Planejador Financeiro**
+Você é o especialista em estratégia e planejamento financeiro de longo prazo. Você:
+- Monta e revisa metas financeiras com prazos e valores realistas
+- Calcula juros compostos, projeções de patrimônio e tempo para aposentadoria com números reais
+- Orienta sobre IR em investimentos: quando recolher DARF, isenções (ações até R$20k/mês), come-cotas, como declarar
+- Explica e compara PGBL vs VGBL, previdência privada vs Tesouro IPCA+
+- Define reserva de emergência ideal (6 a 12 meses de gastos) e onde guardar
+- Orienta gestão de dívidas: qual pagar primeiro, quando vale refinanciar
+- Monta estratégias por perfil e por objetivo (renda passiva, crescimento, aposentadoria antecipada)
+- Quando o cliente tem dados registrados, usa a situação financeira real para projeções e cenários concretos`,
+
+  geral: `${BASE_IDENTITY}
+
+**Como você se comunica:**
+Adapte-se à pessoa e ao momento. Se alguém manda uma mensagem curta e casual, responda de forma natural e direta — sem virar um relatório. Se alguém pede uma análise aprofundada, aprofunde.
+
+Você domina: Tesouro Direto, CDB, LCI/LCA, CRI/CRA, debêntures, poupança, ações (análise técnica e fundamentalista), FIIs (tijolo, papel, híbridos), ETFs, BDRs, opções, criptomoedas, corretoras brasileiras, planejamento de carteira por perfil, IR sobre investimentos, reserva de emergência, aposentadoria (PGBL/VGBL), renda passiva e juros compostos.
+
+Quando o cliente tem dados de carteira ou perfil registrados, use esses dados para personalizar a resposta.`,
+};
+
+// ── ANTHROPIC HELPER ──────────────────────────────────────────
+async function callAnthropic(
+  model: string,
+  system: string,
+  messages: unknown[],
+  maxTokens = 2048,
+): Promise<Response> {
+  return fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({ model, max_tokens: maxTokens, system, messages }),
+  });
+}
+
+// ── ROUTER AGENT (Haiku — rápido e barato) ────────────────────
+async function routeMessage(message: string, hasPatrimonio: boolean): Promise<AgentType> {
+  const prompt = `Classifique a pergunta financeira abaixo em UMA das quatro categorias:
+
+carteira  → pergunta sobre a carteira/portfólio pessoal do usuário (preço médio, meus ativos, minha posição, aportar, rebalancear)
+mercado   → análise de mercado, cotações, fundamentos de ações/FIIs, criptomoedas, macroeconomia, análise de gráfico
+planejamento → metas financeiras, aposentadoria, orçamento, imposto de renda, estratégia de longo prazo, dívidas
+geral     → saudações, perguntas conceituais básicas ou qualquer coisa que não se encaixe acima
+
+${hasPatrimonio ? "Contexto: este usuário possui carteira de investimentos registrada no sistema.\n" : ""}Pergunta: "${message}"
+
+Responda APENAS com uma palavra: carteira, mercado, planejamento ou geral`;
+
+  try {
+    const res = await callAnthropic(
+      "claude-haiku-4-5-20251001",
+      "",
+      [{ role: "user", content: prompt }],
+      10,
+    );
+    if (!res.ok) return "geral";
+    const data = await res.json();
+    const answer = (data.content?.[0]?.text ?? "geral").trim().toLowerCase();
+    const valid: AgentType[] = ["carteira", "mercado", "planejamento", "geral"];
+    return valid.includes(answer as AgentType) ? (answer as AgentType) : "geral";
+  } catch (_) {
+    return "geral";
+  }
+}
+
+// ── PATRIMÔNIO CONTEXT ────────────────────────────────────────
 function buildPatrimonioContext(p: Record<string, unknown>): string {
   const hasData = p.renda_mensal || p.renda_fixa || p.acoes || p.fiis || p.reserva;
   if (!hasData) return "";
@@ -106,11 +182,12 @@ function buildPatrimonioContext(p: Record<string, unknown>): string {
   lines.push(
     "\nUse esses dados para PERSONALIZAR completamente cada resposta. " +
     "Conecte tudo com a situação real do cliente. " +
-    "NUNCA invente valores ou ativos além dos informados acima."
+    "NUNCA invente valores ou ativos além dos informados acima.",
   );
   return lines.join("\n");
 }
 
+// ── MAIN HANDLER ──────────────────────────────────────────────
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: cors });
@@ -119,7 +196,7 @@ Deno.serve(async (req: Request) => {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Authenticate user
+    // ── Authenticate ───────────────────────────────────────────
     let userId: string | null = null;
     const authHeader = req.headers.get("Authorization");
     if (authHeader) {
@@ -137,7 +214,7 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const { mode } = body;
 
-    // ── MODE: extract_memory ──────────────────────────────────────
+    // ── MODE: extract_memory ───────────────────────────────────
     if (mode === "extract_memory") {
       const { conversation, existingMemory = "" } = body;
       if (!conversation || conversation.length < 4) {
@@ -151,24 +228,16 @@ Memória atual do usuário (já registrada):
 ${existingMemory || "(nenhuma ainda)"}
 
 Conversa:
-${conversation.map((m: {role:string,content:string}) => `${m.role === "user" ? "Usuário" : "IA"}: ${m.content}`).join("\n")}
+${conversation.map((m: { role: string; content: string }) => `${m.role === "user" ? "Usuário" : "IA"}: ${m.content}`).join("\n")}
 
 Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ainda não estão na memória atual). Se não houver nada novo relevante, retorne exatamente: NENHUM`;
 
-      const extractRes = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 400,
-          messages: [{ role: "user", content: extractPrompt }],
-        }),
-      });
-
+      const extractRes = await callAnthropic(
+        "claude-haiku-4-5-20251001",
+        "",
+        [{ role: "user", content: extractPrompt }],
+        400,
+      );
       if (extractRes.ok) {
         const extractData = await extractRes.json();
         const newFacts = extractData.content?.[0]?.text ?? "";
@@ -180,7 +249,9 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       return new Response(JSON.stringify({ ok: true }), { headers: cors });
     }
 
-    // ── MODE: chat (default) ──────────────────────────────────────
+    // ── MODE: chat (default) ───────────────────────────────────
+
+    // Check credits
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
       .select("credit_balance")
@@ -195,15 +266,14 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
     }
 
     const currentBalance = profileData.credit_balance ?? 0;
-
     if (currentBalance < CREDITS_PER_MESSAGE) {
-      return new Response(JSON.stringify({ error: "creditos_insuficientes", credit_balance: currentBalance }), {
-        status: 402,
-        headers: { ...cors, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "creditos_insuficientes", credit_balance: currentBalance }),
+        { status: 402, headers: { ...cors, "Content-Type": "application/json" } },
+      );
     }
 
-    // Load persistent AI memory
+    // Load AI memory
     let aiMemory = "";
     try {
       const { data: memData } = await supabase
@@ -214,7 +284,7 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       aiMemory = (memData as any)?.ai_memory ?? "";
     } catch (_) { /* column may not exist yet */ }
 
-    // Load patrimônio for dynamic system prompt enrichment
+    // Load patrimônio
     let patrimonioCtx = "";
     try {
       const { data: patData } = await supabase
@@ -222,10 +292,8 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
         .select("*")
         .eq("user_id", userId)
         .single();
-      if (patData) {
-        patrimonioCtx = buildPatrimonioContext(patData as Record<string, unknown>);
-      }
-    } catch (_) { /* table may not exist yet — silently skip */ }
+      if (patData) patrimonioCtx = buildPatrimonioContext(patData as Record<string, unknown>);
+    } catch (_) { /* table may not exist yet */ }
 
     const { message, history = [], imageData } = body;
 
@@ -236,13 +304,19 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       });
     }
 
-    // Build full system prompt: base + patrimônio context + memory
+    // ── ROUTE: decide which specialist agent to use ────────────
+    // Images always go to the market analyst (chart analysis)
+    const agentType: AgentType = imageData
+      ? "mercado"
+      : await routeMessage(message ?? "", !!patrimonioCtx);
+
+    // Build system prompt for the chosen agent
     const memoryBlock = aiMemory
       ? `\n\n[O que você já sabe sobre este usuário de conversas anteriores]\n${aiMemory}`
       : "";
-    const systemWithContext = SYSTEM_PROMPT + patrimonioCtx + memoryBlock;
+    const systemPrompt = AGENT_PROMPTS[agentType] + patrimonioCtx + memoryBlock;
 
-    // Build user message content — multimodal when image is present
+    // Build user message content (multimodal if image present)
     let userContent: unknown;
     if (imageData?.base64 && imageData?.mediaType && (imageData.mediaType as string).startsWith("image/")) {
       userContent = [
@@ -265,20 +339,8 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
       { role: "user", content: userContent },
     ];
 
-    const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 2048,
-        system: systemWithContext,
-        messages,
-      }),
-    });
+    // ── CALL SPECIALIST AGENT ─────────────────────────────────
+    const anthropicRes = await callAnthropic("claude-sonnet-4-6", systemPrompt, messages);
 
     if (!anthropicRes.ok) {
       const errText = await anthropicRes.text();
@@ -292,22 +354,27 @@ Retorne APENAS uma lista de bullets curtos com os novos fatos aprendidos (que ai
     const data = await anthropicRes.json();
     const reply = data.content?.[0]?.text ?? "Sem resposta.";
 
-    // Deduct credits after successful response
+    // Deduct credits
     const newBalance = currentBalance - CREDITS_PER_MESSAGE;
     await supabase
       .from("profiles")
       .update({ credit_balance: newBalance })
       .eq("id", userId);
 
-    // Save messages to history
+    // Save to history
     await supabase.from("chat_messages").insert([
-      { user_id: userId, role: "user", content: typeof message === "string" ? message : "[imagem/arquivo]" },
+      {
+        user_id: userId,
+        role: "user",
+        content: typeof message === "string" ? message : "[imagem/arquivo]",
+      },
       { user_id: userId, role: "assistant", content: reply },
     ]);
 
-    return new Response(JSON.stringify({ reply, credit_balance: newBalance }), {
-      headers: { ...cors, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ reply, agent: agentType, credit_balance: newBalance }),
+      { headers: { ...cors, "Content-Type": "application/json" } },
+    );
   } catch (err) {
     console.error("Function error:", err);
     return new Response(JSON.stringify({ error: String(err) }), {
