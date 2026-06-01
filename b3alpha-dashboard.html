@@ -1903,9 +1903,13 @@ async function sendDbChat() {
       showBuyCreditsModal();
     } else if (code === 'perfil_nao_encontrado') {
       addMsg('ai', 'Perfil não encontrado. Tente fazer login novamente.');
+    } else if (code && code.includes('authentication_error')) {
+      addMsg('ai', '⚠️ Chave da API Anthropic inválida ou não configurada. Configure ANTHROPIC_API_KEY nos secrets da Edge Function no painel do Supabase.');
+    } else if (code && (code.includes('overloaded') || code.includes('529'))) {
+      addMsg('ai', 'A API está sobrecarregada agora. Tente novamente em alguns segundos.');
     } else {
-      addMsg('ai', `Erro ao processar sua mensagem. Tente novamente.`);
-      console.error('[B3Alpha] Erro IA:', code);
+      addMsg('ai', `Erro: ${escHtml(String(code).slice(0,120))}. Abra o console (F12) para detalhes.`);
+      console.error('[B3Alpha] Erro IA completo:', code);
     }
   }
   input.disabled = false; btn.disabled = false; _isThinking = false;
