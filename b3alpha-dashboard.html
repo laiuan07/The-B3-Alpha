@@ -423,37 +423,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   flex-direction:column;
 }
 
-/* Header chat */
-.db-chat-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 24px;
-  background:rgba(8,14,28,.9); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border2); flex-shrink:0;
-}
-.db-chat-header-left { display:flex; align-items:center; gap:10px }
-.db-chat-title {
-  font-family:'IBM Plex Sans',sans-serif; font-size:15px; font-weight:800;
-  color:var(--text);
-}
-.db-chat-badge {
-  font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700;
-  letter-spacing:1px; color:var(--green);
-  background:rgba(0,255,157,.08); border:1px solid rgba(0,255,157,.25);
-  padding:3px 9px; border-radius:100px;
-}
-.db-online-dot {
-  width:7px; height:7px; border-radius:50%; background:var(--green);
-  box-shadow:0 0 7px var(--green); animation:pulse 2s infinite;
-}
-.db-chat-header-right { display:flex; align-items:center; gap:6px }
-.db-header-btn {
-  display:flex; align-items:center; gap:5px;
-  padding:6px 12px; border-radius:8px;
-  background:rgba(255,255,255,.04); border:1px solid var(--border2);
-  color:var(--muted); font-size:12px; font-weight:600;
-  cursor:pointer; transition:all .18s;
-}
-.db-header-btn:hover { background:rgba(255,255,255,.08); color:var(--text) }
 
 /* Área de mensagens */
 .db-chat-messages {
@@ -502,12 +471,15 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .ia-msg-row {
   display: flex;
   gap: 0;
-  padding: 20px 48px;
+  padding: 16px 40px;
   animation: msgIn .22s ease both;
-  border-bottom: 1px solid rgba(255,255,255,.03);
-  transition: background .15s;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.12s;
+  background: transparent;
+  border-left: none;
+  border-right: none;
 }
-.ia-msg-row:hover { background: rgba(255,255,255,.015) }
+.ia-msg-row:hover { background: rgba(255,255,255,0.012); }
 @keyframes msgIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
 
 /* Mensagem do usuário — alinhada à DIREITA */
@@ -579,9 +551,13 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 /* Texto da mensagem */
 .ia-msg-text {
   font-size: var(--chat-font-size);
-  line-height: 1.72;
-  color: rgba(240,234,214,.88);
+  line-height: 1.7;
+  color: rgba(240,234,214,0.85);
   word-break: break-word;
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
 }
 .ia-msg-row.user .ia-msg-text { color: rgba(240,234,214,.92); }
 
@@ -1031,6 +1007,27 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04); font-size:12px;
 }
 
+/* ── MODO PRETO E BRANCO — todo texto em branco, só o ticker mantém cor ──────── */
+:root {
+  --gold:  #ffffff;
+  --gold2: #e8e8e8;
+  --cyan:  #d0d0d0;
+  --green: #ffffff;
+  --red:   rgba(255,255,255,0.65);
+}
+/* Restaurar cores do ticker (único elemento colorido) */
+.wc-ticker-item .up  { color: #00FF9D !important; }
+.wc-ticker-item .dn  { color: #FF3B5C !important; }
+/* name-highlight: remover gradiente dourado, deixar branco */
+.wc-greeting .name-highlight {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: unset !important;
+  filter: none !important;
+  color: #ffffff !important;
+}
+
 </style>
 </head>
 <body>
@@ -1042,7 +1039,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
     <svg width="22" height="22" viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="-10" width="110" height="110" rx="18" fill="#C9A84C"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="#040A14"/></svg>
     B3Alpha
   </div>
-  <div class="db-mob-credits" onclick="showBuyCreditsModal()">⚡ <span id="headerCreditsNum">50</span></div>
+  <div class="db-mob-credits" onclick="showBuyCreditsModal()"><span id="headerCreditsNum">50</span></div>
 </div>
 
 <div class="db-layout">
@@ -1151,9 +1148,9 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
               Smart IA ▾
             </div>
             <div class="wc-input-btns">
-              <button class="wc-input-btn" title="Anexar arquivo" onclick="document.getElementById('wcFileInput').click()">📎</button>
+              <button class="wc-input-btn" title="Anexar arquivo" onclick="document.getElementById('wcFileInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
               <input type="file" id="wcFileInput" style="display:none" accept="image/*,.pdf,.csv" onchange="handleFileUpload(this)">
-              <button class="wc-input-btn" title="Voz">🎤</button>
+              <button class="wc-input-btn" title="Voz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
               <button class="wc-send-btn" onclick="startChatFromWelcome()" title="Enviar">→</button>
             </div>
           </div>
@@ -1173,7 +1170,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
       <div class="wc-cards-grid" style="margin-bottom:auto;padding-bottom:60px">
         <!-- Módulos -->
         <div class="wc-card modules" onclick="openDbModule()">
-          <span class="wc-card-icon">📚</span>
           <div class="wc-card-tag">Mini Curso Gratuito</div>
           <h3 class="wc-card-title">Módulos de Ensino</h3>
           <p class="wc-card-sub">4 módulos completos · Aprenda antes de investir · Do zero ao avançado</p>
@@ -1182,7 +1178,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
         <!-- Perfil -->
         <div class="wc-card profile" onclick="openProfileOverlay()">
-          <span class="wc-card-icon">👤</span>
           <div class="wc-card-tag">Personalização</div>
           <h3 class="wc-card-title">Perfil de Investidor</h3>
           <p class="wc-card-sub" id="wcProfileSub">Configure seu perfil · A IA se adapta à sua situação real</p>
@@ -1191,7 +1186,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
         <!-- Créditos -->
         <div class="wc-card credits" onclick="showBuyCreditsModal()">
-          <span class="wc-card-icon">⚡</span>
           <div class="wc-card-tag">Acesso à IA</div>
           <h3 class="wc-card-title">Créditos & Planos</h3>
           <div class="wc-credits-num" id="wcCreditsNum">50</div>
@@ -1224,6 +1218,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           </button>
         </div>
       </div>
+
 
       <!-- Mensagens -->
       <div class="db-chat-messages" id="iaMsgsScroll">
@@ -1323,7 +1318,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           <div class="cfg-row-arrow">›</div>
         </div>
         <div class="cfg-row" onclick="closeOverlays();setTimeout(showBuyCreditsModal,80)">
-          <div class="cfg-row-icon">⚡</div>
+          <div class="cfg-row-icon">◉</div>
           <div class="cfg-row-info">
             <div class="cfg-row-title">Créditos</div>
             <div class="cfg-row-sub"><span id="cfgCreditsNum">50</span> créditos disponíveis — compre mais</div>
@@ -1342,7 +1337,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           <div class="cfg-row-arrow">›</div>
         </div>
         <div class="cfg-row" onclick="closeOverlays();setTimeout(openAlertasOverlay,80)">
-          <div class="cfg-row-icon">🔔</div>
+          <div class="cfg-row-icon">◎</div>
           <div class="cfg-row-info">
             <div class="cfg-row-title">Alertas de Preço</div>
             <div class="cfg-row-sub">Configure alertas automáticos por email</div>
@@ -1438,7 +1433,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
     <div class="db-overlay" id="dbPatrimonioOverlay">
       <div class="db-overlay-inner">
         <div class="db-overlay-hdr">
-          <div class="db-overlay-title">💼 Meu Perfil & Patrimônio</div>
+          <div class="db-overlay-title">Meu Perfil & Patrimônio</div>
           <button class="db-overlay-close" onclick="closeOverlays()">✕</button>
         </div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Registre sua situação financeira — a IA usa esses dados para personalizar cada análise com sua realidade.</p>
@@ -1591,7 +1586,7 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
     <div class="db-overlay" id="dbAlertasOverlay">
       <div class="db-overlay-inner">
         <div class="db-overlay-hdr">
-          <div class="db-overlay-title">🔔 Alertas de Preço</div>
+          <div class="db-overlay-title">Alertas de Preço</div>
           <button class="db-overlay-close" onclick="closeOverlays()">✕</button>
         </div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:24px">Receba um email quando um ativo atingir o preço alvo.</p>
@@ -1620,7 +1615,6 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   <div class="bcm-bg" onclick="closeBuyCreditsModal()"></div>
   <div class="bcm-card">
     <button class="bcm-close" onclick="closeBuyCreditsModal()">✕</button>
-    <div style="font-size:40px;text-align:center;margin-bottom:10px">⚡</div>
     <div class="bcm-title">Comprar Créditos</div>
     <div class="bcm-sub">Cada mensagem consome créditos. Escolha o pack ideal.</div>
     <div class="bcm-packs">
@@ -1702,7 +1696,17 @@ async function loadUserProfile() {
   if (profile) {
     userCredits = profile.credit_balance ?? 50;
     updateCreditsUI();
-    const name = profile.full_name || _currentUser.email?.split('@')[0] || 'Usuário';
+    // Google OAuth envia o nome em user_metadata.full_name ou user_metadata.name
+    const googleName = _currentUser.user_metadata?.full_name || _currentUser.user_metadata?.name;
+    // Cadastro por email/senha salva first_name + last_name
+    const firstName = _currentUser.user_metadata?.first_name || '';
+    const lastName  = _currentUser.user_metadata?.last_name  || '';
+    const emailRegName = firstName ? (firstName + (lastName ? ' ' + lastName : '')).trim() : null;
+    // Persistir nome no profile para próximas sessões
+    if (!profile.full_name && (googleName || emailRegName)) {
+      _supabase.from('profiles').update({ full_name: googleName || emailRegName }).eq('id', _currentUser.id);
+    }
+    const name = profile.full_name || googleName || emailRegName || _currentUser.email?.split('@')[0] || 'Usuário';
     const initial = name.charAt(0).toUpperCase();
     document.getElementById('wcUserName').textContent = name;
     document.getElementById('dbUserName').textContent = name;
@@ -1963,7 +1967,7 @@ async function sendDbChat() {
     } else if (code === 'perfil_nao_encontrado') {
       addMsg('ai', 'Perfil não encontrado. Tente fazer login novamente.');
     } else if (code && code.includes('authentication_error')) {
-      addMsg('ai', '⚠️ Chave da API Anthropic inválida ou não configurada. Configure ANTHROPIC_API_KEY nos secrets da Edge Function no painel do Supabase.');
+      addMsg('ai', 'Chave da API Anthropic inválida ou não configurada. Configure ANTHROPIC_API_KEY nos secrets da Edge Function no painel do Supabase.');
     } else if (code && (code.includes('overloaded') || code.includes('529'))) {
       addMsg('ai', 'A API está sobrecarregada agora. Tente novamente em alguns segundos.');
     } else {
@@ -2287,7 +2291,7 @@ function handleFileUpload(input) {
   } else {
     reader.onload = e => {
       _attachedImage = {base64:e.target.result.split(',')[1], mediaType:file.type, fileName:file.name, isPDF:true};
-      showToast(`📄 ${file.name} anexado`,'info');
+      showToast(`${file.name} anexado`,'info');
     };
     reader.readAsDataURL(file);
   }
@@ -2366,7 +2370,7 @@ function openModule(num) {
 }
 function updateNextBtn() {
   const btn = document.getElementById('moduleNextBtn'); if(!btn) return;
-  if(currentModuleNum>=4) { btn.innerHTML='<span class="mnb-label">Ir para IA ⚡</span>'; btn.classList.remove('arrow-only'); }
+  if(currentModuleNum>=4) { btn.innerHTML='<span class="mnb-label">Ir para IA</span>'; btn.classList.remove('arrow-only'); }
   else { btn.innerHTML='→'; btn.classList.add('arrow-only'); }
 }
 function nextModule() {
@@ -2479,7 +2483,7 @@ function renderAlertas() {
       <span class="al-item-ticker">${a.ticker}</span>
       <span class="al-item-cond">${a.condLabel}</span>
       ${a.cond !== 'dividend_announced' ? `<span class="al-item-price">R$ ${a.target.toFixed(2).replace('.',',')}</span>` : '<span class="al-item-price">—</span>'}
-      <span class="al-item-email">📧 ${a.email}</span>
+      <span class="al-item-email">${a.email}</span>
       <span style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace">${a.createdAt}</span>
       <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
         <span style="font-size:10px;color:var(--green);background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);padding:2px 8px;border-radius:100px;font-family:'IBM Plex Mono',monospace">● ativo</span>
@@ -2673,8 +2677,8 @@ document.addEventListener('click',()=>document.getElementById('dhUser')?.classLi
    LOGOUT
 ══════════════════════════════════════ */
 async function handleLogout() {
-  await _supabase.auth.signOut();
-  window.location.replace('/');
+  try { await _supabase.auth.signOut(); } catch(e) {}
+  window.location.href = '/';
 }
 
 /* ══════════════════════════════════════

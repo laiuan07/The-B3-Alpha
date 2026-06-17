@@ -26,7 +26,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
-<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script src="https://js.hcaptcha.com/1/api.js?onload=hcaptchaOnLoad&render=explicit" async defer></script>
 <style>
 :root{
   --bg:#020812;--bg2:#060d18;
@@ -673,6 +673,16 @@ footer a:hover{color:var(--gold)}
 .popup-btn-no:hover{color:var(--text)}
 .popup-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .popup-close:hover{background:rgba(248,113,113,0.1);color:var(--red)}
+
+/* ════ GOOGLE ONBOARDING MODAL ════ */
+.google-ob-modal{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;padding:24px}
+.google-ob-modal.open{display:flex}
+.google-ob-bg{position:absolute;inset:0;background:rgba(2,4,12,0.93);backdrop-filter:blur(18px)}
+.google-ob-card{position:relative;z-index:1;width:100%;max-width:420px;background:rgba(4,9,22,0.97);border:1px solid rgba(201,168,76,0.25);border-radius:24px;padding:40px 40px 36px;box-shadow:0 40px 100px rgba(0,0,0,0.85);overflow:hidden}
+.google-ob-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.55),transparent)}
+.google-ob-icon{font-size:36px;text-align:center;display:block;margin-bottom:10px}
+.google-ob-title{font-family:'IBM Plex Sans',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.5px;text-align:center;margin-bottom:6px}
+.google-ob-sub{font-size:13px;color:var(--muted);text-align:center;line-height:1.65;margin-bottom:26px}
 </style>
 </head>
 <body>
@@ -691,12 +701,12 @@ footer a:hover{color:var(--gold)}
     <div class="popup-title">Antes de começar,<br>que tal aprender de <span>graça?</span></div>
     <div class="popup-sub">4 módulos explicativos para te dar uma base sólida. Zero custo.</div>
     <div class="popup-modules">
-      <div class="popup-mod" onclick="closeCoursePopup();openModule(1)"><span class="popup-mod-icon">🚀</span><div><div class="popup-mod-num">Módulo 01</div><div class="popup-mod-name">Investindo na B3</div></div></div>
-      <div class="popup-mod" onclick="closeCoursePopup();openModule(2)"><span class="popup-mod-icon">🏢</span><div><div class="popup-mod-num">Módulo 02</div><div class="popup-mod-name">Fundos Imobiliários</div></div></div>
-      <div class="popup-mod" onclick="closeCoursePopup();openModule(3)"><span class="popup-mod-icon">💰</span><div><div class="popup-mod-num">Módulo 03</div><div class="popup-mod-name">Renda Fixa</div></div></div>
-      <div class="popup-mod" onclick="closeCoursePopup();openModule(4)"><span class="popup-mod-icon">₿</span><div><div class="popup-mod-num">Módulo 04</div><div class="popup-mod-name">Corretoras & Criptos</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModuleWithAuth(1)"><span class="popup-mod-icon">🚀</span><div><div class="popup-mod-num">Módulo 01</div><div class="popup-mod-name">Investindo na B3</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModuleWithAuth(2)"><span class="popup-mod-icon">🏢</span><div><div class="popup-mod-num">Módulo 02</div><div class="popup-mod-name">Fundos Imobiliários</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModuleWithAuth(3)"><span class="popup-mod-icon">💰</span><div><div class="popup-mod-num">Módulo 03</div><div class="popup-mod-name">Renda Fixa</div></div></div>
+      <div class="popup-mod" onclick="closeCoursePopup();openModuleWithAuth(4)"><span class="popup-mod-icon">₿</span><div><div class="popup-mod-num">Módulo 04</div><div class="popup-mod-name">Corretoras & Criptos</div></div></div>
     </div>
-    <button class="popup-btn-yes" onclick="closeCoursePopup();openModule(1)">Quero começar pelo Módulo 1 →</button>
+    <button class="popup-btn-yes" onclick="closeCoursePopup();openModuleWithAuth(1)">Quero começar pelo Módulo 1 →</button>
     <button class="popup-btn-no" onclick="closeCoursePopup()">Agora não, ir para o dashboard</button>
   </div>
 </div>
@@ -1122,6 +1132,7 @@ footer a:hover{color:var(--gold)}
     <div class="error-box" id="loginError"></div>
     <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="loginEmail" type="email" placeholder="seu@email.com"></div>
     <div class="form-group"><label class="form-label">Senha</label><div class="pass-wrap"><input class="form-input" id="loginPassword" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()"><button class="pass-toggle" onclick="togglePass('loginPassword',this)">mostrar</button></div></div>
+    <div id="hcaptchaLogin" style="margin-bottom:14px"></div>
     <button class="btn-submit" id="loginBtn" onclick="handleLogin()"><span class="btn-text">Entrar na plataforma →</span><div class="btn-loader"></div></button>
     <div class="auth-switch">Novo por aqui? <a onclick="goTo('register')">Criar conta grátis</a></div>
   </div>
@@ -1159,7 +1170,7 @@ footer a:hover{color:var(--gold)}
       <div class="pass-wrap"><input class="form-input" id="regPassword" type="password" placeholder="mín. 8 caracteres" oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter')handleRegister()"><button class="pass-toggle" onclick="togglePass('regPassword',this)">mostrar</button></div>
       <div class="strength-wrap" id="strengthWrap"><div class="strength-bars"><div class="strength-bar" id="sb1"></div><div class="strength-bar" id="sb2"></div><div class="strength-bar" id="sb3"></div><div class="strength-bar" id="sb4"></div></div><span class="strength-lbl" id="strengthLbl"></span></div>
     </div>
-    <div class="h-captcha" data-sitekey="e44e7394-27f8-4ae8-8392-5cf88d0af19c" data-theme="dark" id="hcaptchaWidget" style="margin-bottom:14px"></div>
+    <div id="hcaptchaWidget" style="margin-bottom:14px"></div>
     <button class="btn-submit" id="registerBtn" onclick="handleRegister()"><span class="btn-text">Criar minha conta →</span><div class="btn-loader"></div></button>
     <div class="auth-switch">Já tem conta? <a onclick="goTo('login')">Entrar →</a></div>
   </div>
@@ -1337,10 +1348,10 @@ footer a:hover{color:var(--gold)}
         <!-- MÓDULOS -->
         <div id="db-modules" style="display:none">
           <div class="db-grid">
-            <div class="db-card" onclick="openModule(1)" style="cursor:pointer"><div class="dc-title">🚀 Módulo 1</div><p style="font-size:13px;color:var(--muted)">Investindo na B3 — do zero ao primeiro investimento.</p></div>
-            <div class="db-card" onclick="openModule(2)" style="cursor:pointer"><div class="dc-title">🏢 Módulo 2</div><p style="font-size:13px;color:var(--muted)">Fundos Imobiliários — dividendos todo mês.</p></div>
-            <div class="db-card" onclick="openModule(3)" style="cursor:pointer"><div class="dc-title">💰 Módulo 3</div><p style="font-size:13px;color:var(--muted)">Renda Fixa & Impostos — Selic, CDB e Tesouro.</p></div>
-            <div class="db-card" onclick="openModule(4)" style="cursor:pointer"><div class="dc-title">₿ Módulo 4</div><p style="font-size:13px;color:var(--muted)">Corretoras & Criptomoedas — como começar.</p></div>
+            <div class="db-card" onclick="openModuleWithAuth(1)" style="cursor:pointer"><div class="dc-title">🚀 Módulo 1</div><p style="font-size:13px;color:var(--muted)">Investindo na B3 — do zero ao primeiro investimento.</p></div>
+            <div class="db-card" onclick="openModuleWithAuth(2)" style="cursor:pointer"><div class="dc-title">🏢 Módulo 2</div><p style="font-size:13px;color:var(--muted)">Fundos Imobiliários — dividendos todo mês.</p></div>
+            <div class="db-card" onclick="openModuleWithAuth(3)" style="cursor:pointer"><div class="dc-title">💰 Módulo 3</div><p style="font-size:13px;color:var(--muted)">Renda Fixa & Impostos — Selic, CDB e Tesouro.</p></div>
+            <div class="db-card" onclick="openModuleWithAuth(4)" style="cursor:pointer"><div class="dc-title">₿ Módulo 4</div><p style="font-size:13px;color:var(--muted)">Corretoras & Criptomoedas — como começar.</p></div>
           </div>
         </div>
 
@@ -1549,7 +1560,7 @@ function _buildTicker(data){
 async function _loadTickerBrapi(){
   try{
     const symbols=_tickerSeed.map(t=>t.sym).join(',');
-    const res=await fetch(`https://brapi.dev/api/quote/${symbols}?range=1d`);
+    const res=await fetch(`https://brapi.dev/api/quote/${symbols}?range=1d&token=demo`);
     if(!res.ok) return;
     const j=await res.json();
     if(j?.results?.length){
@@ -1652,17 +1663,54 @@ function checkStrength(v){
 (function(){ const b=document.getElementById('regBirth'); if(b) b.max=new Date().toISOString().split('T')[0]; })();
 
 /* ══ LOGIN ══ */
+/* ── hCaptcha — render explícito para controlar dois widgets ── */
+let _loginCaptchaWidgetId   = null;
+let _registerCaptchaWidgetId = null;
+let _loginCaptchaToken      = '';
+let _registerCaptchaToken   = '';
+
+function onLoginCaptchaVerify(token)    { _loginCaptchaToken = token; }
+function onLoginCaptchaExpire()         { _loginCaptchaToken = ''; }
+function onRegisterCaptchaVerify(token) { _registerCaptchaToken = token; }
+function onRegisterCaptchaExpire()      { _registerCaptchaToken = ''; }
+
+function hcaptchaOnLoad() {
+  const cfg = { sitekey: 'e44e7394-27f8-4ae8-8392-5cf88d0af19c', theme: 'dark' };
+  if (document.getElementById('hcaptchaLogin')) {
+    _loginCaptchaWidgetId = hcaptcha.render('hcaptchaLogin', {
+      ...cfg,
+      callback: 'onLoginCaptchaVerify',
+      'expired-callback': 'onLoginCaptchaExpire',
+    });
+  }
+  if (document.getElementById('hcaptchaWidget')) {
+    _registerCaptchaWidgetId = hcaptcha.render('hcaptchaWidget', {
+      ...cfg,
+      callback: 'onRegisterCaptchaVerify',
+      'expired-callback': 'onRegisterCaptchaExpire',
+    });
+  }
+}
+
 async function handleLogin(){
   hideError('loginError');
   const email=document.getElementById('loginEmail').value.trim();
   const pass=document.getElementById('loginPassword').value;
   if(!email||!_emailRe.test(email)) return showError('loginError','Digite um e-mail válido.');
   if(!pass) return showError('loginError','Digite sua senha.');
+  if(!_loginCaptchaToken){
+    if(_loginCaptchaWidgetId!==null) hcaptcha.reset(_loginCaptchaWidgetId);
+    return showError('loginError','Por favor, confirme que você não é um robô.');
+  }
   const btn=document.getElementById('loginBtn'); btn.classList.add('loading');
   try{
-    const {data,error}=await _supabase.auth.signInWithPassword({email,password:pass});
+    const {data,error}=await _supabase.auth.signInWithPassword({email,password:pass,options:{captchaToken:_loginCaptchaToken}});
     btn.classList.remove('loading');
-    if(error) return showError('loginError', error.message.includes('Invalid')?'Email ou senha incorretos.':error.message);
+    if(error){
+      if(_loginCaptchaWidgetId!==null) hcaptcha.reset(_loginCaptchaWidgetId);
+      _loginCaptchaToken='';
+      return showError('loginError', error.message.includes('Invalid')?'Email ou senha incorretos.':error.message);
+    }
     const name=data.user.user_metadata?.first_name||data.user.email.split('@')[0];
     populateUserUI(data.user,name);
     loadUserProfile(data.user.id);
@@ -1686,13 +1734,20 @@ async function handleRegister(){
   if(!isOver18(birth)) return showError('registerError','Você precisa ter pelo menos 18 anos.');
   if(!email||!_emailRe.test(email)) return showError('registerError','Digite um e-mail válido.');
   if(!pass||pass.length<8) return showError('registerError','Senha deve ter pelo menos 8 caracteres.');
-  const captchaToken = hcaptcha.getResponse();
-  if(!captchaToken) return showError('registerError','Por favor, confirme que você não é um robô.');
+  const captchaToken = _registerCaptchaToken;
+  if(!captchaToken){
+    if(_registerCaptchaWidgetId!==null) hcaptcha.reset(_registerCaptchaWidgetId);
+    return showError('registerError','Por favor, confirme que você não é um robô.');
+  }
   const btn=document.getElementById('registerBtn'); btn.classList.add('loading');
   try{
     const {data,error}=await _supabase.auth.signUp({email,password:pass,options:{captchaToken,data:{first_name:first,last_name:last,birth_date:birth}}});
     btn.classList.remove('loading');
-    if(error){ hcaptcha.reset(); return showError('registerError', error.message.includes('already')?'Este email já está cadastrado.':error.message); }
+    if(error){
+      if(_registerCaptchaWidgetId!==null) hcaptcha.reset(_registerCaptchaWidgetId);
+      _registerCaptchaToken='';
+      return showError('registerError', error.message.includes('already')?'Este email já está cadastrado.':error.message);
+    }
     populateUserUI(data.user,first);
     loadUserProfile(data.user.id);
     _authHandled=true;
@@ -1706,6 +1761,55 @@ async function authGoogle(){
   const redirect=window.location.origin+window.location.pathname;
   const {error}=await _supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirect}});
   if(error) alert('Erro ao conectar com Google: '+error.message);
+}
+
+/* ══ GOOGLE ONBOARDING ══ */
+let _obUser = null;
+
+function showGoogleOnboarding(user){
+  _obUser = user;
+  // Pré-preencher nome vindo do Google
+  const googleName = user.user_metadata?.full_name || user.user_metadata?.name || '';
+  const firstName = googleName.split(' ')[0] || '';
+  const nameEl = document.getElementById('obName');
+  if(nameEl && firstName) nameEl.value = firstName;
+  document.getElementById('googleObModal').classList.add('open');
+}
+
+async function submitGoogleOnboarding(){
+  const nameVal  = (document.getElementById('obName').value  || '').trim();
+  const birthVal =  document.getElementById('obBirth').value;
+  const reasonVal= (document.getElementById('obReason').value|| '').trim();
+  const errEl    =  document.getElementById('obError');
+
+  errEl.style.display = 'none';
+
+  if(!nameVal)           { errEl.textContent='Digite seu nome.';                                    errEl.style.display='block'; return; }
+  if(!birthVal)          { errEl.textContent='Informe sua data de nascimento.';                     errEl.style.display='block'; return; }
+  if(!isOver18(birthVal)){ errEl.textContent='Você precisa ter pelo menos 18 anos para investir.'; errEl.style.display='block'; return; }
+  if(!reasonVal)         { errEl.textContent='Conte por que escolheu investir.';                    errEl.style.display='block'; return; }
+
+  const btn = document.getElementById('obBtn');
+  btn.classList.add('loading');
+
+  try {
+    // Salva no user_metadata (funciona sempre)
+    await _supabase.auth.updateUser({
+      data: { first_name: nameVal, birth_date: birthVal, investment_reason: reasonVal }
+    });
+    // Salva full_name e birth_date na tabela profiles
+    if(_obUser){
+      await _supabase.from('profiles').update({
+        full_name: nameVal,
+        birth_date: birthVal
+      }).eq('id', _obUser.id);
+    }
+    window.location.href = '/b3alpha-dashboard';
+  } catch(e){
+    btn.classList.remove('loading');
+    errEl.textContent = 'Erro ao salvar perfil. Tente novamente.';
+    errEl.style.display = 'block';
+  }
 }
 
 /* ══ LOGOUT ══ */
@@ -1750,24 +1854,38 @@ function _updatePlanUI(p){
 
 /* ══ AUTH STATE LISTENER ══ */
 _supabase.auth.onAuthStateChange((event,session)=>{
-  if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED')&&session){
+  if((event==='SIGNED_IN')&&session){
     const user=session.user;
     const name=user.user_metadata?.first_name||user.user_metadata?.full_name||user.email.split('@')[0];
     populateUserUI(user,name);
     loadUserProfile(user.id);
     if(!_authHandled){
       handleStripeReturn();
-      window.location.href = '/b3alpha-dashboard';
+      // Google OAuth: novo usuário sem data de nascimento → onboarding
+      const isGoogle = user.app_metadata?.provider === 'google' ||
+                       (user.identities||[]).some(i=>i.provider==='google');
+      const hasOnboarded = !!user.user_metadata?.birth_date;
+      if(isGoogle && !hasOnboarded){
+        showGoogleOnboarding(user);
+      } else {
+        window.location.href = '/b3alpha-dashboard';
+      }
     }
   }
   if(event==='SIGNED_OUT') _doGoTo('landing');
 });
 
 async function checkSession(){
-  const {data:{session}}=await _supabase.auth.getSession();
-  if(session){
-    window.location.href = '/b3alpha-dashboard';
+  // Se a URL contém tokens do OAuth (retorno do Google), não fazer signOut —
+  // o onAuthStateChange vai processar o login automaticamente.
+  const hash   = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+  if(hash.includes('access_token') || params.has('code') || params.has('error_description')){
+    return; // aguarda onAuthStateChange tratar o login Google
   }
+  // Sem OAuth em andamento → encerrar sessão antiga e mostrar landing
+  await _supabase.auth.signOut();
+  _doGoTo('landing');
 }
 
 /* ══ CREDITS ══ */
@@ -2192,7 +2310,7 @@ function closeLoginRequiredModal(){ document.getElementById('loginRequiredModal'
 /* ══ OVERVIEW LIVE DATA (Brapi) ══ */
 async function _loadOverview(){
   try{
-    const res=await fetch('https://brapi.dev/api/quote/PETR4,HGLG11,%5EBVSP?range=1d');
+    const res=await fetch('https://brapi.dev/api/quote/PETR4,HGLG11,%5EBVSP?range=1d&token=demo');
     if(!res.ok) return;
     const j=await res.json();
     j?.results?.forEach(r=>{
@@ -2221,10 +2339,12 @@ setInterval(_loadTickerBrapi,90000);
 /* ── Demo IA iPhone animation ── */
 (function(){
   const CHAT = [
-    { type:'user', text:'Tenho 200 cotas de PETR4 com PM de R$&nbsp;34,20. Caiu 6% hoje — faço preço médio ou realizo o prejuízo?' },
-    { type:'ai',   text:'Com Selic a 14,75%, o custo de oportunidade é alto. PETR4 carrega risco político elevado agora.<br><br>Antes de aportar mais, avalie: o prejuízo atual representa <strong>~R$&nbsp;930</strong>. Realizar e migrar para renda fixa te garante 1,2% ao mês sem volatilidade. Se o tese de longo prazo ainda faz sentido, médio somente com stop em R$&nbsp;30,50.' },
-    { type:'user', text:'Faz sentido migrar parte disso pro HGLG11 então?' },
-    { type:'ai',   text:'HGLG11 negocia com <strong>P/VP de 0,94</strong> e DY dos últimos 12 meses de 9,8% — atrativo, mas FIIs de logística sofrem quando a Selic demora a cair.<br><br>Sugestão: não mais que 15% do capital nessa migração agora. Espera o Copom de junho antes de ampliar posição.' },
+    { type:'user', text:'Oi, como você está? 😊' },
+    { type:'ai',   text:'Oi! Tô ótima, obrigada 😄<br><br>Sou a <strong>B3Alpha</strong> — sua analista de investimentos com IA. Você já investe ou tá começando agora?' },
+    { type:'user', text:'Tô começando... tenho R$&nbsp;500 e não sei por onde ir' },
+    { type:'ai',   text:'Perfeito pra dar o primeiro passo! Com R$&nbsp;500 hoje, eu montaria assim:<br><br><strong>• 40%</strong> Tesouro Selic — segurança total, ~14% a.a.<br><strong>• 30%</strong> CDB 110% CDI — liquidez D+0<br><strong>• 20%</strong> HGLG11 — renda mensal de FII<br><strong>• 10%</strong> VALE3 — exposição à bolsa<br><br>Quer que eu aprofunde algum desses?' },
+    { type:'user', text:'Qual o risco do HGLG11 agora?' },
+    { type:'ai',   text:'HGLG11 negocia a <strong>P/VP 0,94</strong> — desconto de 6% sobre o patrimônio. DY dos últimos 12 meses: <strong>9,8% a.a.</strong><br><br>Risco moderado: FIIs de logística sofrem quando a Selic demora a cair. Com Selic a 14,75%, recomendo não ultrapassar <strong>15–20%</strong> da carteira por enquanto. Ideal revisar após o próximo Copom.' },
   ];
 
   let _seq = null;
@@ -2383,6 +2503,36 @@ setInterval(_loadTickerBrapi,90000);
   obs.observe(section);
 })();
 </script>
+
+<!-- ══════════════════════════════════ GOOGLE ONBOARDING MODAL ══════════════════════════════════ -->
+<div class="google-ob-modal" id="googleObModal">
+  <div class="google-ob-bg"></div>
+  <div class="google-ob-card">
+    <span class="google-ob-icon">👋</span>
+    <h2 class="google-ob-title">Bem-vindo à B3Alpha!</h2>
+    <p class="google-ob-sub">Complete seu perfil para começar a investir com inteligência.</p>
+
+    <div class="form-group">
+      <label class="form-label">Como prefere ser chamado?</label>
+      <input class="form-input" id="obName" type="text" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Data de nascimento</label>
+      <input class="form-input" id="obBirth" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Por que escolheu investir?</label>
+      <textarea class="form-input" id="obReason" placeholder="Conte um pouco sobre seus objetivos financeiros..." style="resize:none;height:82px;line-height:1.6"></textarea>
+    </div>
+
+    <div class="error-box" id="obError" style="display:none;margin-bottom:12px"></div>
+
+    <button class="btn-submit" id="obBtn" onclick="submitGoogleOnboarding()">
+      <span class="btn-text">Começar a investir →</span>
+      <div class="btn-loader"></div>
+    </button>
+  </div>
+</div>
 
 </body>
 </html>
