@@ -1716,6 +1716,12 @@ async function loadUserProfile() {
     const planLabel = document.getElementById('wcPlanLabel');
     if (planLabel) planLabel.textContent = `Plano ${plan} · ${userCredits} créditos restantes`;
     if (profile.risk_profile) selectObOption('risk', profile.risk_profile);
+
+    // Auto-start: novo usuário sem onboarding → abrir módulo 1 automaticamente
+    if (!profile.onboarding_completed) {
+      _isOnboarding = true;
+      setTimeout(() => openModule(1), 1400);
+    }
   }
 
   /* Patrimônio */
@@ -2359,7 +2365,8 @@ function openPatrimonioOverlay(){ closeOverlays(); document.getElementById('dbPa
    MÓDULOS
 ══════════════════════════════════════ */
 let currentModuleNum = 0;
-const moduleFiles = {1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides_1.html'};
+let _isOnboarding = false;
+const moduleFiles = {1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides.html'};
 function openModule(num) {
   currentModuleNum = num;
   document.getElementById('moduleIframe').src = moduleFiles[num];
@@ -2375,7 +2382,15 @@ function updateNextBtn() {
 }
 function nextModule() {
   const iframe = document.getElementById('moduleIframe');
-  if(currentModuleNum>=4) { closeModule(); return; }
+  if(currentModuleNum>=4) {
+    closeModule();
+    if (_isOnboarding && _currentUser) {
+      _isOnboarding = false;
+      _supabase.from('profiles').update({ onboarding_completed: true }).eq('id', _currentUser.id);
+      setTimeout(() => showToast('Parabéns! Você completou todos os módulos 🎓', 'success'), 400);
+    }
+    return;
+  }
   iframe.style.opacity='0';
   setTimeout(()=>{ currentModuleNum++; iframe.src=moduleFiles[currentModuleNum]; iframe.onload=()=>{iframe.style.opacity='1';iframe.onload=null;}; updateNextBtn(); },300);
 }

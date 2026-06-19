@@ -1711,12 +1711,9 @@ async function handleLogin(){
       _loginCaptchaToken='';
       return showError('loginError', error.message.includes('Invalid')?'Email ou senha incorretos.':error.message);
     }
-    const name=data.user.user_metadata?.first_name||data.user.email.split('@')[0];
-    populateUserUI(data.user,name);
-    loadUserProfile(data.user.id);
     _authHandled=true;
     document.getElementById('loginSuccess').classList.add('show');
-    setTimeout(()=>{ _authHandled=false; resumePendingCheckout(); openModuleFlow(1); },1600);
+    setTimeout(()=>{ _authHandled=false; resumePendingCheckout(); window.location.href='/b3alpha-dashboard'; },1600);
   }catch(e){ btn.classList.remove('loading'); showError('loginError','Erro de conexão. Tente novamente.'); }
 }
 
@@ -1748,11 +1745,20 @@ async function handleRegister(){
       _registerCaptchaToken='';
       return showError('registerError', error.message.includes('already')?'Este email já está cadastrado.':error.message);
     }
-    populateUserUI(data.user,first);
-    loadUserProfile(data.user.id);
+    // Salva perfil na tabela profiles para a IA reconhecer o usuário
+    if(data.user){
+      const fullName = first + (last ? ' '+last : '');
+      const birthFormatted = birth ? new Date(birth+'T12:00:00').toLocaleDateString('pt-BR') : '';
+      const initialMemory = `Nome do usuário: ${first}. Nome completo: ${fullName}.${birthFormatted ? ' Data de nascimento: '+birthFormatted+'.' : ''} Sempre chame o usuário pelo primeiro nome (${first}).`;
+      await _supabase.from('profiles').update({
+        full_name: fullName,
+        birth_date: birth || null,
+        ai_memory: initialMemory
+      }).eq('id', data.user.id);
+    }
     _authHandled=true;
     document.getElementById('registerSuccess').classList.add('show');
-    setTimeout(()=>{ _authHandled=false; resumePendingCheckout(); openModuleFlow(1); },1800);
+    setTimeout(()=>{ _authHandled=false; resumePendingCheckout(); window.location.href='/b3alpha-dashboard'; },1800);
   }catch(e){ btn.classList.remove('loading'); showError('registerError','Erro de conexão. Tente novamente.'); }
 }
 
@@ -1793,15 +1799,18 @@ async function submitGoogleOnboarding(){
   btn.classList.add('loading');
 
   try {
-    // Salva no user_metadata (funciona sempre)
+    // Salva no user_metadata
     await _supabase.auth.updateUser({
       data: { first_name: nameVal, birth_date: birthVal, investment_reason: reasonVal }
     });
-    // Salva full_name e birth_date na tabela profiles
+    // Salva na tabela profiles — full_name, birth_date e ai_memory para a IA reconhecer
     if(_obUser){
+      const birthFormatted = birthVal ? new Date(birthVal+'T12:00:00').toLocaleDateString('pt-BR') : '';
+      const initialMemory = `Nome do usuário: ${nameVal}.${birthFormatted ? ' Data de nascimento: '+birthFormatted+'.' : ''} O que acha sobre investimentos: ${reasonVal}. Sempre chame o usuário pelo primeiro nome (${nameVal}).`;
       await _supabase.from('profiles').update({
         full_name: nameVal,
-        birth_date: birthVal
+        birth_date: birthVal || null,
+        ai_memory: initialMemory
       }).eq('id', _obUser.id);
     }
     window.location.href = '/b3alpha-dashboard';
@@ -2224,7 +2233,7 @@ const _MODULE_URLS={
   1:'modulo1-slides.html',
   2:'modulo2-slides.html',
   3:'modulo3-slides.html',
-  4:'modulo4-slides_1.html'
+  4:'modulo4-slides.html'
 };
 let _currentModule=1;
 async function openModuleWithAuth(n){
@@ -2298,7 +2307,7 @@ function nextModule(){
       _updateFlowBtn();
     } else {
       /* All modules done — go to dashboard */
-      window.location.href = '/b3alpha-dashboard.html';
+      window.location.href = '/b3alpha-dashboard';
     }
   } else {
     if(_currentModule<4) openModule(_currentModule+1);
@@ -2521,8 +2530,8 @@ setInterval(_loadTickerBrapi,90000);
       <input class="form-input" id="obBirth" type="date">
     </div>
     <div class="form-group">
-      <label class="form-label">Por que escolheu investir?</label>
-      <textarea class="form-input" id="obReason" placeholder="Conte um pouco sobre seus objetivos financeiros..." style="resize:none;height:82px;line-height:1.6"></textarea>
+      <label class="form-label">O que você acha sobre investimento?</label>
+      <textarea class="form-input" id="obReason" placeholder="Ex: Quero construir patrimônio, me aposentar mais cedo, ou simplesmente fazer meu dinheiro render mais..." style="resize:none;height:82px;line-height:1.6"></textarea>
     </div>
 
     <div class="error-box" id="obError" style="display:none;margin-bottom:12px"></div>

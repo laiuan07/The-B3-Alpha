@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 4 — Corretoras & Criptomoedas</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#120F1A;--canvas:#1A1525;--surf:#221C30;--surf2:#2A223C;--bord:rgba(255,255,255,0.08);--ink:#EDE8F5;--soft:#A898C8;--muted:#5A4878;--purple:#A78BFA;--ps:rgba(167,139,250,0.10);--pb:rgba(167,139,250,0.22);--pg:rgba(167,139,250,0.20);--green:#4CD992;--yellow:#F0C94A;--blue:#5BA8D4;--red:#E06B6B;--orange:#FB923C}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid var(--bord);flex-shrink:0}
+  .modtag{display:inline-flex;align-items:center;gap:7px;background:var(--ps);border:1px solid var(--pb);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:700;color:var(--purple);letter-spacing:.08em;text-transform:uppercase}
+  .modtag span{width:6px;height:6px;border-radius:50%;background:var(--purple);display:inline-block}
+  .topbar h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--ink)}
+  .topbar h1 em{color:var(--purple);font-style:normal}
+  .hint{font-size:11px;color:var(--muted)}
+  .grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;padding:20px 28px;gap:14px;min-height:0}
+  .flip-card{perspective:1200px;cursor:pointer;min-height:0;min-width:0}
+  .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.77,0,.18,1)}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column}
+  .front{background:var(--canvas);border:1px solid var(--bord);align-items:center;justify-content:center;gap:10px;padding:24px;position:relative;overflow:hidden}
+  .front::before{content:'';position:absolute;top:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--pg),transparent 65%);pointer-events:none}
+  .front:hover{border-color:rgba(167,139,250,0.35)}
+  .flip-card:hover .front{box-shadow:0 8px 40px rgba(167,139,250,0.12)}
+  .f-num{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--purple);background:var(--ps);border:1px solid var(--pb);padding:3px 11px;border-radius:100px}
+  .f-icon{font-size:36px}
+  .f-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--ink);text-align:center;line-height:1.2}
+  .f-title em{color:var(--purple);font-style:normal}
+  .f-sub{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.4}
+  .f-cta{font-size:11px;color:var(--purple);font-weight:600;display:flex;align-items:center;gap:5px;margin-top:2px;opacity:.7}
+  .back{background:var(--surf);border:1px solid var(--pb);transform:rotateY(180deg);padding:16px 18px;justify-content:flex-start;gap:8px;box-shadow:0 0 40px rgba(167,139,250,0.1);overflow-y:auto}
+  .back::-webkit-scrollbar{width:3px}
+  .back::-webkit-scrollbar-thumb{background:var(--pb);border-radius:3px}
+  .b-tag{display:inline-flex;align-items:center;gap:6px;background:var(--ps);border:1px solid var(--pb);border-radius:100px;padding:3px 10px;width:fit-content;font-size:9px;font-weight:700;color:var(--purple);letter-spacing:.06em;text-transform:uppercase}
+  .b-tag span{width:4px;height:4px;border-radius:50%;background:var(--purple);display:inline-block}
+  .b-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--ink);line-height:1.2}
+  .b-title em{color:var(--purple);font-style:normal}
+  .b-rows{display:flex;flex-direction:column;gap:6px}
+  .b-row{background:rgba(255,255,255,0.04);border:1px solid var(--bord);border-radius:9px;padding:8px 10px;display:flex;align-items:flex-start;gap:8px;transition:border-color .2s}
+  .b-row:hover{border-color:rgba(167,139,250,0.3)}
+  .bri{font-size:15px;flex-shrink:0;margin-top:1px}
+  .brt{font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+  .brd{font-size:10.5px;color:var(--soft);line-height:1.45}
+  .cor-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .cor-card{background:rgba(255,255,255,0.04);border:1px solid var(--bord);border-radius:10px;padding:10px 12px;transition:border-color .2s}
+  .cor-card:hover{border-color:rgba(167,139,250,0.3)}
+  .cor-card.dest{border-color:var(--purple);background:var(--ps)}
+  .cc-name{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:800;color:var(--ink);margin-bottom:3px}
+  .cc-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;margin-bottom:5px}
+  .badge-g{background:rgba(76,217,146,0.15);color:var(--green)}
+  .badge-p{background:var(--ps);color:var(--purple)}
+  .badge-o{background:rgba(251,146,60,0.15);color:var(--orange)}
+  .cc-desc{font-size:10.5px;color:var(--soft);line-height:1.4}
+  .motivos{display:flex;flex-direction:column;gap:7px}
+  .motivo{background:rgba(255,255,255,0.04);border:1px solid var(--bord);border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;transition:border-color .2s}
+  .motivo:hover{border-color:rgba(167,139,250,0.3)}
+  .mot-num{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--purple);background:var(--ps);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .mot-t{font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+  .mot-d{font-size:10.5px;color:var(--soft);line-height:1.45}
+  .mini-stats{display:flex;gap:7px}
+  .mstat{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--bord);border-radius:9px;padding:9px 8px;text-align:center}
+  .mstat .mv{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;line-height:1}
+  .mstat .ml{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+  .mv.g{color:var(--green)}.mv.o{color:var(--orange)}.mv.p{color:var(--purple)}
+  .b-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.06);border:1px solid var(--bord);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);cursor:pointer;transition:background .2s,color .2s;flex-shrink:0}
+  .b-close:hover{background:rgba(224,107,107,0.15);color:var(--red)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="modtag"><span></span>Módulo 4</div>
+  <h1>Corretoras & <em>Criptomoedas</em></h1>
+  <span class="hint">Clique nos cards para virar</span>
+</div>
+<div class="grid">
+  <div class="flip-card" id="card-0" onclick="flip(0)">
+    <div class="flip-inner">
+      <div class="face front"><span class="f-num">01</span><span class="f-icon">🏦</span><div class="f-title">O que é uma <em>corretora?</em></div><div class="f-sub">Entenda a função antes de escolher</div><div class="f-cta">Clique para descobrir →</div></div>
+      <div class="face back">
+        <div class="b-close" onclick="event.stopPropagation();flip(0)">✕</div>
+        <div class="b-tag"><span></span>01 / 04</div>
+        <div class="b-title">O que é uma <em>corretora?</em></div>
+        <div class="b-rows">
+          <div class="b-row"><span class="bri">🔌</span><div><div class="brt">A ponte entre você e a bolsa</div><div class="brd">A corretora é o intermediário que conecta seu dinheiro ao mercado. Sem ela, você não consegue comprar ações, FIIs ou renda fixa na B3.</div></div></div>
+          <div class="b-row"><span class="bri">📱</span><div><div class="brt">Tudo pelo celular</div><div class="brd">Hoje você abre conta em minutos, de graça, pelo app. Transfere via Pix e já investe em segundos.</div></div></div>
+          <div class="b-row"><span class="bri">🛡️</span><div><div class="brt">Regulada pela CVM</div><div class="brd">Toda corretora séria é registrada na CVM e na B3. Seus ativos ficam no seu CPF — não no balanço da corretora.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flip-card" id="card-1" onclick="flip(1)">
+    <div class="flip-inner">
+      <div class="face front"><span class="f-num">02</span><span class="f-icon">⭐</span><div class="f-title">Qual <em>corretora</em> escolher?</div><div class="f-sub">Do iniciante ao intermediário</div><div class="f-cta">Clique para ver →</div></div>
+      <div class="face back">
+        <div class="b-close" onclick="event.stopPropagation();flip(1)">✕</div>
+        <div class="b-tag"><span></span>02 / 04</div>
+        <div class="b-title">Qual <em>corretora</em> escolher?</div>
+        <div class="cor-grid">
+          <div class="cor-card dest"><div class="cc-name">Nu Invest</div><span class="cc-badge badge-g">🌱 Iniciante</span><div class="cc-desc">Integrada ao Nubank. Zero taxas, app simples e área educacional.</div></div>
+          <div class="cor-card dest"><div class="cc-name">Inter</div><span class="cc-badge badge-g">🌱 Iniciante</span><div class="cc-desc">Conta corrente + investimentos no mesmo app. Zero taxa e intuitivo.</div></div>
+          <div class="cor-card dest"><div class="cc-name">Rico</div><span class="cc-badge badge-g">🌱 Iniciante</span><div class="cc-desc">Corretagem zero, conteúdo educacional forte e variedade de ativos.</div></div>
+          <div class="cor-card" style="border-color:var(--orange)"><div class="cc-name">XP Investimentos</div><span class="cc-badge badge-o">📈 Intermediário</span><div class="cc-desc">A maior corretora independente do Brasil. Plataforma completa e assessoria.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flip-card" id="card-2" onclick="flip(2)">
+    <div class="flip-inner">
+      <div class="face front"><span class="f-num">03</span><span class="f-icon">₿</span><div class="f-title">A história das <em>criptos</em></div><div class="f-sub">De R$0 a trilhões em 15 anos</div><div class="f-cta">Clique para saber →</div></div>
+      <div class="face back">
+        <div class="b-close" onclick="event.stopPropagation();flip(2)">✕</div>
+        <div class="b-tag"><span></span>03 / 04</div>
+        <div class="b-title">A história das <em>criptos</em></div>
+        <div class="b-rows">
+          <div class="b-row"><span class="bri">🌱</span><div><div class="brt">2009 — Bitcoin nasce do zero</div><div class="brd">Satoshi Nakamoto cria o Bitcoin como moeda digital descentralizada. Em 2010 valia frações de centavo.</div></div></div>
+          <div class="b-row"><span class="bri">🚀</span><div><div class="brt">2017–2021 — Explosão global</div><div class="brd">Bitcoin passou de US$1k para US$69k. Ethereum e centenas de altcoins surgiram, criando um mercado de trilhões.</div></div></div>
+          <div class="b-row"><span class="bri">📊</span><div><div class="brt">Alta volatilidade</div><div class="brd">Oscilações de 20–50% em dias são comuns. Risco alto, mas oportunidades existem.</div></div></div>
+        </div>
+        <div class="mini-stats"><div class="mstat"><div class="mv g">+21.000%</div><div class="ml">BTC em 10 anos</div></div><div class="mstat"><div class="mv o">+2.000%</div><div class="ml">ETH desde 2017</div></div><div class="mstat"><div class="mv p">$3T+</div><div class="ml">Market cap cripto</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="flip-card" id="card-3" onclick="flip(3)">
+    <div class="flip-inner">
+      <div class="face front"><span class="f-num">04</span><span class="f-icon">🎯</span><div class="f-title">3 motivos para <em>investir</em> em cripto</div><div class="f-sub">Por que faz sentido ter na carteira</div><div class="f-cta">Clique para ver →</div></div>
+      <div class="face back">
+        <div class="b-close" onclick="event.stopPropagation();flip(3)">✕</div>
+        <div class="b-tag"><span></span>04 / 04</div>
+        <div class="b-title">3 motivos para <em>investir</em> em cripto</div>
+        <div class="motivos">
+          <div class="motivo"><span class="mot-num">1</span><div><div class="mot-t">Retorno acima de qualquer classe</div><div class="mot-d">Bitcoin e Ethereum superaram ações, FIIs e renda fixa na última década. Quem alocou 5–10% multiplicou o patrimônio.</div></div></div>
+          <div class="motivo"><span class="mot-num">2</span><div><div class="mot-t">Descorrelação com a bolsa</div><div class="mot-d">Cripto tem ciclos próprios — adiciona diversificação real à carteira.</div></div></div>
+          <div class="motivo"><span class="mot-num">3</span><div><div class="mot-t">Acessível a partir de R$1</div><div class="mot-d">Compre frações por qualquer valor — direto pelo app da corretora em segundos.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const flipped=[false,false,false,false];
+function flip(i){flipped[i]=!flipped[i];document.getElementById('card-'+i).classList.toggle('flipped',flipped[i]);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')flipped.forEach((f,i)=>{if(f)flip(i);});});
+</script>
+</body>
+</html>

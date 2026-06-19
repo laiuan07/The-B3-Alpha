@@ -18,8 +18,9 @@
   .cols{display:flex;flex:1;overflow:hidden}
   .col{flex:1;position:relative;overflow:hidden;cursor:pointer;transition:flex .55s cubic-bezier(.77,0,.18,1);border-right:1px solid var(--border)}
   .col:last-child{border-right:none}
-  .cols:has(.col:hover) .col{flex:0.3}
-  .cols:has(.col:hover) .col:hover{flex:3}
+  .cols.has-active .col{flex:0.3}
+  .cols.has-active .col.active{flex:3}
+  .cols:not(.has-active) .col:hover{flex:1.8}
   .col-1{background:linear-gradient(160deg,#102030 0%,#141618 100%)}
   .col-2{background:linear-gradient(160deg,#0F2E1E 0%,#141618 100%)}
   .col-3{background:linear-gradient(160deg,#2A1F05 0%,#141618 100%)}
@@ -30,9 +31,9 @@
   .col-3::before{background:radial-gradient(circle,rgba(240,201,74,0.2),transparent 65%)}
   .col-4::before{background:radial-gradient(circle,rgba(91,168,212,0.2),transparent 65%)}
   .col-collapsed{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .3s;pointer-events:none}
-  .cols:has(.col:hover) .col:not(:hover) .col-collapsed{opacity:1}
-  .cols:not(:has(.col:hover)) .col-collapsed{opacity:1}
-  .col:hover .col-collapsed{opacity:0}
+  .cols.has-active .col:not(.active) .col-collapsed{opacity:1}
+  .cols:not(.has-active) .col-collapsed{opacity:1}
+  .col.active .col-collapsed{opacity:0}
   .cn-num{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;border:1px solid rgba(255,255,255,0.15)}
   .cn-icon{font-size:32px}
   .cn-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);letter-spacing:.06em;text-transform:uppercase;opacity:0.7;max-height:160px}
@@ -45,7 +46,7 @@
   .col-3 .cn-title{color:var(--yellow)}
   .col-4 .cn-title{color:var(--blue)}
   .col-content{position:absolute;inset:0;padding:40px 36px;overflow-y:auto;opacity:0;transform:translateY(12px);transition:opacity .35s .15s,transform .35s .15s;pointer-events:none;min-width:520px}
-  .col:hover .col-content{opacity:1;transform:translateY(0);pointer-events:all}
+  .col.active .col-content{opacity:1;transform:translateY(0);pointer-events:all}
   .col-content::-webkit-scrollbar{width:3px}
   .col-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
   .cc-tag{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:4px 12px;margin-bottom:16px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.1)}
@@ -120,7 +121,7 @@
 <div class="top-bar">
   <div class="mod-tag"><span></span>Módulo 2</div>
   <h1>Fundos <em>Imobiliários</em></h1>
-  <span class="hint">Passe o cursor sobre uma coluna para expandir</span>
+  <span class="hint">Clique em uma coluna para expandir</span>
 </div>
 <div class="cols">
   <div class="col col-1">
@@ -181,5 +182,20 @@
     </div>
   </div>
 </div>
+<script>
+const cols = document.querySelector('.cols');
+document.querySelectorAll('.col').forEach(col => {
+  col.addEventListener('click', () => {
+    const isActive = col.classList.contains('active');
+    document.querySelectorAll('.col').forEach(c => c.classList.remove('active'));
+    if (!isActive) {
+      col.classList.add('active');
+      cols.classList.add('has-active');
+    } else {
+      cols.classList.remove('has-active');
+    }
+  });
+});
+</script>
 </body>
 </html>
