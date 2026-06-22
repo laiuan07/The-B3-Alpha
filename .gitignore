@@ -1,0 +1,6 @@
+.vercel
+
+# Supabase edge functions (deploy separado via npx supabase functions deploy)
+blueprint-ia/
+supabase/functions/
+supabase/.temp/
