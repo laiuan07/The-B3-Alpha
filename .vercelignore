@@ -1,0 +1,14 @@
+blueprint-ia/
+supabase/
+check-alerts/
+stripe-webhook/
+node_modules/
+.claude/
+.vscode/
+*.mov
+*.MOV
+*.pdf
+*.docx
+*.json.bak
+n8n-alertas-preco.json
+pluggy-sql.sql
