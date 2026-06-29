@@ -2501,14 +2501,19 @@ setInterval(_loadTickerBrapi,90000);
 /* ── Demo IA iPhone animation ── */
 (function(){
   const CHAT = [
-    { type:'user', text:'Oi, como você está? 😊' },
-    { type:'ai',   text:'Oi! Tô ótima, obrigada 😄<br><br>Sou a <strong>B3Alpha</strong> — sua analista de investimentos com IA. Você já investe ou tá começando agora?' },
-    { type:'user', text:'Tô começando... tenho R$&nbsp;500 e não sei por onde ir' },
-    { type:'ai',   text:'Perfeito pra dar o primeiro passo! Com R$&nbsp;500 hoje, eu montaria assim:<br><br><strong>• 40%</strong> Tesouro Selic — segurança total, ~14% a.a.<br><strong>• 30%</strong> CDB 110% CDI — liquidez D+0<br><strong>• 20%</strong> HGLG11 — renda mensal de FII<br><strong>• 10%</strong> VALE3 — exposição à bolsa<br><br>Quer que eu aprofunde algum desses?' },
-    { type:'user', text:'Qual o risco do HGLG11 agora?' },
-    { type:'ai',   text:'HGLG11 negocia a <strong>P/VP 0,94</strong> — desconto de 6% sobre o patrimônio. DY dos últimos 12 meses: <strong>9,8% a.a.</strong><br><br>Risco moderado: FIIs de logística sofrem quando a Selic demora a cair. Com Selic a 14,75%, recomendo não ultrapassar <strong>15–20%</strong> da carteira por enquanto. Ideal revisar após o próximo Copom.' },
+    { type:'user', text:'Nunca investi antes e não sei por onde começar.' },
+    { type:'ai',   text:'Sem problemas. Antes de falar sobre investimentos, preciso entender sua situação financeira.<br><br>• Qual é a sua idade?<br>• Quanto você consegue investir por mês?<br>• Você possui alguma reserva de emergência?<br>• Qual é o seu principal objetivo?<br>• Você possui alguma dívida atualmente?' },
+    { type:'user', text:'Tenho 24 anos, consigo investir R$&nbsp;500 por mês, não tenho reserva de emergência e quero construir patrimônio.' },
+    { type:'ai',   text:'Obrigado pelas informações.<br><br>Antes de pensar em investimentos com maior retorno, o primeiro passo seria criar uma <strong>reserva de emergência</strong>. Ela serve para lidar com imprevistos sem comprometer seus investimentos ou recorrer a empréstimos.<br><br>Enquanto essa reserva é construída, também é importante desenvolver o hábito de investir todo mês. A consistência costuma ter mais impacto no longo prazo do que tentar encontrar o investimento perfeito.' },
+    { type:'user', text:'Então eu ainda não devo investir?' },
+    { type:'ai',   text:'Você pode investir desde já, mas a estratégia deve ser adequada ao seu momento.<br><br>Como ainda não possui reserva, o ideal é priorizar investimentos com <strong>baixo risco e alta liquidez</strong> até formar essa proteção. Depois disso, avaliamos alternativas voltadas ao crescimento do patrimônio, sempre considerando seu perfil e objetivos.' },
+    { type:'user', text:'Como você decide quais investimentos fazem sentido para mim?' },
+    { type:'ai',   text:'Minha análise considera:<br><br>• Sua renda mensal e capacidade de aporte.<br>• Seus objetivos financeiros.<br>• O prazo em que pretende usar o dinheiro.<br>• Sua tolerância ao risco.<br>• Sua situação financeira atual.<br><br>Com base nisso, explico os investimentos mais compatíveis com seu perfil e o papel de cada um dentro de uma estratégia de longo prazo.' },
+    { type:'user', text:'Você pode me acompanhar enquanto eu aprendo a investir?' },
+    { type:'ai',   text:'Sim.<br><br>Posso explicar conceitos, analisar oportunidades, esclarecer dúvidas, simular cenários futuros e acompanhar sua evolução ao longo da jornada financeira.<br><br>Cada orientação é baseada nas informações que você fornecer — tornando a análise <strong>personalizada para a sua realidade</strong>.' },
   ];
 
+  const MAX_BUBBLES = 3;
   let _seq = null;
   let _running = false;
 
@@ -2531,6 +2536,25 @@ setInterval(_loadTickerBrapi,90000);
     if(c) c.innerHTML = '';
   }
 
+  function trimBubbles(c){
+    const bubbles = c.querySelectorAll('.iph-bubble');
+    if(bubbles.length > MAX_BUBBLES){
+      for(let i = 0; i < bubbles.length - MAX_BUBBLES; i++){
+        bubbles[i].style.transition = 'opacity .3s';
+        bubbles[i].style.opacity = '0';
+        setTimeout(() => { if(bubbles[i].parentNode) bubbles[i].parentNode.removeChild(bubbles[i]); }, 320);
+      }
+    }
+  }
+
+  function addBubble(c, msg){
+    const bubble = makeBubble(msg);
+    c.appendChild(bubble);
+    setTimeout(() => { if(bubble.parentNode) bubble.classList.add('visible'); }, 30);
+    trimBubbles(c);
+    c.scrollTop = c.scrollHeight;
+  }
+
   function runChat(){
     clearChat();
     _running = true;
@@ -2538,11 +2562,10 @@ setInterval(_loadTickerBrapi,90000);
     if(!c){ _running = false; return; }
 
     const timers = [];
-    let t = 600;
+    let t = 800;
 
-    CHAT.forEach((msg, i) => {
+    CHAT.forEach((msg) => {
       if(msg.type === 'ai'){
-        // show typing first
         timers.push(setTimeout(() => {
           if(!_running) return;
           const typing = makeTyping();
@@ -2553,26 +2576,24 @@ setInterval(_loadTickerBrapi,90000);
           timers.push(setTimeout(() => {
             if(!_running) return;
             if(typing.parentNode) typing.parentNode.removeChild(typing);
-            const bubble = makeBubble(msg);
-            c.appendChild(bubble);
-            c.scrollTop = c.scrollHeight;
-            setTimeout(() => { if(bubble.parentNode) bubble.classList.add('visible'); }, 30);
-            c.scrollTop = c.scrollHeight;
-          }, 1100));
+            addBubble(c, msg);
+          }, 1200));
         }, t));
-        t += 1900;
+        t += 2200;
       } else {
         timers.push(setTimeout(() => {
           if(!_running) return;
-          const bubble = makeBubble(msg);
-          c.appendChild(bubble);
-          c.scrollTop = c.scrollHeight;
-          setTimeout(() => { if(bubble.parentNode) bubble.classList.add('visible'); }, 30);
-          c.scrollTop = c.scrollHeight;
+          addBubble(c, msg);
         }, t));
-        t += 800;
+        t += 1000;
       }
     });
+
+    // Loop: reinicia 5s após o último balão
+    timers.push(setTimeout(() => {
+      if(!_running) return;
+      runChat();
+    }, t + 5000));
 
     _seq = timers;
   }
