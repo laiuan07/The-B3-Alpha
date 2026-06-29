@@ -2513,22 +2513,15 @@ setInterval(_loadTickerBrapi,90000);
     { type:'ai',   text:'Sim.<br><br>Posso explicar conceitos, analisar oportunidades, esclarecer dúvidas, simular cenários futuros e acompanhar sua evolução ao longo da jornada financeira.<br><br>Cada orientação é baseada nas informações que você fornecer — tornando a análise <strong>personalizada para a sua realidade</strong>.' },
   ];
 
-  const MAX_BUBBLES = 3;
-  let _seq = null;
+  let _timers = [];
   let _running = false;
 
-  function makeBubble(msg){
-    const el = document.createElement('div');
-    el.className = 'iph-bubble ' + (msg.type === 'user' ? 'user-b' : 'ai-b');
-    el.innerHTML = msg.text;
-    return el;
-  }
-
-  function makeTyping(){
-    const el = document.createElement('div');
-    el.className = 'iph-typing';
-    el.innerHTML = '<span></span><span></span><span></span>';
-    return el;
+  function _addTimer(fn, delay){
+    const id = setTimeout(() => {
+      _timers = _timers.filter(x => x !== id);
+      if(_running) fn();
+    }, delay);
+    _timers.push(id);
   }
 
   function clearChat(){
@@ -2536,71 +2529,68 @@ setInterval(_loadTickerBrapi,90000);
     if(c) c.innerHTML = '';
   }
 
-  function trimBubbles(c){
-    const bubbles = c.querySelectorAll('.iph-bubble');
-    if(bubbles.length > MAX_BUBBLES){
-      for(let i = 0; i < bubbles.length - MAX_BUBBLES; i++){
-        bubbles[i].style.transition = 'opacity .3s';
-        bubbles[i].style.opacity = '0';
-        setTimeout(() => { if(bubbles[i].parentNode) bubbles[i].parentNode.removeChild(bubbles[i]); }, 320);
-      }
-    }
-  }
-
-  function addBubble(c, msg){
-    const bubble = makeBubble(msg);
-    c.appendChild(bubble);
-    setTimeout(() => { if(bubble.parentNode) bubble.classList.add('visible'); }, 30);
-    trimBubbles(c);
-    c.scrollTop = c.scrollHeight;
+  function stopChat(){
+    _running = false;
+    _timers.forEach(id => clearTimeout(id));
+    _timers = [];
   }
 
   function runChat(){
+    stopChat();
     clearChat();
     _running = true;
     const c = document.getElementById('iphMsgs');
     if(!c){ _running = false; return; }
 
-    const timers = [];
-    let t = 800;
+    let t = 600;
 
     CHAT.forEach((msg) => {
       if(msg.type === 'ai'){
-        timers.push(setTimeout(() => {
-          if(!_running) return;
-          const typing = makeTyping();
+        // mostra typing
+        _addTimer(() => {
+          const typing = document.createElement('div');
+          typing.className = 'iph-typing';
+          typing.innerHTML = '<span></span><span></span><span></span>';
           c.appendChild(typing);
           c.scrollTop = c.scrollHeight;
-          setTimeout(() => { if(typing.parentNode) typing.classList.add('visible'); }, 30);
+          requestAnimationFrame(() => typing.classList.add('visible'));
 
-          timers.push(setTimeout(() => {
-            if(!_running) return;
+          // substitui typing pela resposta
+          _addTimer(() => {
             if(typing.parentNode) typing.parentNode.removeChild(typing);
-            addBubble(c, msg);
-          }, 1200));
-        }, t));
-        t += 2200;
+            // remove balões antigos se tiver mais de 2
+            while(c.querySelectorAll('.iph-bubble').length >= 2){
+              c.removeChild(c.querySelector('.iph-bubble'));
+            }
+            const bubble = document.createElement('div');
+            bubble.className = 'iph-bubble ai-b';
+            bubble.innerHTML = msg.text;
+            c.appendChild(bubble);
+            c.scrollTop = c.scrollHeight;
+            requestAnimationFrame(() => bubble.classList.add('visible'));
+          }, 1200);
+        }, t);
+        t += 2400;
+
       } else {
-        timers.push(setTimeout(() => {
-          if(!_running) return;
-          addBubble(c, msg);
-        }, t));
+        _addTimer(() => {
+          // remove balões antigos se tiver mais de 2
+          while(c.querySelectorAll('.iph-bubble').length >= 2){
+            c.removeChild(c.querySelector('.iph-bubble'));
+          }
+          const bubble = document.createElement('div');
+          bubble.className = 'iph-bubble user-b';
+          bubble.innerHTML = msg.text;
+          c.appendChild(bubble);
+          c.scrollTop = c.scrollHeight;
+          requestAnimationFrame(() => bubble.classList.add('visible'));
+        }, t);
         t += 1000;
       }
     });
 
-    // Loop: reinicia 5s após o último balão
-    timers.push(setTimeout(() => {
-      if(!_running) return;
-      runChat();
-    }, t + 5000));
-
-    _seq = timers;
-  }
-
-  function stopChat(){
-    _running = false;
-    if(_seq){ _seq.forEach(id => clearTimeout(id)); _seq = null; }
+    // Reinicia após 6s do fim
+    _addTimer(() => runChat(), t + 6000);
   }
 
   /* ── 3D float + mouse-follow via RAF ── */
