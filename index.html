@@ -2513,84 +2513,98 @@ setInterval(_loadTickerBrapi,90000);
     { type:'ai',   text:'Sim.<br><br>Posso explicar conceitos, analisar oportunidades, esclarecer dúvidas, simular cenários futuros e acompanhar sua evolução ao longo da jornada financeira.<br><br>Cada orientação é baseada nas informações que você fornecer — tornando a análise <strong>personalizada para a sua realidade</strong>.' },
   ];
 
-  let _timers = [];
-  let _running = false;
+  // Monta sequência plana de passos a partir do CHAT
+  // Cada par user+ai vira: [show_user, show_typing, show_ai]
+  const STEPS = [];
+  CHAT.forEach(msg => {
+    if(msg.type === 'user'){
+      STEPS.push({ action: 'user', text: msg.text });
+    } else {
+      STEPS.push({ action: 'typing' });
+      STEPS.push({ action: 'ai', text: msg.text });
+    }
+  });
 
-  function _addTimer(fn, delay){
-    const id = setTimeout(() => {
-      _timers = _timers.filter(x => x !== id);
-      if(_running) fn();
-    }, delay);
-    _timers.push(id);
+  // Delay entre passos (ms)
+  const DELAY = {
+    user:   1200,   // após mostrar balão do usuário, aguarda antes do typing
+    typing: 2000,   // typing fica visível por este tempo antes da resposta
+    ai:     3000,   // após resposta da IA, aguarda antes da próxima pergunta
+    restart: 5000,  // pausa antes de reiniciar
+  };
+
+  let _timer = null;
+  let _running = false;
+  let _typing = null;
+
+  function _clearTimer(){
+    if(_timer){ clearTimeout(_timer); _timer = null; }
   }
 
   function clearChat(){
     const c = document.getElementById('iphMsgs');
     if(c) c.innerHTML = '';
+    _typing = null;
   }
 
   function stopChat(){
     _running = false;
-    _timers.forEach(id => clearTimeout(id));
-    _timers = [];
+    _clearTimer();
+    clearChat();
   }
 
-  function runChat(){
-    stopChat();
-    clearChat();
-    _running = true;
+  function _showBubble(c, cls, html){
+    // Remove todos os balões anteriores, mantém apenas o último par
+    const bubbles = c.querySelectorAll('.iph-bubble');
+    if(bubbles.length >= 2){
+      bubbles[0].remove();
+    }
+    const el = document.createElement('div');
+    el.className = 'iph-bubble ' + cls;
+    el.innerHTML = html;
+    c.appendChild(el);
+    c.scrollTop = c.scrollHeight;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  }
+
+  function runStep(i){
+    if(!_running) return;
     const c = document.getElementById('iphMsgs');
     if(!c){ _running = false; return; }
 
-    let t = 600;
+    if(i >= STEPS.length){
+      // fim — aguarda e reinicia
+      _timer = setTimeout(() => { if(_running) runChat(); }, DELAY.restart);
+      return;
+    }
 
-    CHAT.forEach((msg) => {
-      if(msg.type === 'ai'){
-        // mostra typing
-        _addTimer(() => {
-          const typing = document.createElement('div');
-          typing.className = 'iph-typing';
-          typing.innerHTML = '<span></span><span></span><span></span>';
-          c.appendChild(typing);
-          c.scrollTop = c.scrollHeight;
-          requestAnimationFrame(() => typing.classList.add('visible'));
+    const step = STEPS[i];
 
-          // substitui typing pela resposta
-          _addTimer(() => {
-            if(typing.parentNode) typing.parentNode.removeChild(typing);
-            // remove balões antigos se tiver mais de 2
-            while(c.querySelectorAll('.iph-bubble').length >= 2){
-              c.removeChild(c.querySelector('.iph-bubble'));
-            }
-            const bubble = document.createElement('div');
-            bubble.className = 'iph-bubble ai-b';
-            bubble.innerHTML = msg.text;
-            c.appendChild(bubble);
-            c.scrollTop = c.scrollHeight;
-            requestAnimationFrame(() => bubble.classList.add('visible'));
-          }, 1200);
-        }, t);
-        t += 2400;
+    if(step.action === 'user'){
+      _showBubble(c, 'user-b', step.text);
+      _timer = setTimeout(() => runStep(i + 1), DELAY.user);
 
-      } else {
-        _addTimer(() => {
-          // remove balões antigos se tiver mais de 2
-          while(c.querySelectorAll('.iph-bubble').length >= 2){
-            c.removeChild(c.querySelector('.iph-bubble'));
-          }
-          const bubble = document.createElement('div');
-          bubble.className = 'iph-bubble user-b';
-          bubble.innerHTML = msg.text;
-          c.appendChild(bubble);
-          c.scrollTop = c.scrollHeight;
-          requestAnimationFrame(() => bubble.classList.add('visible'));
-        }, t);
-        t += 1000;
-      }
-    });
+    } else if(step.action === 'typing'){
+      _typing = document.createElement('div');
+      _typing.className = 'iph-typing';
+      _typing.innerHTML = '<span></span><span></span><span></span>';
+      c.appendChild(_typing);
+      c.scrollTop = c.scrollHeight;
+      requestAnimationFrame(() => requestAnimationFrame(() => { if(_typing) _typing.classList.add('visible'); }));
+      _timer = setTimeout(() => runStep(i + 1), DELAY.typing);
 
-    // Reinicia após 6s do fim
-    _addTimer(() => runChat(), t + 6000);
+    } else if(step.action === 'ai'){
+      if(_typing && _typing.parentNode){ _typing.parentNode.removeChild(_typing); _typing = null; }
+      _showBubble(c, 'ai-b', step.text);
+      _timer = setTimeout(() => runStep(i + 1), DELAY.ai);
+    }
+  }
+
+  function runChat(){
+    _clearTimer();
+    clearChat();
+    _running = true;
+    _timer = setTimeout(() => runStep(0), 800);
   }
 
   /* ── 3D float + mouse-follow via RAF ── */
