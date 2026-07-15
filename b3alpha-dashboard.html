@@ -1636,8 +1636,8 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
               </svg>
             </label>
 
-            <!-- Voz -->
-            <button class="db-input-icon-btn" id="voiceBtn" onclick="toggleVoiceRecording()" title="Mensagem por voz">
+            <!-- Voz: em desenvolvimento, oculto -->
+            <button class="db-input-icon-btn" id="voiceBtn" onclick="toggleVoiceRecording()" title="Mensagem por voz" style="display:none">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -3022,7 +3022,7 @@ function openProfileOverlay(){
   if (consent) consent.checked = !!localStorage.getItem('b3alpha_lgpd_consent');
 }
 function openPlansOverlay()  { closeOverlays(); document.getElementById('dbPlansOverlay')?.classList.add('open') }
-function openAlertasOverlay(){ closeOverlays(); document.getElementById('dbAlertasOverlay')?.classList.add('open') }
+function openAlertasOverlay(){ closeOverlays(); document.getElementById('dbAlertasOverlay')?.classList.add('open'); loadAlertas(); }
 function openPatrimonioOverlay(){ closeOverlays(); document.getElementById('dbPatrimonioOverlay')?.classList.add('open') }
 async function openContaOverlay(){
   document.getElementById('dbContaOverlay').classList.add('open');
