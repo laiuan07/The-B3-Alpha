@@ -748,6 +748,21 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .cfg-row-title { font-size:13px; font-weight:600; color:var(--text); line-height:1.3 }
 .cfg-row-sub { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4 }
 .cfg-row-arrow { font-size:18px; color:var(--muted); flex-shrink:0 }
+/* ─── MINHA CONTA ─── */
+.conta-header{display:flex;align-items:center;gap:16px;padding:18px;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:14px;margin-bottom:18px}
+.conta-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#A07830);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#040A14;flex-shrink:0}
+.conta-plan-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:.04em}
+.conta-credits-box{background:rgba(0,255,157,.04);border:1px solid rgba(0,255,157,.15);border-radius:14px;padding:18px;margin-bottom:14px}
+.conta-credits-num{font-size:44px;font-weight:900;font-family:var(--mono);color:var(--green);line-height:1;margin-bottom:10px}
+.conta-bar-track{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.conta-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .6s ease}
+.conta-stats-box{background:rgba(255,255,255,.02);border:1px solid var(--border2);border-radius:14px;padding:4px 16px;margin-bottom:16px}
+.conta-stat-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border)}
+.conta-stat-row:last-child{border-bottom:none}
+.conta-stat-label{font-size:13px;color:var(--muted)}
+.conta-stat-value{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono)}
+.conta-buy-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;border-radius:12px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s}
+.conta-buy-btn:hover{box-shadow:0 8px 24px rgba(201,168,76,.35);transform:translateY(-1px)}
 /* mantido para compatibilidade */
 .db-input-btn {
   display:flex; align-items:center; gap:6px; padding:7px 13px;
@@ -809,6 +824,67 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 .module-next-btn.arrow-only { min-width:48px; width:48px; border-radius:50%; padding:0 }
 .module-next-btn:hover { transform:scale(1.07); box-shadow:0 6px 32px rgba(201,168,76,.6) }
 .module-next-btn .mnb-label { font-family:'IBM Plex Sans',sans-serif; font-weight:800; font-size:13px; white-space:nowrap; color:#040A14 }
+
+/* ════════════════════════════════════════
+   TOKEN STATUS BADGE (planos pagos)
+════════════════════════════════════════ */
+.token-status-bar {
+  display: none;
+  align-items: center; gap: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  padding: 6px 12px; margin: 0 0 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  transition: border-color .3s, background .3s;
+}
+.token-status-bar.visible { display: flex }
+.token-status-bar.sufficient { border-color: rgba(0,255,157,0.2); background: rgba(0,255,157,0.04) }
+.token-status-bar.insufficient { border-color: rgba(255,59,92,0.3); background: rgba(255,59,92,0.06) }
+.token-status-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  background: var(--green);
+  box-shadow: 0 0 6px rgba(0,255,157,0.6);
+  transition: background .3s, box-shadow .3s;
+}
+.token-status-bar.insufficient .token-status-dot {
+  background: var(--red);
+  box-shadow: 0 0 6px rgba(255,59,92,0.6);
+}
+.token-status-key { color: var(--cyan); }
+.token-status-colon { color: var(--muted); margin: 0 1px }
+.token-status-val { color: var(--green); transition: color .3s }
+.token-status-bar.insufficient .token-status-val { color: var(--red) }
+.token-status-sep { color: var(--muted); margin: 0 4px }
+.token-status-count { color: var(--text); font-weight: 600 }
+.token-status-label { color: var(--muted) }
+
+/* Banner de aviso créditos baixos (free) */
+.credit-warn-banner {
+  display: none; align-items: center; gap: 8px;
+  padding: 8px 12px; margin: 0 0 8px;
+  border-radius: 8px; font-size: 12px; font-weight: 600;
+  animation: warnSlideIn .3s ease;
+}
+@keyframes warnSlideIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
+.credit-warn-banner.visible { display: flex }
+.credit-warn-banner.warn {
+  background: rgba(251,191,36,0.1);
+  border: 1px solid rgba(251,191,36,0.3);
+  color: #fbbf24;
+}
+.credit-warn-banner.critical {
+  background: rgba(255,59,92,0.1);
+  border: 1px solid rgba(255,59,92,0.4);
+  color: var(--red);
+}
+.credit-warn-banner button {
+  margin-left: auto; padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; cursor: pointer; border: none;
+  background: currentColor; color: var(--bg);
+  opacity: 0.9; transition: opacity .2s;
+}
+.credit-warn-banner button:hover { opacity: 1 }
 
 /* ════════════════════════════════════════
    COMPRAR CRÉDITOS MODAL
@@ -1007,6 +1083,262 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04); font-size:12px;
 }
 
+/* ════════════════════════════════════════
+   ONBOARDING DE PERFIL — modal 3 etapas
+════════════════════════════════════════ */
+.ob-modal {
+  position: fixed; inset: 0; z-index: 9800;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.ob-modal.open { display: flex; }
+
+.ob-bg {
+  position: absolute; inset: 0;
+  background: rgba(2,8,18,0.88); backdrop-filter: blur(18px);
+}
+
+.ob-card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 24px;
+  padding: 36px 32px 28px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  overflow: hidden;
+  animation: obCardIn .35s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes obCardIn { from{opacity:0;transform:translateY(24px)scale(.97)} to{opacity:1;transform:none} }
+.ob-card::before {
+  content:''; position:absolute; top:0; left:15%; right:15%; height:1px;
+  background: linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);
+}
+
+/* Barra de progresso das etapas */
+.ob-steps {
+  display: flex; align-items: center; gap: 0;
+  margin-bottom: 32px;
+}
+.ob-step-dot {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  color: rgba(240,234,214,0.3); font-weight: 600;
+  transition: all .3s ease;
+}
+.ob-step-dot.active {
+  background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.5);
+  color: var(--gold2); box-shadow: 0 0 12px rgba(201,168,76,0.2);
+}
+.ob-step-dot.done {
+  background: rgba(0,255,157,0.12); border-color: rgba(0,255,157,0.35);
+  color: var(--green);
+}
+.ob-step-line {
+  flex: 1; height: 1px;
+  background: rgba(255,255,255,0.06); transition: background .4s;
+}
+.ob-step-line.done { background: rgba(0,255,157,0.25); }
+
+/* Painéis */
+.ob-panel { animation: obPanelIn .28s cubic-bezier(.16,1,.3,1) both; }
+@keyframes obPanelIn { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:none} }
+
+.ob-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg,var(--gold),#A07830);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 24px rgba(201,168,76,0.3);
+}
+.ob-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: clamp(1.1rem,3vw,1.3rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  margin-bottom: 7px; line-height: 1.2;
+}
+.ob-sub {
+  font-size: 13px; color: var(--muted);
+  line-height: 1.65; margin-bottom: 26px; font-weight: 400;
+}
+
+/* Grid de perfil de risco */
+.ob-risk-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;
+  margin-bottom: 26px;
+}
+.ob-risk-opt {
+  padding: 16px 10px; border-radius: 14px; cursor: pointer;
+  background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.07);
+  text-align: center; transition: all .2s; user-select: none;
+}
+.ob-risk-opt:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.04); }
+.ob-risk-opt.selected {
+  border-color: var(--gold); background: rgba(201,168,76,0.1);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+.ob-risk-icon { font-size: 22px; margin-bottom: 7px; }
+.ob-risk-name {
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+  color: var(--text); margin-bottom: 3px;
+}
+.ob-risk-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* Campos financeiros */
+.ob-fields { display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px; }
+.ob-field label {
+  display: block; font-size: 11px; color: var(--muted);
+  font-weight: 500; margin-bottom: 5px; letter-spacing: .01em;
+}
+.ob-field input, .ob-field select {
+  width: 100%; background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+  padding: 10px 13px; color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
+  outline: none; transition: border-color .18s;
+}
+.ob-field input:focus, .ob-field select:focus { border-color: rgba(201,168,76,0.4); }
+.ob-field select option { background: var(--surface); }
+.ob-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Botões de ação */
+.ob-actions { display: flex; flex-direction: column; gap: 8px; }
+.ob-btn-primary {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg,var(--gold),#A07830);
+  border: none; border-radius: 12px;
+  font-family: 'IBM Plex Sans', sans-serif; font-weight: 800; font-size: 14px;
+  color: #040A14; cursor: pointer; transition: all .2s;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+}
+.ob-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,0.45); }
+.ob-btn-primary:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.ob-btn-secondary {
+  width: 100%; padding: 11px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600; font-size: 13px; color: var(--muted);
+  cursor: pointer; transition: all .18s;
+}
+.ob-btn-secondary:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+
+.ob-btn-row { display: flex; gap: 8px; }
+.ob-btn-back {
+  width: 44px; height: 44px; flex-shrink: 0; border-radius: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--muted); font-size: 16px; cursor: pointer; transition: all .18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.ob-btn-back:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+
+.ob-skip {
+  display: block; text-align: center; margin-top: 10px;
+  font-size: 11px; color: rgba(240,234,214,0.2);
+  cursor: pointer; background: none; border: none;
+  font-family: inherit; transition: color .18s; width: 100%;
+}
+.ob-skip:hover { color: rgba(240,234,214,0.45); }
+
+/* Step 3 — summary */
+.ob-summary {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 26px;
+  padding: 16px; border-radius: 12px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+}
+.ob-summary-row {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--muted);
+}
+.ob-summary-row strong { color: var(--text); }
+.ob-summary-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(0,255,157,0.5);
+}
+.ob-celebrate {
+  font-size: 36px; margin-bottom: 16px; display: block; text-align: left;
+}
+
+/* ════════════════════════════════════════
+   SKELETON LOADER — elimina flash de conteúdo vazio
+════════════════════════════════════════ */
+#pageLoader {
+  position: fixed; inset: 0; z-index: 9900;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 18px;
+  transition: opacity .45s ease, visibility .45s ease;
+}
+#pageLoader.hidden {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.pl-logo {
+  width: 52px; height: 52px; border-radius: 15px;
+  background: linear-gradient(135deg, var(--gold), #A07830);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 28px rgba(201,168,76,0.3);
+  animation: plPulse 1.4s ease-in-out infinite;
+}
+@keyframes plPulse {
+  0%,100% { opacity:1; transform:scale(1); box-shadow:0 8px 28px rgba(201,168,76,0.3) }
+  50%      { opacity:.75; transform:scale(.94); box-shadow:0 4px 14px rgba(201,168,76,0.15) }
+}
+.pl-bar {
+  width: 120px; height: 2px; border-radius: 2px;
+  background: rgba(255,255,255,0.06); overflow: hidden;
+}
+.pl-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  border-radius: 2px;
+  animation: plSlide 1.4s ease-in-out infinite;
+  width: 40%;
+}
+@keyframes plSlide {
+  0%   { transform:translateX(-100%) }
+  100% { transform:translateX(350%) }
+}
+.pl-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px;
+  color: rgba(240,234,214,0.25); text-transform: uppercase;
+}
+
+/* ════════════════════════════════════════
+   MÓDULOS — badges de progresso
+════════════════════════════════════════ */
+.mod-badge-done {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  color: var(--green); letter-spacing: .8px; text-transform: uppercase;
+  background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2);
+  border-radius: 100px; padding: 3px 9px; margin-bottom: 8px;
+}
+.mod-badge-current {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  color: var(--gold); letter-spacing: .8px; text-transform: uppercase;
+  background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 100px; padding: 3px 9px; margin-bottom: 8px;
+}
+.mod-progress-strip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 10px; margin-bottom: 16px;
+  background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.15);
+  font-size: 12px; color: var(--muted);
+}
+.mod-progress-strip strong { color: var(--gold2); }
+.mod-dots { display:flex; gap:5px }
+.mod-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); transition: background .3s;
+}
+.mod-dot.done { background: var(--green); box-shadow: 0 0 6px rgba(0,255,157,0.5) }
+.mod-dot.current { background: var(--gold); box-shadow: 0 0 6px rgba(201,168,76,0.5) }
+
 /* ── MODO PRETO E BRANCO — todo texto em branco, só o ticker mantém cor ──────── */
 :root {
   --gold:  #ffffff;
@@ -1031,6 +1363,22 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 </style>
 </head>
 <body>
+
+<!-- ══ PAGE LOADER — elimina flash de conteúdo vazio ══ -->
+<div id="pageLoader">
+  <div class="pl-logo">
+    <svg width="26" height="26" viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z
+           M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84
+           L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z
+           M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z"
+        fill="#040A14"/>
+    </svg>
+  </div>
+  <div class="pl-bar"><div class="pl-bar-fill"></div></div>
+  <span class="pl-text">Carregando</span>
+</div>
 
 <!-- ══ MOBILE TOP BAR ══ -->
 <div class="db-mobile-top">
@@ -1249,6 +1597,24 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
       <!-- Input Bar -->
       <div class="db-input-area">
+
+        <!-- Badge tokens (plano pago) -->
+        <div class="token-status-bar" id="tokenStatusBar">
+          <div class="token-status-dot"></div>
+          <span class="token-status-key">status</span><span class="token-status-colon">:</span>
+          <span class="token-status-val" id="tokenStatusVal">"tokens_suficientes"</span>
+          <span class="token-status-sep">·</span>
+          <span class="token-status-key">mensagens</span><span class="token-status-colon">:</span>
+          <span class="token-status-count" id="tokenStatusCount">0</span>
+          <span class="token-status-label">restantes</span>
+        </div>
+
+        <!-- Banner aviso créditos baixos (free) -->
+        <div class="credit-warn-banner" id="creditWarnBanner">
+          <span id="creditWarnMsg">⚠️ Créditos acabando</span>
+          <button onclick="showBuyCreditsModal()">Recarregar</button>
+        </div>
+
         <!-- Preview imagem/PDF -->
         <div class="ia-img-preview" id="iaImgPreview">
           <img id="iaImgThumb" src="">
@@ -1291,6 +1657,52 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
       </div>
     </div>
 
+    <!-- OVERLAY: MINHA CONTA -->
+<div class="db-overlay" id="dbContaOverlay">
+  <div class="db-overlay-inner" style="max-width:460px">
+    <div class="db-overlay-hdr">
+      <div class="db-overlay-title">Minha Conta</div>
+      <button class="db-overlay-close" onclick="closeOverlays()">✕</button>
+    </div>
+
+    <div class="conta-header">
+      <div class="conta-avatar" id="contaAvatar">U</div>
+      <div style="min-width:0">
+        <div style="font-size:15px;font-weight:700;color:var(--text)" id="contaName">—</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="contaEmail">—</div>
+        <div style="margin-top:6px"><span class="conta-plan-badge" id="contaPlanBadge">FREE</span></div>
+      </div>
+    </div>
+
+    <div class="conta-credits-box">
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Créditos disponíveis</div>
+      <div class="conta-credits-num" id="contaCreditsNum">—</div>
+      <div class="conta-bar-track"><div class="conta-bar-fill" id="contaCreditsBar" style="width:0%"></div></div>
+      <div style="font-size:11px;color:var(--muted)">Cada mensagem consome créditos de acordo com o uso da IA</div>
+    </div>
+
+    <div class="conta-stats-box">
+      <div class="conta-stat-row">
+        <span class="conta-stat-label">Mensagens enviadas este mês</span>
+        <span class="conta-stat-value" id="contaMsgCount">—</span>
+      </div>
+      <div class="conta-stat-row">
+        <span class="conta-stat-label">Créditos consumidos este mês</span>
+        <span class="conta-stat-value" id="contaCreditsUsed">—</span>
+      </div>
+      <div class="conta-stat-row">
+        <span class="conta-stat-label">Plano atual</span>
+        <span class="conta-stat-value" id="contaPlanLabel">—</span>
+      </div>
+    </div>
+
+    <button class="conta-buy-btn" onclick="closeOverlays();setTimeout(showBuyCreditsModal,80)">+ Comprar mais créditos →</button>
+    <div style="text-align:center;margin-top:10px">
+      <button onclick="closeOverlays();setTimeout(openPlansOverlay,80)" style="font-size:12px;color:var(--gold);background:none;border:none;cursor:pointer;opacity:.8">Ver planos de assinatura →</button>
+    </div>
+  </div>
+</div>
+
     <!-- OVERLAY: CONFIGURAÇÕES -->
     <div class="db-overlay" id="dbConfigOverlay">
       <div class="db-overlay-inner" style="max-width:540px">
@@ -1301,6 +1713,14 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
 
         <!-- Conta -->
         <div class="cfg-section-label">Conta</div>
+        <div class="cfg-row" onclick="closeOverlays();setTimeout(openContaOverlay,80)">
+          <div class="cfg-row-icon">◉</div>
+          <div class="cfg-row-info">
+            <div class="cfg-row-title">Minha Conta</div>
+            <div class="cfg-row-sub">Créditos disponíveis, uso mensal e recargas</div>
+          </div>
+          <div class="cfg-row-arrow">›</div>
+        </div>
         <div class="cfg-row" onclick="closeOverlays();setTimeout(openProfileOverlay,80)">
           <div class="cfg-row-icon">◎</div>
           <div class="cfg-row-info">
@@ -1363,34 +1783,49 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           <div class="db-overlay-title">◫ Módulos do Curso</div>
           <button class="db-overlay-close" onclick="closeOverlays()">✕</button>
         </div>
+        <!-- faixa de progresso geral -->
+        <div class="mod-progress-strip" id="modProgressStrip" style="display:none">
+          <div class="mod-dots" id="modDots">
+            <div class="mod-dot" id="modDot1"></div>
+            <div class="mod-dot" id="modDot2"></div>
+            <div class="mod-dot" id="modDot3"></div>
+            <div class="mod-dot" id="modDot4"></div>
+          </div>
+          <span id="modProgressLabel">Continue de onde parou</span>
+        </div>
+
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
-          <div class="wc-card modules" onclick="openModule(1)">
+          <div class="wc-card modules" id="modCard1" onclick="openModule(1)">
+            <div id="modBadge1"></div>
             <span class="wc-card-icon">🚀</span>
             <div class="wc-card-tag">01 · Iniciante</div>
             <h3 class="wc-card-title">Investindo na B3</h3>
             <p class="wc-card-sub">Do zero ao primeiro investimento. Como funciona a bolsa.</p>
-            <div class="wc-card-cta">Acessar →</div>
+            <div class="wc-card-cta" id="modCta1">Acessar →</div>
           </div>
-          <div class="wc-card modules" onclick="openModule(2)">
+          <div class="wc-card modules" id="modCard2" onclick="openModule(2)">
+            <div id="modBadge2"></div>
             <span class="wc-card-icon">🏢</span>
             <div class="wc-card-tag">02 · Iniciante</div>
             <h3 class="wc-card-title">Fundos Imobiliários</h3>
             <p class="wc-card-sub">Dividendos mensais isentos de IR. Como analisar FIIs.</p>
-            <div class="wc-card-cta">Acessar →</div>
+            <div class="wc-card-cta" id="modCta2">Acessar →</div>
           </div>
-          <div class="wc-card modules" onclick="openModule(3)">
+          <div class="wc-card modules" id="modCard3" onclick="openModule(3)">
+            <div id="modBadge3"></div>
             <span class="wc-card-icon">💰</span>
             <div class="wc-card-tag">03 · Intermediário</div>
             <h3 class="wc-card-title">Renda Fixa & IR</h3>
             <p class="wc-card-sub">Selic 14,75%. CDB, Tesouro e como pagar menos imposto.</p>
-            <div class="wc-card-cta">Acessar →</div>
+            <div class="wc-card-cta" id="modCta3">Acessar →</div>
           </div>
-          <div class="wc-card modules" onclick="openModule(4)">
+          <div class="wc-card modules" id="modCard4" onclick="openModule(4)">
+            <div id="modBadge4"></div>
             <span class="wc-card-icon">₿</span>
             <div class="wc-card-tag">04 · Intermediário</div>
             <h3 class="wc-card-title">Corretoras & Criptos</h3>
             <p class="wc-card-sub">Qual corretora escolher. Bitcoin e criptoativos com estratégia.</p>
-            <div class="wc-card-cta">Acessar →</div>
+            <div class="wc-card-cta" id="modCta4">Acessar →</div>
           </div>
         </div>
       </div>
@@ -1576,8 +2011,29 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
           </table>
         </div>
 
-        <div style="margin-top:24px;display:flex;align-items:center;gap:12px">
-          <button onclick="saveProfileData()" id="saveProfileBtn" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;padding:13px 32px;border-radius:10px;font-family:'IBM Plex Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.3)">Salvar meu perfil →</button>
+        <!-- LGPD / Privacidade -->
+        <div class="lgpd-box">
+          <div class="lgpd-icon">🔒</div>
+          <div class="lgpd-body">
+            <div class="lgpd-title">Seus dados são protegidos pela LGPD</div>
+            <p class="lgpd-text">
+              As informações financeiras que você preenche aqui são usadas <strong style="color:var(--text)">exclusivamente</strong> para personalizar as análises da IA B3Alpha.
+              Seus dados são armazenados de forma segura, nunca são vendidos ou compartilhados com terceiros, e você pode solicitar a exclusão a qualquer momento.
+            </p>
+            <button class="lgpd-link" onclick="openPrivacyModal()">
+              Ler a Política de Privacidade completa →
+            </button>
+            <div class="lgpd-check-row">
+              <input type="checkbox" id="lgpdConsent">
+              <label for="lgpdConsent">
+                Li e concordo com a <button class="lgpd-link" onclick="openPrivacyModal()" style="font-size:inherit">Política de Privacidade</button> e autorizo o tratamento dos meus dados conforme a LGPD (Lei 13.709/2018).
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;display:flex;align-items:center;gap:12px">
+          <button onclick="saveProfileDataWithConsent()" id="saveProfileBtn" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#040A14;border:none;padding:13px 32px;border-radius:10px;font-family:'IBM Plex Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.3)">Salvar meu perfil →</button>
           <span id="saveProfileStatus" style="font-size:12px;color:var(--muted)"></span>
         </div>
       </div>
@@ -1610,6 +2066,69 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
   </main>
 </div>
 
+<!-- Modal Política de Privacidade / LGPD -->
+<div class="privacy-modal" id="privacyModal">
+  <div class="privacy-modal-bg" onclick="closePrivacyModal()"></div>
+  <div class="privacy-modal-card">
+    <div class="privacy-modal-hdr">
+      <div class="privacy-modal-title">🔒 Política de Privacidade & LGPD</div>
+      <button class="privacy-modal-close" onclick="closePrivacyModal()">✕</button>
+    </div>
+    <div class="privacy-modal-body">
+      <h3>1. Quem somos</h3>
+      <p>A <strong>B3Alpha</strong> é uma plataforma de inteligência artificial para investidores brasileiros. Responsável pelo tratamento dos seus dados: B3Alpha (contato: b3alphaa@gmail.com).</p>
+
+      <h3>2. Quais dados coletamos</h3>
+      <ul>
+        <li><strong>Dados de cadastro:</strong> nome completo, endereço de e-mail.</li>
+        <li><strong>Dados financeiros (opcionais):</strong> renda mensal, gastos, patrimônio, carteira de ações, FIIs, criptoativos, renda fixa e objetivos de investimento.</li>
+        <li><strong>Histórico de conversas:</strong> mensagens trocadas com a IA para gerar memória personalizada.</li>
+        <li><strong>Dados de uso:</strong> logs de acesso e eventos de navegação para melhoria do serviço.</li>
+      </ul>
+
+      <h3>3. Para que usamos seus dados</h3>
+      <ul>
+        <li>Personalizar as análises e respostas da IA com base na sua situação financeira real.</li>
+        <li>Enviar notificações de alertas de preço que você configurar.</li>
+        <li>Processar pagamentos e gerenciar sua assinatura (via Stripe).</li>
+        <li>Melhorar continuamente a plataforma e a qualidade da IA.</li>
+      </ul>
+
+      <h3>4. Base legal (LGPD — Lei 13.709/2018)</h3>
+      <p>O tratamento dos seus dados é realizado com base no seu <strong>consentimento explícito</strong> (Art. 7º, I) e na execução do contrato de prestação de serviço (Art. 7º, V). Você pode revogar seu consentimento a qualquer momento.</p>
+
+      <h3>5. Compartilhamento de dados</h3>
+      <p>Seus dados <strong>nunca são vendidos</strong>. Compartilhamos apenas com fornecedores estritamente necessários para operar a plataforma:</p>
+      <ul>
+        <li><strong>Supabase</strong> — banco de dados e autenticação (servidores seguros).</li>
+        <li><strong>Anthropic</strong> — processamento das mensagens pela IA (sem armazenamento permanente).</li>
+        <li><strong>Stripe</strong> — processamento de pagamentos (certificação PCI-DSS).</li>
+        <li><strong>Resend</strong> — envio de e-mails transacionais.</li>
+      </ul>
+
+      <h3>6. Seus direitos</h3>
+      <p>Conforme a LGPD, você tem direito a:</p>
+      <ul>
+        <li>Confirmar a existência do tratamento e acessar seus dados.</li>
+        <li>Corrigir dados incompletos, inexatos ou desatualizados.</li>
+        <li>Solicitar a anonimização, bloqueio ou eliminação dos seus dados.</li>
+        <li>Revogar o consentimento a qualquer momento sem prejuízo.</li>
+        <li>Portabilidade dos dados a outro fornecedor de serviço.</li>
+      </ul>
+      <p>Para exercer seus direitos, entre em contato: <strong>b3alphaa@gmail.com</strong></p>
+
+      <h3>7. Segurança</h3>
+      <p>Seus dados são armazenados com criptografia em trânsito (TLS) e em repouso. O acesso é restrito a sistemas autorizados e protegido por autenticação segura.</p>
+
+      <h3>8. Retenção</h3>
+      <p>Seus dados são mantidos enquanto sua conta estiver ativa. Após a exclusão da conta, os dados são removidos em até 30 dias, salvo obrigação legal.</p>
+
+      <h3>9. Contato & DPO</h3>
+      <p>Dúvidas sobre privacidade ou para exercer seus direitos: <strong>b3alphaa@gmail.com</strong><br>Última atualização: junho de 2026.</p>
+    </div>
+  </div>
+</div>
+
 <!-- Comprar Créditos Modal -->
 <div class="buy-credits-modal" id="buyCreditsModal">
   <div class="bcm-bg" onclick="closeBuyCreditsModal()"></div>
@@ -1636,6 +2155,116 @@ html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text
     </div>
     <button class="bcm-btn" onclick="buyCredits()">Comprar agora →</button>
     <div class="bcm-error" id="bcmError"></div>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING DE PERFIL ══ -->
+<div class="ob-modal" id="obModal">
+  <div class="ob-bg"></div>
+  <div class="ob-card">
+
+    <!-- Barra de progresso -->
+    <div class="ob-steps">
+      <div class="ob-step-dot active" id="obDot1">1</div>
+      <div class="ob-step-line" id="obLine1"></div>
+      <div class="ob-step-dot" id="obDot2">2</div>
+      <div class="ob-step-line" id="obLine2"></div>
+      <div class="ob-step-dot" id="obDot3">3</div>
+    </div>
+
+    <!-- ── ETAPA 1: Perfil de risco ── -->
+    <div id="obPanel1" class="ob-panel">
+      <div class="ob-icon">
+        <svg width="24" height="24" viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 6 L55 6 L55 18 L22 18 L22 39 L50 39 L50 51 L22 51 L22 72 L55 72 L55 84 L10 84 Z M55 6 L78 6 C92 6 100 15 100 27 C100 35 96 41 89 44 C96 47 100 54 100 63 C100 75 92 84 78 84 L55 84 L55 51 L78 51 C83 51 86 48 86 43 C86 38 83 35 78 35 L55 35 Z M55 18 L55 35 L78 35 C83 35 86 32 86 27 C86 22 83 18 78 18 Z" fill="#040A14"/></svg>
+      </div>
+      <h2 class="ob-title">Qual é seu perfil de investidor?</h2>
+      <p class="ob-sub">A IA calibra as análises e recomendações de acordo com sua tolerância ao risco.</p>
+
+      <div class="ob-risk-grid">
+        <div class="ob-risk-opt" id="obRiskOpt_conservador" onclick="obSelectRisk('conservador')">
+          <div class="ob-risk-icon">🛡️</div>
+          <div class="ob-risk-name">Conservador</div>
+          <div class="ob-risk-desc">Prefere segurança e estabilidade</div>
+        </div>
+        <div class="ob-risk-opt" id="obRiskOpt_moderado" onclick="obSelectRisk('moderado')">
+          <div class="ob-risk-icon">⚖️</div>
+          <div class="ob-risk-name">Moderado</div>
+          <div class="ob-risk-desc">Equilíbrio entre risco e retorno</div>
+        </div>
+        <div class="ob-risk-opt" id="obRiskOpt_arrojado" onclick="obSelectRisk('arrojado')">
+          <div class="ob-risk-icon">🚀</div>
+          <div class="ob-risk-name">Arrojado</div>
+          <div class="ob-risk-desc">Busca maior retorno com mais risco</div>
+        </div>
+      </div>
+
+      <div class="ob-actions">
+        <button class="ob-btn-primary" id="obBtn1" onclick="obGoStep(2)" disabled>Próximo →</button>
+        <button class="ob-skip" onclick="obSkip()">Pular por agora</button>
+      </div>
+    </div>
+
+    <!-- ── ETAPA 2: Dados financeiros ── -->
+    <div id="obPanel2" class="ob-panel" style="display:none">
+      <h2 class="ob-title">Sua situação financeira</h2>
+      <p class="ob-sub">A IA usa esses dados para personalizar cada análise com sua realidade.</p>
+
+      <div class="ob-fields">
+        <div class="ob-fields-row">
+          <div class="ob-field">
+            <label>Renda mensal</label>
+            <input id="obRenda" type="text" placeholder="R$ 0,00" oninput="obFormatMoney(this)">
+          </div>
+          <div class="ob-field">
+            <label>Gastos mensais</label>
+            <input id="obGastos" type="text" placeholder="R$ 0,00" oninput="obFormatMoney(this)">
+          </div>
+        </div>
+        <div class="ob-fields-row">
+          <div class="ob-field">
+            <label>Aporte mensal</label>
+            <input id="obAporte" type="text" placeholder="R$ 0,00" oninput="obFormatMoney(this)">
+          </div>
+          <div class="ob-field">
+            <label>Prazo (anos)</label>
+            <input id="obPrazo" type="number" placeholder="ex: 10" min="1" max="50">
+          </div>
+        </div>
+        <div class="ob-field">
+          <label>Objetivo principal</label>
+          <select id="obObjetivo">
+            <option value="">Selecionar...</option>
+            <option value="reserva">Reserva de emergência</option>
+            <option value="renda">Renda passiva mensal</option>
+            <option value="aposentadoria">Aposentadoria</option>
+            <option value="crescimento">Crescimento patrimonial</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ob-actions">
+        <div class="ob-btn-row">
+          <button class="ob-btn-back" onclick="obGoStep(1)">←</button>
+          <button class="ob-btn-primary" style="flex:1" onclick="obGoStep(3)">Próximo →</button>
+        </div>
+        <button class="ob-skip" onclick="obSkip()">Pular por agora</button>
+      </div>
+    </div>
+
+    <!-- ── ETAPA 3: Confirmação ── -->
+    <div id="obPanel3" class="ob-panel" style="display:none">
+      <span class="ob-celebrate">🎉</span>
+      <h2 class="ob-title">Tudo pronto! Sua IA está personalizada.</h2>
+      <p class="ob-sub">Salvei suas preferências. Agora as análises vão ser muito mais precisas para você.</p>
+
+      <div class="ob-summary" id="obSummary"></div>
+
+      <div class="ob-actions">
+        <button class="ob-btn-primary" onclick="obFinish()">Começar a conversar →</button>
+        <button class="ob-btn-secondary" onclick="obOpenCarteira()">Configurar carteira completa →</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1695,6 +2324,8 @@ async function loadUserProfile() {
 
   if (profile) {
     userCredits = profile.credit_balance ?? 50;
+    userPlanType = profile.plan_type ?? 'free';
+    _shownCreditWarnings.clear();
     updateCreditsUI();
     // Google OAuth envia o nome em user_metadata.full_name ou user_metadata.name
     const googleName = _currentUser.user_metadata?.full_name || _currentUser.user_metadata?.name;
@@ -1717,8 +2348,11 @@ async function loadUserProfile() {
     if (planLabel) planLabel.textContent = `Plano ${plan} · ${userCredits} créditos restantes`;
     if (profile.risk_profile) selectObOption('risk', profile.risk_profile);
 
-    // Auto-start: novo usuário sem onboarding → abrir módulo 1 automaticamente
-    if (!profile.onboarding_completed) {
+    // Carrega e mescla progresso de módulos (Supabase ↔ localStorage)
+    _loadModuleProgressFromProfile(profile);
+
+    // Auto-start: só abre se for a primeira vez E nunca acessou nenhum módulo
+    if (!profile.onboarding_completed && _getLastModule() === 0) {
       _isOnboarding = true;
       setTimeout(() => openModule(1), 1400);
     }
@@ -1769,6 +2403,14 @@ async function loadUserProfile() {
   /* Pré-preencher email nos alertas */
   const alEmail = document.getElementById('alEmail');
   if (alEmail && !alEmail.value) alEmail.value = _currentUser.email || '';
+
+  /* Esconder loader — conteúdo já está pronto */
+  hidePageLoader();
+}
+
+function hidePageLoader() {
+  const loader = document.getElementById('pageLoader');
+  if (loader) loader.classList.add('hidden');
 }
 
 /* ══════════════════════════════════════
@@ -1914,6 +2556,8 @@ async function callBlueprintIA(message, history, attachedFile) {
 ══════════════════════════════════════ */
 let chatHistory = [], _isThinking = false, _attachedImage = null;
 let userCredits = 50;
+let userPlanType = 'free';
+let _shownCreditWarnings = new Set();
 let _convs = [], _activeConvId = null;
 
 function sendSugg(text) {
@@ -1924,15 +2568,27 @@ function sendSugg(text) {
 async function sendDbChat() {
   const input = document.getElementById('dbChatInput');
   const btn   = document.getElementById('dbSendBtn');
+  const wcBtn = document.querySelector('.wc-send-btn');
   const text  = input.value.trim();
   if (!text && !_attachedImage) return;
   if (_isThinking) return;
-  if (userCredits < 10) { showBuyCreditsModal(); return; }
+
+  // Bloquear IMEDIATAMENTE — antes de qualquer await para evitar duplo clique
+  _isThinking = true;
+  if (btn)   { btn.disabled = true; }
+  if (wcBtn) { wcBtn.disabled = true; wcBtn.style.opacity = '.5'; }
+
+  if (userCredits < 10) {
+    _isThinking = false;
+    if (btn)   { btn.disabled = false; }
+    if (wcBtn) { wcBtn.disabled = false; wcBtn.style.opacity = ''; }
+    showBuyCreditsModal(); return;
+  }
 
   const welcome = document.getElementById('dbWelcome');
   if (welcome) welcome.style.display = 'none';
   input.value = ''; input.style.height = 'auto';
-  input.disabled = true; btn.disabled = true; _isThinking = true;
+  input.disabled = true;
 
   addMsg('user', escHtml(text));
   chatHistory.push({ role: 'user', content: text });
@@ -1981,7 +2637,10 @@ async function sendDbChat() {
       console.error('[B3Alpha] Erro IA completo:', code);
     }
   }
-  input.disabled = false; btn.disabled = false; _isThinking = false;
+  input.disabled = false;
+  if (btn)   { btn.disabled = false; }
+  if (wcBtn) { wcBtn.disabled = false; wcBtn.style.opacity = ''; }
+  _isThinking = false;
   input.focus();
   removeAttachedImage();
 }
@@ -2355,11 +3014,55 @@ function openConfigOverlay() {
   document.getElementById('dbConfigOverlay')?.classList.add('open');
   if(window.innerWidth<=768) closeMobileSidebar();
 }
-function openDbModule()      { closeOverlays(); document.getElementById('dbModulesOverlay')?.classList.add('open') }
-function openProfileOverlay(){ closeOverlays(); document.getElementById('dbPatrimonioOverlay')?.classList.add('open') }
+function openProfileOverlay(){
+  closeOverlays();
+  document.getElementById('dbPatrimonioOverlay')?.classList.add('open');
+  // Pré-marca o checkbox LGPD se o usuário já consentiu antes
+  const consent = document.getElementById('lgpdConsent');
+  if (consent) consent.checked = !!localStorage.getItem('b3alpha_lgpd_consent');
+}
 function openPlansOverlay()  { closeOverlays(); document.getElementById('dbPlansOverlay')?.classList.add('open') }
 function openAlertasOverlay(){ closeOverlays(); document.getElementById('dbAlertasOverlay')?.classList.add('open') }
 function openPatrimonioOverlay(){ closeOverlays(); document.getElementById('dbPatrimonioOverlay')?.classList.add('open') }
+async function openContaOverlay(){
+  document.getElementById('dbContaOverlay').classList.add('open');
+  try{
+    const {data:{session}} = await _supabase.auth.getSession();
+    if(!session) return;
+    const user = session.user;
+    const firstName = user.user_metadata?.first_name || '';
+    const name = firstName || user.email.split('@')[0];
+    const initial = name[0].toUpperCase();
+    document.getElementById('contaAvatar').textContent = initial;
+    document.getElementById('contaName').textContent = name;
+    document.getElementById('contaEmail').textContent = user.email;
+    // Perfil
+    const {data:prof} = await _supabase.from('profiles').select('credit_balance,plan_type').eq('id',user.id).single();
+    if(prof){
+      const credits = prof.credit_balance ?? 0;
+      const plan = prof.plan_type ?? 'free';
+      const planMap = {free:'Gratuito',pro:'Pro',monthly:'Pro Mensal',annual:'Anual'};
+      const planColor = {free:'#888888',pro:'#C9A84C',monthly:'#C9A84C',annual:'#00D49D'};
+      const color = planColor[plan] || '#888888';
+      document.getElementById('contaCreditsNum').textContent = credits;
+      const pct = Math.min(100, Math.round((credits / 500) * 100));
+      document.getElementById('contaCreditsBar').style.width = pct + '%';
+      document.getElementById('contaPlanLabel').textContent = planMap[plan] || plan;
+      const badge = document.getElementById('contaPlanBadge');
+      badge.textContent = (planMap[plan] || plan).toUpperCase();
+      badge.style.cssText += `;background:${color}22;color:${color};border:1px solid ${color}44`;
+    }
+    // Mensagens este mês
+    const inicio = new Date(); inicio.setDate(1); inicio.setHours(0,0,0,0);
+    const {count} = await _supabase.from('chat_messages')
+      .select('id',{count:'exact',head:true})
+      .eq('user_id',user.id).eq('role','user')
+      .gte('created_at',inicio.toISOString());
+    const msgs = count ?? 0;
+    document.getElementById('contaMsgCount').textContent = msgs;
+    document.getElementById('contaCreditsUsed').textContent = msgs * 10;
+  }catch(e){ console.error('openContaOverlay',e); }
+}
 
 /* ══════════════════════════════════════
    MÓDULOS
@@ -2367,8 +3070,112 @@ function openPatrimonioOverlay(){ closeOverlays(); document.getElementById('dbPa
 let currentModuleNum = 0;
 let _isOnboarding = false;
 const moduleFiles = {1:'modulo1-slides.html',2:'modulo2-slides.html',3:'modulo3-slides.html',4:'modulo4-slides.html'};
+
+/* ── PROGRESSO DE MÓDULOS ─────────────────────────────────────── */
+function _getModuleDone() {
+  try { return JSON.parse(localStorage.getItem('b3alpha_modules_done') || '[]'); } catch(e) { return []; }
+}
+function _markModuleDone(num) {
+  const done = _getModuleDone();
+  if (!done.includes(num)) {
+    done.push(num);
+    localStorage.setItem('b3alpha_modules_done', JSON.stringify(done));
+  }
+  _syncModuleProgressToSupabase();
+}
+function _getLastModule() {
+  try { return parseInt(localStorage.getItem('b3alpha_last_module') || '0') || 0; } catch(e) { return 0; }
+}
+function _setLastModule(num) {
+  try { localStorage.setItem('b3alpha_last_module', String(num)); } catch(e) {}
+  _syncModuleProgressToSupabase();
+}
+
+/* Persiste progresso no Supabase — cross-device */
+async function _syncModuleProgressToSupabase() {
+  if (!_currentUser) return;
+  try {
+    await _supabase.from('profiles').update({
+      modules_done: _getModuleDone(),
+      last_module:  _getLastModule()
+    }).eq('id', _currentUser.id);
+  } catch(_) {}
+}
+
+/* Carrega progresso do Supabase e mescla com localStorage */
+function _loadModuleProgressFromProfile(profile) {
+  if (!profile) return;
+
+  // modules_done: usar o maior conjunto (local vs remoto)
+  const local  = _getModuleDone();
+  const remote = Array.isArray(profile.modules_done) ? profile.modules_done : [];
+  const merged = [...new Set([...local, ...remote])];
+  if (merged.length > local.length) {
+    localStorage.setItem('b3alpha_modules_done', JSON.stringify(merged));
+  }
+
+  // last_module: usar o maior valor
+  const localLast  = _getLastModule();
+  const remoteLast = typeof profile.last_module === 'number' ? profile.last_module : 0;
+  if (remoteLast > localLast) {
+    localStorage.setItem('b3alpha_last_module', String(remoteLast));
+  }
+}
+function _renderModuleProgress() {
+  const done = _getModuleDone();
+  const last = _getLastModule();
+  const strip = document.getElementById('modProgressStrip');
+  const label = document.getElementById('modProgressLabel');
+
+  // Atualiza dots
+  for (let i = 1; i <= 4; i++) {
+    const dot   = document.getElementById('modDot' + i);
+    const badge = document.getElementById('modBadge' + i);
+    const cta   = document.getElementById('modCta' + i);
+    if (!dot || !badge) continue;
+
+    dot.className = 'mod-dot';
+    badge.innerHTML = '';
+
+    if (done.includes(i)) {
+      dot.classList.add('done');
+      badge.innerHTML = '<div class="mod-badge-done">✓ Concluído</div>';
+      if (cta) cta.textContent = 'Rever →';
+    } else if (i === last && !done.includes(i)) {
+      dot.classList.add('current');
+      badge.innerHTML = '<div class="mod-badge-current">▶ Continue aqui</div>';
+      if (cta) cta.textContent = 'Continuar →';
+    } else {
+      if (cta) cta.textContent = 'Acessar →';
+    }
+  }
+
+  // Faixa de progresso geral
+  if (strip && label) {
+    if (done.length > 0 || last > 0) {
+      strip.style.display = 'flex';
+      if (done.length === 4) {
+        label.innerHTML = '<strong>Curso completo!</strong> Todos os módulos concluídos 🎓';
+      } else if (last > 0 && !done.includes(last)) {
+        label.innerHTML = `<strong>${done.length}/4 concluídos</strong> — continue o Módulo ${last}`;
+      } else {
+        label.innerHTML = `<strong>${done.length}/4 módulos concluídos</strong>`;
+      }
+    } else {
+      strip.style.display = 'none';
+    }
+  }
+}
+
+function openDbModule() {
+  closeOverlays();
+  document.getElementById('dbModulesOverlay')?.classList.add('open');
+  _renderModuleProgress();
+}
+
 function openModule(num) {
   currentModuleNum = num;
+  _setLastModule(num);
   document.getElementById('moduleIframe').src = moduleFiles[num];
   document.getElementById('modal-modules').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2382,17 +3189,19 @@ function updateNextBtn() {
 }
 function nextModule() {
   const iframe = document.getElementById('moduleIframe');
+  _markModuleDone(currentModuleNum);
   if(currentModuleNum>=4) {
     closeModule();
-    if (_isOnboarding && _currentUser) {
+    if (_currentUser) {
       _isOnboarding = false;
       _supabase.from('profiles').update({ onboarding_completed: true }).eq('id', _currentUser.id);
-      setTimeout(() => showToast('Parabéns! Você completou todos os módulos 🎓', 'success'), 400);
     }
+    // Abre onboarding de perfil após completar os módulos
+    setTimeout(() => openProfileOnboarding(), 500);
     return;
   }
   iframe.style.opacity='0';
-  setTimeout(()=>{ currentModuleNum++; iframe.src=moduleFiles[currentModuleNum]; iframe.onload=()=>{iframe.style.opacity='1';iframe.onload=null;}; updateNextBtn(); },300);
+  setTimeout(()=>{ currentModuleNum++; _setLastModule(currentModuleNum); iframe.src=moduleFiles[currentModuleNum]; iframe.onload=()=>{iframe.style.opacity='1';iframe.onload=null;}; updateNextBtn(); },300);
 }
 function closeModule() {
   document.getElementById('modal-modules').classList.remove('open');
@@ -2418,22 +3227,162 @@ async function buyCredits() {
 }
 function updateCreditsUI() {
   const n = userCredits;
+  const msgs = Math.floor(n / 10); // 10 créditos = 1 mensagem
+  const isPaid = userPlanType === 'pro' || userPlanType === 'monthly' || userPlanType === 'annual';
+
+  // ── Contadores numéricos ───────────────────────────────────
   ['creditsNum','wcCreditsNum','sideCreditsNum','headerCreditsNum','iaCreditsCount','cfgCreditsNum','dropCreditsNum'].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.textContent=n;
   });
+
+  // ── Barras de progresso ────────────────────────────────────
   const pct = Math.min(100,(n/500)*100)+'%';
   const wcBar = document.getElementById('wcCreditsBar');
   const dropBar = document.getElementById('dropCreditsBar');
   if(wcBar) wcBar.style.width = pct;
   if(dropBar) dropBar.style.width = pct;
+
+  // ── Cores dos contadores ───────────────────────────────────
   const dropNum = document.getElementById('dropCreditsNum');
   if(dropNum) dropNum.style.color = n<=0?'var(--red)':n<=20?'#fbbf24':'var(--green)';
   const badge = document.getElementById('creditsBadge');
   if(badge) badge.style.color = n<=0?'var(--red)':n<=20?'#fbbf24':'';
   const label = document.getElementById('wcPlanLabel');
   if(label) label.textContent = `${n} créditos restantes`;
+
+  // ── TOKEN STATUS BADGE (planos pagos) ──────────────────────
+  const tokenBar   = document.getElementById('tokenStatusBar');
+  const tokenVal   = document.getElementById('tokenStatusVal');
+  const tokenCount = document.getElementById('tokenStatusCount');
+  if (tokenBar && isPaid) {
+    tokenBar.classList.add('visible');
+    tokenCount.textContent = msgs;
+    if (msgs >= 3) {
+      tokenBar.classList.remove('insufficient');
+      tokenBar.classList.add('sufficient');
+      tokenVal.textContent = '"tokens_suficientes"';
+    } else {
+      tokenBar.classList.remove('sufficient');
+      tokenBar.classList.add('insufficient');
+      tokenVal.textContent = '"tokens_insuficientes"';
+    }
+  } else if (tokenBar) {
+    tokenBar.classList.remove('visible');
+  }
+
+  // ── AVISOS CRÉDITOS BAIXOS (free) ─────────────────────────
+  const banner    = document.getElementById('creditWarnBanner');
+  const bannerMsg = document.getElementById('creditWarnMsg');
+  if (banner && !isPaid) {
+    if (n <= 10 && !_shownCreditWarnings.has(10)) {
+      _shownCreditWarnings.add(10);
+      showToast('🔴 Última mensagem! Recarregue seus créditos para continuar.', 'error');
+    } else if (n <= 20 && !_shownCreditWarnings.has(20)) {
+      _shownCreditWarnings.add(20);
+      showToast('⚠️ Apenas 2 mensagens restantes — considere recarregar.', 'error');
+    } else if (n <= 30 && !_shownCreditWarnings.has(30)) {
+      _shownCreditWarnings.add(30);
+      showToast('⚠️ Créditos baixos: 3 mensagens restantes.', 'info');
+    }
+
+    // Banner persistente abaixo de 20 créditos
+    if (n <= 20 && n > 0) {
+      banner.classList.add('visible');
+      banner.className = 'credit-warn-banner visible ' + (n <= 10 ? 'critical' : 'warn');
+      bannerMsg.textContent = n <= 10
+        ? `🔴 Última mensagem disponível — ${n} crédito${n!==1?'s':''} restante${n!==1?'s':''}`
+        : `⚠️ Créditos baixos — ${msgs} mensagem${msgs!==1?'s':''} restante${msgs!==1?'s':''}`;
+    } else {
+      banner.classList.remove('visible');
+    }
+  } else if (banner) {
+    banner.classList.remove('visible');
+  }
 }
+
+/* ══════════════════════════════════════
+   LGPD / PRIVACIDADE
+══════════════════════════════════════ */
+.lgpd-box {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: rgba(0,212,255,0.04);
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 12px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.lgpd-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px }
+.lgpd-body { flex: 1; min-width: 0 }
+.lgpd-title {
+  font-size: 12px; font-weight: 700; color: var(--cyan);
+  letter-spacing: .03em; margin-bottom: 5px;
+}
+.lgpd-text {
+  font-size: 11px; color: var(--muted); line-height: 1.6; margin-bottom: 8px;
+}
+.lgpd-link {
+  font-size: 11px; color: var(--cyan); cursor: pointer;
+  text-decoration: underline; background: none; border: none;
+  padding: 0; font-family: inherit;
+}
+.lgpd-link:hover { opacity: .8 }
+.lgpd-check-row {
+  display: flex; align-items: center; gap: 8px; margin-top: 10px;
+}
+.lgpd-check-row input[type="checkbox"] {
+  width: 15px; height: 15px; accent-color: var(--cyan); cursor: pointer; flex-shrink: 0;
+}
+.lgpd-check-row label {
+  font-size: 11px; color: var(--text); cursor: pointer; line-height: 1.4;
+}
+
+/* Modal política de privacidade */
+.privacy-modal {
+  position: fixed; inset: 0; z-index: 1200;
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.privacy-modal.open { display: flex }
+.privacy-modal-bg {
+  position: absolute; inset: 0;
+  background: rgba(2,8,18,.94); backdrop-filter: blur(12px);
+}
+.privacy-modal-card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 600px; max-height: 80vh;
+  background: var(--surface); border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 20px; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0,0,0,.7);
+}
+.privacy-modal-hdr {
+  padding: 20px 24px; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.privacy-modal-title {
+  font-size: 15px; font-weight: 800;
+  background: linear-gradient(135deg,var(--cyan),var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.privacy-modal-close {
+  background: none; border: none; color: var(--muted); font-size: 18px;
+  cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: color .2s;
+}
+.privacy-modal-close:hover { color: var(--text) }
+.privacy-modal-body {
+  padding: 24px; overflow-y: auto; flex: 1;
+  font-size: 12px; color: var(--muted); line-height: 1.8;
+}
+.privacy-modal-body h3 {
+  font-size: 12px; font-weight: 700; color: var(--cyan);
+  letter-spacing: .08em; text-transform: uppercase;
+  margin: 18px 0 6px; font-family: 'IBM Plex Mono', monospace;
+}
+.privacy-modal-body h3:first-child { margin-top: 0 }
+.privacy-modal-body p { margin-bottom: 10px }
+.privacy-modal-body ul { padding-left: 16px; margin-bottom: 10px }
+.privacy-modal-body li { margin-bottom: 4px }
+.privacy-modal-body strong { color: var(--text) }
 
 /* ══════════════════════════════════════
    ALERTAS SIMPLES
@@ -2602,6 +3551,20 @@ function addTransfRow() {
 function renderTransferencias() { _renderTable('transferenciaTableBody', _transferencias, 6, 'delTransferencia') }
 function delTransferencia(i) { _transferencias.splice(i,1); renderTransferencias(); }
 
+function openPrivacyModal()  { document.getElementById('privacyModal')?.classList.add('open') }
+function closePrivacyModal() { document.getElementById('privacyModal')?.classList.remove('open') }
+
+function saveProfileDataWithConsent() {
+  const consent = document.getElementById('lgpdConsent');
+  if (!consent?.checked) {
+    showToast('Por favor, leia e aceite a Política de Privacidade para salvar seu perfil.', 'error');
+    consent?.closest('.lgpd-box')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  localStorage.setItem('b3alpha_lgpd_consent', new Date().toISOString());
+  saveProfileData();
+}
+
 async function saveProfileData() {
   const btn = document.getElementById('saveProfileBtn');
   const status = document.getElementById('saveProfileStatus');
@@ -2761,6 +3724,163 @@ function showToast(msg, type='info') {
 }
 
 
+/* ══════════════════════════════════════
+   ONBOARDING DE PERFIL — 3 etapas
+══════════════════════════════════════ */
+let _obSelectedRisk = '';
+let _obCurrentStep  = 1;
+
+function openProfileOnboarding() {
+  _obSelectedRisk = '';
+  _obCurrentStep  = 1;
+  // Pré-selecionar risk se já tinha escolhido antes
+  const existingRisk = _obData?.risk || '';
+  if (existingRisk) obSelectRisk(existingRisk);
+  _obRenderStep(1);
+  document.getElementById('obModal').classList.add('open');
+}
+
+function obClose() {
+  document.getElementById('obModal').classList.remove('open');
+}
+
+function obSkip() {
+  obClose();
+  showToast('Você pode configurar seu perfil a qualquer momento no menu.', 'info');
+}
+
+function obSelectRisk(risk) {
+  _obSelectedRisk = risk;
+  ['conservador','moderado','arrojado'].forEach(r => {
+    document.getElementById('obRiskOpt_' + r)?.classList.toggle('selected', r === risk);
+  });
+  const btn = document.getElementById('obBtn1');
+  if (btn) btn.disabled = false;
+}
+
+function obFormatMoney(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (!v) { el.value = ''; return; }
+  v = (parseInt(v, 10) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  el.value = 'R$ ' + v;
+}
+
+function _obRenderStep(step) {
+  _obCurrentStep = step;
+  // Painéis
+  [1,2,3].forEach(i => {
+    const p = document.getElementById('obPanel' + i);
+    if (p) p.style.display = i === step ? 'block' : 'none';
+  });
+  // Dots e linhas
+  [1,2,3].forEach(i => {
+    const dot = document.getElementById('obDot' + i);
+    if (!dot) return;
+    dot.className = 'ob-step-dot';
+    if (i < step)  dot.classList.add('done'), dot.textContent = '✓';
+    else if (i === step) dot.classList.add('active'), dot.textContent = i;
+    else dot.textContent = i;
+  });
+  [1,2].forEach(i => {
+    const line = document.getElementById('obLine' + i);
+    if (line) line.className = 'ob-step-line' + (i < step ? ' done' : '');
+  });
+}
+
+function obGoStep(step) {
+  if (step === 3) _obBuildSummary();
+  _obRenderStep(step);
+}
+
+function _obBuildSummary() {
+  const risk    = _obSelectedRisk;
+  const renda   = document.getElementById('obRenda')?.value  || '';
+  const gastos  = document.getElementById('obGastos')?.value || '';
+  const aporte  = document.getElementById('obAporte')?.value || '';
+  const obj     = document.getElementById('obObjetivo')?.value || '';
+  const objLabels = { reserva:'Reserva de emergência', renda:'Renda passiva', aposentadoria:'Aposentadoria', crescimento:'Crescimento patrimonial' };
+
+  const rows = [];
+  if (risk)   rows.push({ label: 'Perfil', value: risk.charAt(0).toUpperCase() + risk.slice(1) });
+  if (renda)  rows.push({ label: 'Renda mensal', value: renda });
+  if (gastos) rows.push({ label: 'Gastos mensais', value: gastos });
+  if (aporte) rows.push({ label: 'Aporte mensal', value: aporte });
+  if (obj)    rows.push({ label: 'Objetivo', value: objLabels[obj] || obj });
+
+  const el = document.getElementById('obSummary');
+  if (!el) return;
+  if (!rows.length) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  el.innerHTML = rows.map(r =>
+    `<div class="ob-summary-row"><div class="ob-summary-dot"></div><span>${r.label}: <strong>${r.value}</strong></span></div>`
+  ).join('');
+}
+
+async function obFinish() {
+  const btn = document.querySelector('#obPanel3 .ob-btn-primary');
+  if (btn) { btn.textContent = 'Salvando...'; btn.disabled = true; }
+
+  await _obSaveToSupabase();
+
+  obClose();
+  if (btn) { btn.textContent = 'Começar a conversar →'; btn.disabled = false; }
+  switchView('chat');
+  setTimeout(() => showToast('Perfil salvo! A IA já está personalizada para você.', 'success'), 300);
+}
+
+function obOpenCarteira() {
+  obClose();
+  // Sincroniza os campos do onboarding com o overlay de patrimônio
+  _obSyncToPatOverlay();
+  openProfileOverlay();
+}
+
+function _obSyncToPatOverlay() {
+  const map = { obRenda:'pat_renda', obGastos:'pat_gastos', obAporte:'pat_aporte', obObjetivo:'pat_objetivo', obPrazo:'pat_prazo' };
+  Object.entries(map).forEach(([src, dst]) => {
+    const srcEl = document.getElementById(src);
+    const dstEl = document.getElementById(dst);
+    if (srcEl && dstEl && srcEl.value) dstEl.value = srcEl.value;
+  });
+  if (_obSelectedRisk) selectObOption('risk', _obSelectedRisk);
+}
+
+async function _obSaveToSupabase() {
+  // Sincroniza nos campos do overlay (para o getPatrimonioContext funcionar)
+  _obSyncToPatOverlay();
+
+  // Salva risk no profiles
+  if (_obSelectedRisk) {
+    _obData.risk = _obSelectedRisk;
+    if (_currentUser) {
+      await _supabase.from('profiles')
+        .update({ risk_profile: _obSelectedRisk })
+        .eq('id', _currentUser.id);
+    }
+  }
+
+  // Salva dados financeiros no patrimônio
+  if (_currentUser) {
+    const parseMoney = id => {
+      const v = document.getElementById(id)?.value || '';
+      return parseFloat(v.replace(/[R$\s.]/g,'').replace(',','.')) || 0;
+    };
+    const payload = {
+      user_id:       _currentUser.id,
+      perfil_risco:  _obSelectedRisk || null,
+      renda_mensal:  parseMoney('pat_renda'),
+      gastos_mensais:parseMoney('pat_gastos'),
+      aporte_mensal: parseMoney('pat_aporte'),
+      objetivo:      document.getElementById('pat_objetivo')?.value || null,
+      prazo:         parseInt(document.getElementById('pat_prazo')?.value) || null,
+    };
+    await _supabase.from('patrimonio').upsert(payload, { onConflict: 'user_id' });
+  }
+
+  patUpdateResumo();
+  updateCreditsUI();
+}
+
 /* ══ CONTROLE DE TAMANHO DE FONTE ══ */
 const FONT_SIZES = [11, 12, 13, 14, 15, 16, 17, 18];
 let _fontIdx = 0; // padrão 11px
@@ -2802,6 +3922,9 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModule(); cl
 
   /* Restaurar conversas salvas */
   _loadConvs();
+
+  /* Fallback: garante que o loader some em até 6s mesmo se algo falhar */
+  setTimeout(hidePageLoader, 6000);
 
   /* Verificar sessão ativa */
   await checkSession();
